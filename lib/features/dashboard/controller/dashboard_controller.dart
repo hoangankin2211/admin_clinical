@@ -23,12 +23,12 @@ class DashboardController extends GetxController {
           )
           .toList();
 
-  late final List<Widget> listPage = const [
+  late final List<Widget> listPage = [
     OverviewScreen(),
-    Text('Patient'),
-    Text('Payment'),
-    Text('Medical Form'),
-    Text('Settings'),
+    const Text('Patient'),
+    const Text('Payment'),
+    const Text('Medical Form'),
+    const Text('Settings'),
   ];
 
   void switchTab(int index) {
