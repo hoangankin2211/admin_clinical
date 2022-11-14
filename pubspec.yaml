@@ -38,6 +38,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   get: ^4.6.5
   badges: ^2.0.3
+  percent_indicator: ^4.2.2
 
 dev_dependencies:
   flutter_test:

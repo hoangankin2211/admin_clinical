@@ -1,6 +1,7 @@
 import 'package:admin_clinical/constants/app_colors.dart';
 import 'package:admin_clinical/constants/app_decoration.dart';
 import 'package:admin_clinical/features/overview/screens/overview_screen.dart';
+import 'package:admin_clinical/features/patient/screens/patient_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -25,7 +26,7 @@ class DashboardController extends GetxController {
 
   late final List<Widget> listPage = const [
     OverviewScreen(),
-    Text('Patient'),
+    PatientScreen(),
     Text('Payment'),
     Text('Medical Form'),
     Text('Settings'),
