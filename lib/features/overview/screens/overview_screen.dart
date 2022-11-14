@@ -1,3 +1,4 @@
+import 'package:admin_clinical/features/overview/widgets/custom_table.dart';
 import 'package:admin_clinical/constants/app_colors.dart';
 import 'package:admin_clinical/constants/app_decoration.dart';
 import 'package:flutter/material.dart';
@@ -108,13 +109,10 @@ class OverviewScreen extends StatelessWidget {
                 ),
               ],
             ),
-            const Text(
+            Text(
               'Welcome, Dr.Stephen',
               textAlign: TextAlign.start,
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold),
+              style: Theme.of(context).textTheme.headline2,
             ),
             const Text(
               'Have a nice at great work',
@@ -125,12 +123,9 @@ class OverviewScreen extends StatelessWidget {
             ),
             Row(
               children: [
-                const Text(
+                Text(
                   'Recenet Patient',
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold),
+                  style: Theme.of(context).textTheme.headline2,
                 ),
                 const Spacer(),
                 TextButton(
@@ -145,7 +140,7 @@ class OverviewScreen extends StatelessWidget {
             SizedBox(
               height: 300,
               child: ListView.builder(
-                itemBuilder: (context, index) => SaleReportCard(
+                itemBuilder: (context, index) => CurrentPatientTableRow(
                   name: newPatientTableData[index]['name']!,
                   id: newPatientTableData[index]['id']!,
                   date: newPatientTableData[index]['date']!,
@@ -168,102 +163,7 @@ class OverviewScreen extends StatelessWidget {
   }
 }
 
-class SaleReportCard extends StatelessWidget {
-  const SaleReportCard({
-    super.key,
-    required this.name,
-    required this.id,
-    required this.date,
-    required this.gender,
-    required this.diseases,
-    required this.status,
-    required this.color,
-    required this.avt,
-  });
-  final String avt;
-  final String name;
-  final String id;
-  final String date;
-  final String gender;
-  final String diseases;
-  final String status;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    final Map<String, String> data = {
-      'name': name,
-      'id': id,
-      'date': date,
-      'gender': gender,
-      'diseases': diseases,
-      'status': status,
-    };
-    return InkWell(
-      onTap: () {},
-      borderRadius: AppDecoration.primaryRadiusBorder,
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 5),
-        padding: const EdgeInsets.all(6),
-        decoration: BoxDecoration(
-            color: color,
-            borderRadius: AppDecoration.primaryRadiusBorder,
-            boxShadow: [
-              BoxShadow(
-                  offset: const Offset(0, 0.5),
-                  color: Colors.grey[200]!,
-                  blurRadius: 2)
-            ]),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            const SizedBox(width: 5),
-            color == Colors.white
-                ? ClipRRect(
-                    borderRadius: BorderRadius.circular(50),
-                    child: Image.asset(
-                      avt,
-                      fit: BoxFit.cover,
-                      height: 35,
-                      width: 35,
-                    ),
-                  )
-                : const SizedBox(
-                    height: 35,
-                    width: 35,
-                  ),
-            const SizedBox(width: 5),
-            ...data.entries
-                .map(
-                  (e) => Expanded(
-                    child: Text(
-                      e.value,
-                      style: const TextStyle(
-                          color: Colors.blueGrey,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                )
-                .toList(),
-            (color == Colors.white)
-                ? InkWell(
-                    onTap: () {},
-                    child: const Icon(
-                      Icons.more_vert_outlined,
-                    ),
-                  )
-                : const SizedBox(
-                    width: 25,
-                  ),
-            const SizedBox(width: 5),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
+// ignore: must_be_immutable
 class StatisticPatient extends StatelessWidget {
   StatisticPatient({super.key, required this.width});
   final double width;
@@ -278,13 +178,9 @@ class StatisticPatient extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 'Patients',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: Theme.of(context).textTheme.headline2,
               ),
               Obx(
                 () => DropdownButton<int>(
