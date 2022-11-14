@@ -1,3 +1,4 @@
+import 'package:admin_clinical/commons/widgets/custom_icon_button.dart';
 import 'package:admin_clinical/constants/app_colors.dart';
 import 'package:admin_clinical/constants/app_decoration.dart';
 import 'package:admin_clinical/features/overview/widgets/custom_table.dart';
@@ -30,11 +31,12 @@ class ListPatientScreen extends StatelessWidget {
                   'Patient List',
                   style: Theme.of(context).textTheme.headline2,
                 ),
-                TextButton.icon(
-                  icon: const Icon(
-                    Icons.add_outlined,
-                    color: Colors.white,
-                    size: 12,
+                CustomIconButton(
+                  onPressed: () => Get.dialog(
+                    AddPatientDialog(
+                      height: constraints.maxHeight * 0.8,
+                      width: constraints.maxWidth * 0.45,
+                    ),
                   ),
                   label: const Text(
                     'Add Patient',
@@ -44,21 +46,11 @@ class ListPatientScreen extends StatelessWidget {
                       fontSize: 12,
                     ),
                   ),
-                  style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 15, vertical: 20),
-                    backgroundColor: AppColors.primaryColor,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: AppDecoration.primaryRadiusBorder),
+                  icon: const Icon(
+                    Icons.add_outlined,
+                    color: Colors.white,
+                    size: 12,
                   ),
-                  onPressed: () {
-                    Get.dialog(
-                      AddPatientDialog(
-                        height: constraints.maxHeight * 0.8,
-                        width: constraints.maxWidth * 0.45,
-                      ),
-                    );
-                  },
                 ),
               ],
             ),
@@ -66,32 +58,35 @@ class ListPatientScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Obx(() => ShowEntriesWidget(
-                      applyEntries: patientPageController.applyEntries,
-                      numberOfEntries:
-                          patientPageController.numberOfEntries.value - 1,
-                      width: constraints.maxWidth * 0.03,
-                      height: constraints.maxHeight * 0.05,
-                      maxEntries: patientPageController.data.value.length - 1,
-                    )),
-                TextButton.icon(
-                  style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 15, horizontal: 10),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: AppDecoration.primaryRadiusBorder,
-                          side: const BorderSide(
-                              color: Colors.grey, width: 0.3))),
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.filter_alt_outlined,
-                    color: Colors.blueGrey,
+                Obx(
+                  () => ShowEntriesWidget(
+                    applyEntries: patientPageController.applyEntries,
+                    numberOfEntries:
+                        patientPageController.numberOfEntries.value - 1,
+                    width: constraints.maxWidth * 0.03,
+                    height: constraints.maxHeight * 0.05,
+                    maxEntries: patientPageController.data.value.length - 1,
                   ),
+                ),
+                CustomIconButton(
+                  onPressed: () {},
                   label: Text(
                     'Filter',
                     style: Theme.of(context).textTheme.headline4,
                   ),
-                )
+                  icon: const Icon(
+                    Icons.filter_alt_outlined,
+                    color: Colors.blueGrey,
+                  ),
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 15, horizontal: 10),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: AppDecoration.primaryRadiusBorder,
+                      side: const BorderSide(color: Colors.grey, width: 0.3),
+                    ),
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: 30),

@@ -35,6 +35,8 @@ class DashboardHeader extends StatelessWidget {
         SizedBox(
           width: width,
           child: const ListTile(
+            minVerticalPadding: 20,
+            dense: true,
             horizontalTitleGap: 10,
             contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
             isThreeLine: true,

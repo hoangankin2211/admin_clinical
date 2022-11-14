@@ -21,7 +21,28 @@ class DashboardScreen extends StatelessWidget {
                     BoxConstraints(maxWidth: constraints.maxWidth * 0.125),
                 child: Obx(
                   () => NavigationRail(
-                    leading: const Icon(Icons.local_hospital_outlined),
+                    leading: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Image.asset(
+                          filterQuality: FilterQuality.high,
+                          'icons/app_icon.png',
+                          fit: BoxFit.cover,
+                          height: 60,
+                          width: 60,
+                        ),
+                        Text(
+                          'Clinic Management',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline2!
+                              .copyWith(
+                                color: const Color.fromARGB(255, 82, 162, 143),
+                              ),
+                        )
+                      ],
+                    ),
                     extended: true,
                     elevation: 0.5,
                     trailing: Expanded(
@@ -51,17 +72,14 @@ class DashboardScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              const VerticalDivider(
-                width: 0.5,
-                thickness: 0.2,
-                color: Colors.grey,
-              ),
               Expanded(
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     DashboardHeader(width: constraints.maxWidth * 0.18),
                     Expanded(
                       child: Container(
+                        alignment: Alignment.topCenter,
                         padding: const EdgeInsets.all(15),
                         child: dashboardController.pages,
                       ),
