@@ -11,7 +11,7 @@ import 'package:intl/intl.dart';
 class ListPatientScreen extends StatelessWidget {
   ListPatientScreen({super.key});
 
-  final List<Map<String, String>> data = [
+  final Rx<List<Map<String, String>>> data = Rx<List<Map<String, String>>>([
     {
       'name': 'Patient Name',
       'id': 'Id',
@@ -23,7 +23,16 @@ class ListPatientScreen extends StatelessWidget {
     },
     {
       'name': 'Hoang Ankin',
-      'id': '20120483',
+      'id': '20120481',
+      'date': DateFormat().add_yMd().format(DateTime.now()).toString(),
+      'gender': 'Male',
+      'diseases': 'Nothing',
+      'status': 'Out-Patient',
+      'payment': 'Private Cash',
+    },
+    {
+      'name': 'Hoang Ankin',
+      'id': '20120482',
       'date': DateFormat().add_yMd().format(DateTime.now()).toString(),
       'gender': 'Male',
       'diseases': 'Nothing',
@@ -41,7 +50,7 @@ class ListPatientScreen extends StatelessWidget {
     },
     {
       'name': 'Hoang Ankin',
-      'id': '20120483',
+      'id': '20120484',
       'date': DateFormat().add_yMd().format(DateTime.now()).toString(),
       'gender': 'Male',
       'diseases': 'Nothing',
@@ -50,165 +59,177 @@ class ListPatientScreen extends StatelessWidget {
     },
     {
       'name': 'Hoang Ankin',
-      'id': '20120483',
+      'id': '20120485',
       'date': DateFormat().add_yMd().format(DateTime.now()).toString(),
       'gender': 'Male',
       'diseases': 'Nothing',
       'status': 'Out-Patient',
       'payment': 'Private Cash',
     },
-    {
-      'name': 'Hoang Ankin',
-      'id': '20120483',
-      'date': DateFormat().add_yMd().format(DateTime.now()).toString(),
-      'gender': 'Male',
-      'diseases': 'Nothing',
-      'status': 'Out-Patient',
-      'payment': 'Private Cash',
-    },
-  ];
+  ]);
 
   void applyEntries(int value) {
-    if (value >= 1 && value <= data.length) {
+    if (value >= 1 && value <= data.value.length) {
       numberOfEntries.value = value;
     }
   }
 
-  late var numberOfEntries = (data.length - 1 > 5 ? 6 : data.length).obs;
+  void removeEntries(int index) {
+    numberOfEntries.value--;
+    data.value.removeAt(index);
+  }
+
+  late var numberOfEntries =
+      (data.value.length - 1 > 5 ? 6 : data.value.length).obs;
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Patient List',
-                style: Theme.of(context).textTheme.headline2,
-              ),
-              TextButton.icon(
-                icon: const Icon(
-                  Icons.add_outlined,
-                  color: Colors.white,
-                  size: 12,
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 40),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Patient List',
+                  style: Theme.of(context).textTheme.headline2,
                 ),
-                label: const Text(
-                  'Add Patient',
-                  style: TextStyle(
+                TextButton.icon(
+                  icon: const Icon(
+                    Icons.add_outlined,
                     color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
+                    size: 12,
+                  ),
+                  label: const Text(
+                    'Add Patient',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
+                  ),
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15, vertical: 20),
+                    backgroundColor: AppColors.primaryColor,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: AppDecoration.primaryRadiusBorder),
+                  ),
+                  onPressed: () {
+                    Get.dialog(
+                      AddPatientDialog(
+                        height: constraints.maxHeight * 0.8,
+                        width: constraints.maxWidth * 0.45,
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 50),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ShowEntriesWidget(
+                  applyEntries: applyEntries,
+                  numberOfEntries: numberOfEntries.value - 1,
+                  width: constraints.maxWidth * 0.03,
+                  height: constraints.maxHeight * 0.05,
+                  maxEntries: data.value.length - 1,
+                ),
+                TextButton.icon(
+                  style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 15, horizontal: 10),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: AppDecoration.primaryRadiusBorder,
+                          side: const BorderSide(
+                              color: Colors.grey, width: 0.3))),
+                  onPressed: () {},
+                  icon: const Icon(
+                    Icons.filter_alt_outlined,
+                    color: Colors.blueGrey,
+                  ),
+                  label: Text(
+                    'Filter',
+                    style: Theme.of(context).textTheme.headline4,
+                  ),
+                )
+              ],
+            ),
+            const SizedBox(height: 30),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                const Expanded(
+                  child: FilterCategory(
+                    title: 'Patient',
+                    hint: 'Patient name, Patient id, etc',
+                    iconData: Icons.search_outlined,
                   ),
                 ),
-                style: TextButton.styleFrom(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 15, vertical: 18),
-                  backgroundColor: AppColors.primaryColor,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: AppDecoration.primaryRadiusBorder),
+                const SizedBox(width: 20),
+                const Expanded(
+                  child: FilterCategory(
+                    title: 'Category',
+                    hint: 'All Category',
+                    iconData: Icons.category_outlined,
+                  ),
                 ),
-                onPressed: () {
-                  Get.dialog(
-                    AddPatientDialog(
-                      height: constraints.maxHeight * 0.8,
-                      width: constraints.maxWidth * 0.5,
-                    ),
-                  );
-                },
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              ShowEntriesWidget(
-                applyEntries: applyEntries,
-                numberOfEntries: numberOfEntries.value - 1,
-                width: constraints.maxWidth * 0.03,
-                height: constraints.maxHeight * 0.05,
-                maxEntries: data.length - 1,
-              ),
-              TextButton.icon(
-                style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 15, horizontal: 10),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: AppDecoration.primaryRadiusBorder,
-                        side:
-                            const BorderSide(color: Colors.grey, width: 0.3))),
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.filter_alt_outlined,
-                  color: Colors.blueGrey,
+                const SizedBox(width: 20),
+                Expanded(
+                  child: FilterCategory(
+                    title: 'Date of Joining',
+                    hint: DateFormat()
+                        .add_yMd()
+                        .format(DateTime.now())
+                        .toString(),
+                    iconData: Icons.calendar_month_outlined,
+                  ),
                 ),
-                label: Text(
-                  'Filter',
-                  style: Theme.of(context).textTheme.headline4,
-                ),
-              )
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              const Expanded(
-                child: FilterCategory(
-                  title: 'Patient',
-                  hint: 'Patient name, Patient id, etc',
-                  iconData: Icons.search_outlined,
-                ),
-              ),
-              const SizedBox(width: 20),
-              const Expanded(
-                child: FilterCategory(
-                  title: 'Category',
-                  hint: 'All Category',
-                  iconData: Icons.category_outlined,
-                ),
-              ),
-              const SizedBox(width: 20),
-              Expanded(
-                child: FilterCategory(
-                  title: 'Date of Joining',
-                  hint:
-                      DateFormat().add_yMd().format(DateTime.now()).toString(),
-                  iconData: Icons.calendar_month_outlined,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: numberOfEntries.value * 100,
-            child: Obx(() => ListView.builder(
+              ],
+            ),
+            const SizedBox(height: 30),
+            SizedBox(
+              height: numberOfEntries.value * 60,
+              child: Obx(
+                () => ListView.builder(
                   itemExtent: 60,
+                  itemCount: numberOfEntries.value,
                   itemBuilder: (context, index) => PatientListRow(
-                    name: data[index]['name']!,
-                    id: data[index]['id']!,
-                    date: data[index]['date']!,
-                    gender: data[index]['gender']!,
-                    diseases: data[index]['diseases']!,
-                    status: data[index]['status']!,
-                    payment: data[index]['payment']!,
+                    index: index,
+                    removeEntries: removeEntries,
+                    name: data.value[index]['name']!,
+                    id: data.value[index]['id']!,
+                    date: data.value[index]['date']!,
+                    gender: data.value[index]['gender']!,
+                    diseases: data.value[index]['diseases']!,
+                    status: data.value[index]['status']!,
+                    payment: data.value[index]['payment']!,
                     avt: 'images/fake_avatar.jpg',
                     color: index == 0 ? Colors.blueGrey[50]! : Colors.white,
                   ),
-                  itemCount: numberOfEntries.value,
-                )),
-          ),
-        ],
+                ),
+              ),
+            ),
+          ],
+        ),
       );
     });
   }
 }
 
+// ignore: must_be_immutable
 class AddPatientDialog extends StatelessWidget {
-  const AddPatientDialog(
-      {super.key, required this.height, required this.width});
+  AddPatientDialog({super.key, required this.height, required this.width});
   final double height;
   final double width;
+
+  List<String> dropDownItem = ['+84', '+86', '+42', '+88', '+14', '+52', '+50'];
+  late var phoneCode = dropDownItem.first.obs;
 
   @override
   Widget build(BuildContext context) {
@@ -216,7 +237,7 @@ class AddPatientDialog extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       elevation: 5,
       child: Container(
-        padding: const EdgeInsets.all(15),
+        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 25),
         height: height,
         width: width,
         constraints: BoxConstraints(maxHeight: height, maxWidth: width),
@@ -230,13 +251,14 @@ class AddPatientDialog extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     'Add New Patient',
                     style: Theme.of(context).textTheme.headline2,
                   ),
                   InkWell(
-                    onTap: () {},
+                    onTap: Get.back,
                     child: Icon(
                       Icons.clear_outlined,
                       color: Colors.grey[350],
@@ -246,7 +268,8 @@ class AddPatientDialog extends StatelessWidget {
               ),
               Divider(
                 color: Colors.grey[350]!,
-                thickness: 0.5,
+                thickness: 0.6,
+                height: 0,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -275,9 +298,35 @@ class AddPatientDialog extends StatelessWidget {
                       hint: 'email@gmail.com'),
                   const Spacer(),
                   CustomTextFormField(
-                      width: width * 0.4,
-                      title: 'Phone Number',
-                      hint: '123456'),
+                    prefixWidget: Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: Obx(
+                        () => DropdownButton<String>(
+                          underline: const SizedBox(),
+                          value: phoneCode.value,
+                          items: dropDownItem
+                              .map((e) => DropdownMenuItem(
+                                    value: e,
+                                    child: Text(
+                                      e,
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ))
+                              .toList(),
+                          onChanged: (value) {
+                            phoneCode.value = value ?? '';
+                          },
+                        ),
+                      ),
+                    ),
+                    width: width * 0.4,
+                    title: 'Phone Number',
+                    hint: '123456',
+                  ),
                 ],
               ),
               CustomTextFormField(
@@ -285,6 +334,53 @@ class AddPatientDialog extends StatelessWidget {
                 title: 'Symptom',
                 hint: 'Describe your symptom',
                 maxLine: 10,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextButton(
+                      onPressed: Get.back,
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 22),
+                        backgroundColor: AppColors.primaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: AppDecoration.primaryRadiusBorder,
+                        ),
+                      ),
+                      child: const Text(
+                        'Save',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  Expanded(
+                    child: TextButton(
+                      onPressed: Get.back,
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 22),
+                        backgroundColor: AppColors.primaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: AppDecoration.primaryRadiusBorder,
+                        ),
+                      ),
+                      child: const Text(
+                        'Save',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  )
+                ],
               ),
             ],
           ),
@@ -301,6 +397,7 @@ class CustomTextFormField extends StatelessWidget {
     this.maxLine,
     this.trailingIcon,
     this.hint,
+    this.prefixWidget,
     required this.width,
   });
   final String title;
@@ -308,6 +405,7 @@ class CustomTextFormField extends StatelessWidget {
   final int? maxLine;
   final String? hint;
   final Icon? trailingIcon;
+  final Widget? prefixWidget;
 
   @override
   Widget build(BuildContext context) {
@@ -322,16 +420,20 @@ class CustomTextFormField extends StatelessWidget {
           labelText: title,
           labelStyle: const TextStyle(
             color: Colors.black,
-            fontWeight: FontWeight.w500,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
           ),
           hintText: hint,
-          hintStyle:
-              TextStyle(color: Colors.grey[350]!, fontWeight: FontWeight.w500),
+          hintStyle: TextStyle(
+              color: Colors.grey[350]!,
+              fontWeight: FontWeight.w500,
+              fontSize: 14),
           border: OutlineInputBorder(
             borderRadius: AppDecoration.primaryRadiusBorder,
             borderSide: BorderSide(color: Colors.grey[350]!, width: 0.4),
           ),
           suffixIcon: trailingIcon,
+          prefixIcon: prefixWidget,
         ),
       ),
     );
@@ -356,7 +458,7 @@ class FilterCategory extends StatelessWidget {
       children: [
         Text(
           title,
-          style: Theme.of(context).textTheme.headline3,
+          style: Theme.of(context).textTheme.headline3!.copyWith(fontSize: 15),
         ),
         const SizedBox(height: 5),
         TextFormField(

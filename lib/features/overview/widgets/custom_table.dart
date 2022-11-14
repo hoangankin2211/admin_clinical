@@ -1,4 +1,6 @@
+import 'package:admin_clinical/features/overview/widgets/dismissible_table_row.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../constants/app_decoration.dart';
 
@@ -110,6 +112,8 @@ class PatientListRow extends StatelessWidget {
     required this.color,
     required this.avt,
     required this.payment,
+    required this.removeEntries,
+    required this.index,
   });
   final String avt;
   final String name;
@@ -119,7 +123,9 @@ class PatientListRow extends StatelessWidget {
   final String diseases;
   final String status;
   final String payment;
+  final int index;
   final Color color;
+  final Function(int) removeEntries;
 
   @override
   Widget build(BuildContext context) {
@@ -132,13 +138,18 @@ class PatientListRow extends StatelessWidget {
       'Status': status,
       'Payment': payment,
     };
-    return InkWell(
-      onTap: color == Colors.white ? () {} : null,
-      borderRadius: AppDecoration.primaryRadiusBorder,
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 5),
-        padding: const EdgeInsets.all(6),
-        decoration: BoxDecoration(
+    return DismissibleTableRow(
+      isTitleRow: color != Colors.white,
+      id: id,
+      remove: removeEntries,
+      index: index,
+      child: InkWell(
+        onTap: color == Colors.white ? () {} : null,
+        borderRadius: AppDecoration.primaryRadiusBorder,
+        child: Container(
+          margin: const EdgeInsets.symmetric(vertical: 5),
+          padding: const EdgeInsets.all(6),
+          decoration: BoxDecoration(
             color: color,
             borderRadius: AppDecoration.primaryRadiusBorder,
             boxShadow: [
@@ -146,56 +157,56 @@ class PatientListRow extends StatelessWidget {
                   offset: const Offset(0, 0.5),
                   color: Colors.grey[200]!,
                   blurRadius: 2)
-            ]),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            const SizedBox(width: 5),
-            color == Colors.white
-                ? ClipRRect(
-                    borderRadius: BorderRadius.circular(50),
-                    child: Image.asset(
-                      avt,
-                      fit: BoxFit.cover,
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const SizedBox(width: 5),
+              color == Colors.white
+                  ? ClipRRect(
+                      borderRadius: BorderRadius.circular(50),
+                      child: Image.asset(
+                        avt,
+                        fit: BoxFit.cover,
+                        height: 35,
+                        width: 35,
+                      ),
+                    )
+                  : const SizedBox(
                       height: 35,
                       width: 35,
                     ),
-                  )
-                : const SizedBox(
-                    height: 35,
-                    width: 35,
-                  ),
-            const SizedBox(width: 5),
-            ...data.entries
-                .map(
-                  (e) => Expanded(
-                    child: Text(
-                      e.value,
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline4!
-                          .copyWith(color: Colors.blueGrey),
-                    ),
-                  ),
-                )
-                .toList(),
-            (color == Colors.white)
-                ? InkWell(
-                    onTap: () {},
-                    child: const Icon(
-                      Icons.more_vert_outlined,
+              const SizedBox(width: 5),
+              ...data.entries
+                  .map(
+                    (e) => Expanded(
+                      child: Text(
+                        e.value,
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline4!
+                            .copyWith(color: Colors.blueGrey),
+                      ),
                     ),
                   )
-                : Expanded(
-                    child: Text(
+                  .toList(),
+              (color == Colors.white)
+                  ? InkWell(
+                      onTap: () {},
+                      child: const Icon(
+                        Icons.more_vert_outlined,
+                      ),
+                    )
+                  : Text(
                       'Action',
                       style: Theme.of(context).textTheme.headline4!.copyWith(
                             color: Colors.blueGrey,
                           ),
                     ),
-                  ),
-            const SizedBox(width: 5),
-          ],
+              const SizedBox(width: 5),
+            ],
+          ),
         ),
       ),
     );

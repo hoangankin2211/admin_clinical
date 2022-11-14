@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 class OverviewScreen extends StatelessWidget {
   OverviewScreen({super.key});
 
-  final List<Map<String, String>> newPatientTableData = [
+  List<Map<String, String>> newPatientTableData = [
     {
       'name': 'Patient Name',
       'id': 'Patient Id',
@@ -26,7 +26,7 @@ class OverviewScreen extends StatelessWidget {
     },
     {
       'name': 'Hoang Ankin',
-      'id': '20120483',
+      'id': '20120484',
       'date': '13/11/2022',
       'gender': 'male',
       'diseases': 'Diabetes',
@@ -34,7 +34,7 @@ class OverviewScreen extends StatelessWidget {
     },
     {
       'name': 'Hoang Ankin',
-      'id': '20120483',
+      'id': '20120485',
       'date': '13/11/2022',
       'gender': 'male',
       'diseases': 'Diabetes',
