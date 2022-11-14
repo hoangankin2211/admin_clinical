@@ -26,10 +26,10 @@ class DashboardController extends GetxController {
 
   late final List<Widget> listPage = [
     OverviewScreen(),
-    PatientScreen(),
+    ListPatientScreen(),
     Text('Payment'),
     Text('Medical Form'),
-    ListPatientScreen(),
+    Text('Settings')
   ];
 
   void switchTab(int index) {
