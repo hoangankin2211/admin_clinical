@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 class AppDecoration {
   static final primaryRadiusBorder = BorderRadius.circular(10);
   static const spaceBetweenElementForm = SizedBox(height: 50);
+  static final elevationContainer = [
+    BoxShadow(
+        offset: const Offset(0, 1), color: Colors.grey[200]!, blurRadius: 2)
+  ];
 }
 
 class AppWidget {
