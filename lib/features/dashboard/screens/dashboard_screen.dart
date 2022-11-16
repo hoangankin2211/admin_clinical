@@ -18,7 +18,7 @@ class DashboardScreen extends StatelessWidget {
             children: [
               ConstrainedBox(
                 constraints:
-                    BoxConstraints(maxWidth: constraints.maxWidth * 0.125),
+                    BoxConstraints(maxWidth: constraints.maxWidth * 0.13),
                 child: Obx(
                   () => NavigationRail(
                     leading: Column(
@@ -62,6 +62,8 @@ class DashboardScreen extends StatelessWidget {
                         ),
                       ),
                     ),
+                    indicatorColor: Colors.blue[50],
+                    useIndicator: true,
                     backgroundColor: Colors.white,
                     unselectedLabelTextStyle: const TextStyle(fontSize: 16),
                     selectedLabelTextStyle: const TextStyle(
@@ -79,7 +81,6 @@ class DashboardScreen extends StatelessWidget {
                     DashboardHeader(width: constraints.maxWidth * 0.18),
                     Expanded(
                       child: Container(
-                        alignment: Alignment.topCenter,
                         padding: const EdgeInsets.all(15),
                         child: dashboardController.pages,
                       ),

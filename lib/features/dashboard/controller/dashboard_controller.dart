@@ -2,6 +2,7 @@ import 'package:admin_clinical/constants/app_decoration.dart';
 import 'package:admin_clinical/features/doctor/screens/doctor_profile_screen.dart';
 import 'package:admin_clinical/features/overview/screens/overview_screen.dart';
 import 'package:admin_clinical/features/patient/screens/list_patients_screen.dart';
+import 'package:admin_clinical/features/settings/screen/setting_main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -29,7 +30,13 @@ class DashboardController extends GetxController {
     OverviewScreen(),
     PatientScreen(),
     ListPatientScreen(),
+<<<<<<< Updated upstream
     Text('Payment'),
+=======
+    const Text('Payment'),
+    const Text('Medical Form'),
+    SettingMainScreen()
+>>>>>>> Stashed changes
   ];
 
   void switchTab(int index) {

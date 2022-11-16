@@ -16,7 +16,7 @@ class OverviewScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
       return Padding(
-        padding: const EdgeInsets.all(15),
+        padding: const EdgeInsets.symmetric(horizontal: 15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -25,17 +25,20 @@ class OverviewScreen extends StatelessWidget {
               textAlign: TextAlign.start,
               style: Theme.of(context).textTheme.headline2,
             ),
-            const Text(
+            const SizedBox(height: 5),
+            Text(
               'Have a nice at great work',
               style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold),
+                color: Colors.blueGrey[400],
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+              ),
             ),
+            const SizedBox(height: 15),
             Row(
               children: [
                 Text(
-                  'Recenet Patient',
+                  'Recent Patient',
                   style: Theme.of(context).textTheme.headline2,
                 ),
                 const Spacer(),
