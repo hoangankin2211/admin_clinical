@@ -62,43 +62,6 @@ class DoctorProfileScreen extends StatelessWidget {
       {'image': 'assets/icons/chat.svg', 'title': 'reviews', 'data': '4.942'},
     ];
     return LayoutBuilder(builder: (context, constraints) {
-      return Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          children: [
-            const SizedBox(height: 10.0),
-            Expanded(
-              child: Row(
-                children: [
-                  const SizedBox(width: 10),
-                  _mainProfileField(listInfo, context),
-                  const SizedBox(height: 20.0),
-                  Container(
-                    height: double.infinity,
-                    width: 0.1,
-                    color: Colors.black,
-                    margin: const EdgeInsets.symmetric(horizontal: 20.0),
-                  ),
-                  Expanded(
-                    flex: 6,
-                    child: Column(
-                      children: [
-                        Expanded(
-                          flex: 6,
-                          child: SizedBox(
-                            height: double.infinity,
-                            width: double.infinity,
-                            child: Column(
-                              children: [
-                                const Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    'Medical examination inforamation',
-                                    style: TextStyle(
-                                        color: AppColors.headline1TextColor,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20.0),
-                                  ),
       return Column(
         children: [
           Expanded(
@@ -125,50 +88,47 @@ class DoctorProfileScreen extends StatelessWidget {
                             children: [
                               const Align(
                                 alignment: Alignment.centerLeft,
-                                child: Text(
-                                  'Medical examination inforamation',
-                                  style: TextStyle(
-                                      color: AppColors.headline1TextColor,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20.0)
+                                child: Text('Medical examination inforamation',
+                                    style: TextStyle(
+                                        color: AppColors.headline1TextColor,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20.0)),
+                              ),
+                              Expanded(
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                        flex: 3,
+                                        child: _patientInformationFiled()),
+                                    const SizedBox(width: 10.0),
+                                    Container(
+                                        width: 0.2,
+                                        height: double.infinity,
+                                        color: Colors.grey),
+                                    const SizedBox(width: 10.0),
+                                    Expanded(
+                                      flex: 6,
+                                      child: _examinationInformationField(),
+                                    ),
+                                  ],
                                 ),
-                                const SizedBox(height: 10.0),
-                                Expanded(
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                          flex: 3,
-                                          child: _patientInformationFiled()),
-                                      const SizedBox(width: 10.0),
-                                      Container(
-                                          width: 0.2,
-                                          height: double.infinity,
-                                          color: Colors.grey),
-                                      const SizedBox(width: 10.0),
-                                      Expanded(
-                                        flex: 6,
-                                        child: _examinationInformationField(),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
-                        const Divider(color: Colors.grey, thickness: 0.3),
-                        Expanded(
-                          flex: 5,
-                          child: _medicalExmainationField(),
-                        ),
-                      ],
-                    ),
+                      ),
+                      const Divider(color: Colors.grey, thickness: 0.3),
+                      Expanded(
+                        flex: 5,
+                        child: _medicalExmainationField(),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       );
     });
   }
