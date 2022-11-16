@@ -1,15 +1,13 @@
 import 'package:admin_clinical/constants/app_colors.dart';
-import 'package:admin_clinical/features/auth/widgets/custom_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 
 import '../../../constants/app_decoration.dart';
 
-class ChangePasswordTab extends StatelessWidget {
-  ChangePasswordTab({super.key});
+// ignore: must_be_immutable
+class NotificationSettingTab extends StatelessWidget {
+  NotificationSettingTab({super.key});
   List<Map<String, dynamic>> data = [
     {
       'title': 'General email Notifications',

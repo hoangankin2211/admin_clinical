@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../constants/app_decoration.dart';
 
-class CustomTextFormField extends StatelessWidget {
+class CustomTextFormField extends StatefulWidget {
   const CustomTextFormField({
     super.key,
     this.title,
@@ -13,45 +13,66 @@ class CustomTextFormField extends StatelessWidget {
     this.width,
     this.hintStyle,
     this.borderSide,
+    this.isPasswordField,
   });
   final String? title;
   final double? width;
   final int? maxLine;
   final BorderSide? borderSide;
   final String? hint;
-  final Icon? trailingIcon;
+  final Widget? trailingIcon;
   final Widget? prefixWidget;
   final TextStyle? hintStyle;
+  final bool? isPasswordField;
+  @override
+  State<CustomTextFormField> createState() => _CustomTextFormFieldState();
+}
 
+class _CustomTextFormFieldState extends State<CustomTextFormField> {
+  bool isObscure = false;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: width ?? double.infinity,
+      width: widget.width ?? double.infinity,
       child: TextFormField(
-        maxLines: maxLine,
+        obscureText: isObscure,
+        maxLines: widget.maxLine,
         decoration: InputDecoration(
           contentPadding:
               const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
           floatingLabelBehavior: FloatingLabelBehavior.always,
-          labelText: title,
+          labelText: widget.title,
           labelStyle: const TextStyle(
             color: Colors.black,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
-          hintText: hint,
-          hintStyle: hintStyle ??
+          hintText: widget.hint,
+          hintStyle: widget.hintStyle ??
               TextStyle(
                   color: Colors.grey[350]!,
                   fontWeight: FontWeight.w500,
                   fontSize: 14),
           border: OutlineInputBorder(
             borderRadius: AppDecoration.primaryRadiusBorder,
-            borderSide:
-                borderSide ?? BorderSide(color: Colors.grey[350]!, width: 0.4),
+            borderSide: widget.borderSide ??
+                BorderSide(color: Colors.grey[350]!, width: 0.4),
           ),
-          suffixIcon: trailingIcon,
-          prefixIcon: prefixWidget,
+          suffixIcon: SizedBox(
+            height: 50,
+            width: 50,
+            child: InkWell(
+              onTap: () {
+                if (widget.isPasswordField ?? false) {
+                  setState(() {
+                    isObscure = !isObscure;
+                  });
+                }
+              },
+              child: widget.trailingIcon,
+            ),
+          ),
+          prefixIcon: widget.prefixWidget,
         ),
       ),
     );

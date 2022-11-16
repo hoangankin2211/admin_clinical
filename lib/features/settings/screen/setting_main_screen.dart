@@ -2,6 +2,7 @@ import 'package:admin_clinical/constants/app_decoration.dart';
 import 'package:admin_clinical/features/settings/controller/settings_controller.dart';
 import 'package:admin_clinical/features/settings/widgets/change_password_tab.dart';
 import 'package:admin_clinical/features/settings/widgets/general_tab.dart';
+import 'package:admin_clinical/features/settings/widgets/notification_setting_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -79,10 +80,8 @@ class _SettingMainScreenState extends State<SettingMainScreen>
                 controller: tabController,
                 children: [
                   GeneralSettingsTab(),
-                  Container(
-                    decoration: const BoxDecoration(color: Colors.blue),
-                  ),
                   ChangePasswordTab(),
+                  NotificationSettingTab(),
                 ],
               ),
             ),
