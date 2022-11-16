@@ -19,7 +19,7 @@ class InformationItem extends StatelessWidget {
             mainTitle,
             style: const TextStyle(
               overflow: TextOverflow.ellipsis,
-              color: Colors.grey,
+              color: Colors.blueGrey,
               fontWeight: FontWeight.bold,
               fontSize: 16.0,
             ),

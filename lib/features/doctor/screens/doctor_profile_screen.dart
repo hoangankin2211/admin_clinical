@@ -64,136 +64,140 @@ class DoctorProfileScreen extends StatelessWidget {
       {'image': 'assets/icons/chat.svg', 'title': 'reviews', 'data': '4.942'},
     ];
     return LayoutBuilder(builder: (context, constraints) {
-      return Column(
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: TextFormField(
-                  decoration: const InputDecoration(
-                    enabledBorder: InputBorder.none,
-                    prefixIcon: Icon(
-                      Icons.search_outlined,
-                      color: Colors.grey,
-                      size: 20,
+      return Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: TextFormField(
+                    decoration: const InputDecoration(
+                      enabledBorder: InputBorder.none,
+                      prefixIcon: Icon(
+                        Icons.search_outlined,
+                        color: Colors.grey,
+                        size: 20,
+                      ),
+                      hintText: 'Search Appointment, Patient, etc',
+                      hintStyle: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500),
                     ),
-                    hintText: 'Search Appointment, Patient, etc',
-                    hintStyle: TextStyle(
+                  ),
+                ),
+                const Icon(
+                  Icons.notifications_outlined,
+                  size: 25,
+                ),
+                SizedBox(
+                  width: constraints.maxWidth * 0.18,
+                  child: const ListTile(
+                    horizontalTitleGap: 10,
+                    contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
+                    isThreeLine: true,
+                    leading: CircleAvatar(
+                      backgroundColor: Color.fromARGB(255, 217, 236, 246),
+                      child: Icon(
+                        Icons.person,
+                        color: Colors.black,
+                      ),
+                    ),
+                    title: Text(
+                      "Stephen Conley",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    subtitle: Text(
+                      'Staff Admin',
+                      style: TextStyle(
                         color: Colors.grey,
                         fontSize: 12,
-                        fontWeight: FontWeight.w500),
-                  ),
-                ),
-              ),
-              const Icon(
-                Icons.notifications_outlined,
-                size: 25,
-              ),
-              SizedBox(
-                width: constraints.maxWidth * 0.18,
-                child: const ListTile(
-                  horizontalTitleGap: 10,
-                  contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
-                  isThreeLine: true,
-                  leading: CircleAvatar(
-                    backgroundColor: Color.fromARGB(255, 217, 236, 246),
-                    child: Icon(
-                      Icons.person,
+                      ),
+                    ),
+                    trailing: Icon(
+                      Icons.arrow_drop_down,
                       color: Colors.black,
                     ),
-                  ),
-                  title: Text(
-                    "Stephen Conley",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  subtitle: Text(
-                    'Staff Admin',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 12,
-                    ),
-                  ),
-                  trailing: Icon(
-                    Icons.arrow_drop_down,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10.0),
-          Expanded(
-            child: Row(
-              children: [
-                _mainProfileField(listInfo, context),
-                const SizedBox(height: 20.0),
-                Container(
-                  height: double.infinity,
-                  width: 0.1,
-                  color: Colors.black,
-                  margin: const EdgeInsets.symmetric(horizontal: 20.0),
-                ),
-                Expanded(
-                  flex: 6,
-                  child: Column(
-                    children: [
-                      Expanded(
-                        flex: 6,
-                        child: SizedBox(
-                          height: double.infinity,
-                          width: double.infinity,
-                          child: Column(
-                            children: [
-                              const Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  'Medical examination inforamation',
-                                  style: TextStyle(
-                                      color: AppColors.headline1TextColor,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20.0),
-                                ),
-                              ),
-                              const SizedBox(height: 10.0),
-                              Expanded(
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                        flex: 3,
-                                        child: _patientInformationFiled()),
-                                    const SizedBox(width: 10.0),
-                                    Container(
-                                        width: 0.2,
-                                        height: double.infinity,
-                                        color: Colors.grey),
-                                    const SizedBox(width: 10.0),
-                                    Expanded(
-                                      flex: 6,
-                                      child: _examinationInformationField(),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const Divider(color: Colors.grey, thickness: 0.3),
-                      Expanded(
-                        flex: 5,
-                        child: _medicalExmainationField(),
-                      ),
-                    ],
                   ),
                 ),
               ],
             ),
-          ),
-        ],
+            const SizedBox(height: 10.0),
+            Expanded(
+              child: Row(
+                children: [
+                  const SizedBox(width: 10),
+                  _mainProfileField(listInfo, context),
+                  const SizedBox(height: 20.0),
+                  Container(
+                    height: double.infinity,
+                    width: 0.1,
+                    color: Colors.black,
+                    margin: const EdgeInsets.symmetric(horizontal: 20.0),
+                  ),
+                  Expanded(
+                    flex: 6,
+                    child: Column(
+                      children: [
+                        Expanded(
+                          flex: 6,
+                          child: SizedBox(
+                            height: double.infinity,
+                            width: double.infinity,
+                            child: Column(
+                              children: [
+                                const Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    'Medical examination inforamation',
+                                    style: TextStyle(
+                                        color: AppColors.headline1TextColor,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20.0),
+                                  ),
+                                ),
+                                const SizedBox(height: 10.0),
+                                Expanded(
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                          flex: 3,
+                                          child: _patientInformationFiled()),
+                                      const SizedBox(width: 10.0),
+                                      Container(
+                                          width: 0.2,
+                                          height: double.infinity,
+                                          color: Colors.grey),
+                                      const SizedBox(width: 10.0),
+                                      Expanded(
+                                        flex: 6,
+                                        child: _examinationInformationField(),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const Divider(color: Colors.grey, thickness: 0.3),
+                        Expanded(
+                          flex: 5,
+                          child: _medicalExmainationField(),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       );
     });
   }
@@ -437,6 +441,7 @@ class DoctorProfileScreen extends StatelessWidget {
   Widget _examinationInformationField() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
           child: SingleChildScrollView(
@@ -693,195 +698,198 @@ class DoctorProfileScreen extends StatelessWidget {
             ),
           ],
         ),
-        child: Column(children: [
-          DoctorCard1(
-              doctor: Doctor(
-            email: "hungnguyen.201102ak@gmail.com",
-            name: "Nguyen Minh Hung",
-            dateBorn: DateTime.now(),
-            avt:
-                "https://res.cloudinary.com/ddopvilpr/image/upload/v1665597692/Nguy%E1%BB%85n%20%C4%90%C3%ACnh%20Kim%20Chi/tsxjxizupxugdfojdg8z.jpg",
-            timeStart: 20,
-            timeFinish: 200,
-            type: "Dentist",
-            description: "oke la",
-            experience: 10,
-            address: "Thi Xa An Khe tinh Gia Lai",
-            gender: "Male",
-          )),
-          const SizedBox(height: 10),
-          const Divider(thickness: 0.2, color: Colors.grey),
-          const SizedBox(height: 10),
-          Row(
-            children: [
-              // Expanded(child: child)
-              for (var item in listInfo)
-                Expanded(
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          height: 60,
-                          width: 60,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: AppColors.primaryColor.withOpacity(0.2),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Column(children: [
+            DoctorCard1(
+                doctor: Doctor(
+              email: "hungnguyen.201102ak@gmail.com",
+              name: "Nguyen Minh Hung",
+              dateBorn: DateTime.now(),
+              avt:
+                  "https://res.cloudinary.com/ddopvilpr/image/upload/v1665673142/Macbool%20air%20pro%2022220/a3gz4jsve2omrw5c4gtv.jpg",
+              timeStart: 20,
+              timeFinish: 200,
+              type: "Dentist",
+              description: "oke la",
+              experience: 10,
+              address: "Thi Xa An Khe tinh Gia Lai",
+              gender: "Male",
+            )),
+            const SizedBox(height: 10),
+            const Divider(thickness: 0.2, color: Colors.grey),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                // Expanded(child: child)
+                for (var item in listInfo)
+                  Expanded(
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            height: 60,
+                            width: 60,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppColors.primaryColor.withOpacity(0.2),
+                            ),
+                            child: SvgPicture.asset(item['image'],
+                                color: AppColors.primaryColor, height: 30),
                           ),
-                          child: SvgPicture.asset(item['image'],
-                              color: AppColors.primaryColor, height: 30),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          item['data'],
-                          textAlign: TextAlign.center,
-                          maxLines: 1,
-                          style: const TextStyle(
-                            color: AppColors.primaryColor,
-                            fontWeight: FontWeight.bold,
+                          const SizedBox(height: 2),
+                          Text(
+                            item['data'],
+                            textAlign: TextAlign.center,
+                            maxLines: 1,
+                            style: const TextStyle(
+                              color: AppColors.primaryColor,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          item['title'],
-                          textAlign: TextAlign.center,
-                          maxLines: 1,
-                          style: const TextStyle(
-                            color: AppColors.headline1TextColor,
-                            fontWeight: FontWeight.w600,
+                          const SizedBox(height: 4),
+                          Text(
+                            item['title'],
+                            textAlign: TextAlign.center,
+                            maxLines: 1,
+                            style: const TextStyle(
+                              color: AppColors.headline1TextColor,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-            ],
-          ),
-          const SizedBox(height: 20.0),
-          const Padding(
-            padding: EdgeInsets.only(left: 10.0),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'About me',
-                style: TextStyle(
-                    color: AppColors.headline1TextColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18),
-              ),
+              ],
             ),
-          ),
-          const SizedBox(height: 10),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.0),
-            child: ReadMoreText(
-              "Doctors, also known as physicians, are licensed health professionals who maintain and restore human health through the practice of medicine. They examine patients, review their medical history, diagnose illnesses or injuries, administer treatment, and counsel patients on their health and well-being.",
-              trimLines: 5,
-              colorClickableText: Colors.pink,
-              trimMode: TrimMode.Line,
-              trimCollapsedText: ' Show more',
-              trimExpandedText: ' Show less',
-              moreStyle: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: AppColors.primaryColor,
-              ),
-              lessStyle: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: AppColors.primaryColor,
-              ),
-            ),
-          ),
-          const SizedBox(height: 20.0),
-          const Padding(
-            padding: EdgeInsets.only(left: 10.0),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Working Time',
-                style: TextStyle(
-                    color: AppColors.headline1TextColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18),
-              ),
-            ),
-          ),
-          const SizedBox(height: 10),
-          const Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
+            const SizedBox(height: 20.0),
+            const Padding(
               padding: EdgeInsets.only(left: 10.0),
-              child: Text(
-                'Monday - Friday, ${08}:00 AM - ${20}:00 PM',
-                style: TextStyle(
-                    color: AppColors.headline1TextColor, fontSize: 15),
-              ),
-            ),
-          ),
-          const SizedBox(height: 10.0),
-          const Divider(thickness: 0.3, color: Colors.grey),
-          const SizedBox(height: 10.0),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Reviews',
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'About me',
                   style: TextStyle(
                       color: AppColors.headline1TextColor,
                       fontWeight: FontWeight.bold,
                       fontSize: 18),
                 ),
-                InkWell(
-                  onTap: () async => await showDialog(
-                      builder: (context) => Dialog(
-                            backgroundColor: Colors.transparent,
-                            child: DialogViewAllComment(),
-                          ),
-                      context: context),
-                  child: const Text(
-                    'See more',
-                    style: TextStyle(
-                      color: AppColors.primaryColor,
+              ),
+            ),
+            const SizedBox(height: 10),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10.0),
+              child: ReadMoreText(
+                "Doctors, also known as physicians, are licensed health professionals who maintain and restore human health through the practice of medicine. They examine patients, review their medical history, diagnose illnesses or injuries, administer treatment, and counsel patients on their health and well-being.",
+                trimLines: 5,
+                colorClickableText: Colors.pink,
+                trimMode: TrimMode.Line,
+                trimCollapsedText: ' Show more',
+                trimExpandedText: ' Show less',
+                moreStyle: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.primaryColor,
+                ),
+                lessStyle: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.primaryColor,
+                ),
+              ),
+            ),
+            const SizedBox(height: 20.0),
+            const Padding(
+              padding: EdgeInsets.only(left: 10.0),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Working Time',
+                  style: TextStyle(
+                      color: AppColors.headline1TextColor,
                       fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      fontSize: 18),
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: EdgeInsets.only(left: 10.0),
+                child: Text(
+                  'Monday - Friday, ${08}:00 AM - ${20}:00 PM',
+                  style: TextStyle(
+                      color: AppColors.headline1TextColor, fontSize: 15),
+                ),
+              ),
+            ),
+            const SizedBox(height: 10.0),
+            const Divider(thickness: 0.3, color: Colors.grey),
+            const SizedBox(height: 10.0),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Reviews',
+                    style: TextStyle(
+                        color: AppColors.headline1TextColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18),
+                  ),
+                  InkWell(
+                    onTap: () async => await showDialog(
+                        builder: (context) => Dialog(
+                              backgroundColor: Colors.transparent,
+                              child: DialogViewAllComment(),
+                            ),
+                        context: context),
+                    child: const Text(
+                      'See more',
+                      style: TextStyle(
+                        color: AppColors.primaryColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
                     ),
                   ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 10.0),
+            Column(
+              children: const [
+                CommentCard(
+                  name: 'Charolette Hanlin',
+                  image: 'assets/images/google.png',
+                  favCount: 629,
+                  title:
+                      'Dr.Jenny is very professional in her work and responsive. I have consulted and my problem is solved.',
+                  day: 6,
+                  star: 4,
+                  checkLike: true,
+                  check: 1,
+                ),
+                CommentCard(
+                  name: 'Nguyen Minh Hung',
+                  image: 'assets/images/fake_avatar.jpg',
+                  favCount: 300,
+                  title: 'Doctors who are very skilled and fast in service',
+                  day: 8,
+                  star: 3,
+                  checkLike: true,
+                  check: 1,
                 ),
               ],
             ),
-          ),
-          const SizedBox(height: 10.0),
-          Column(
-            children: const [
-              CommentCard(
-                name: 'Charolette Hanlin',
-                image: 'assets/images/google.png',
-                favCount: 629,
-                title:
-                    'Dr.Jenny is very professional in her work and responsive. I have consulted and my problem is solved.',
-                day: 6,
-                star: 4,
-                checkLike: true,
-                check: 1,
-              ),
-              CommentCard(
-                name: 'Nguyen Minh Hung',
-                image: 'assets/images/fake_avatar.jpg',
-                favCount: 300,
-                title: 'Doctors who are very skilled and fast in service',
-                day: 8,
-                star: 3,
-                checkLike: true,
-                check: 1,
-              ),
-            ],
-          ),
-        ]),
+          ]),
+        ),
       ),
     );
   }
