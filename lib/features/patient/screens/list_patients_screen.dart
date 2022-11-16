@@ -1,5 +1,4 @@
 import 'package:admin_clinical/commons/widgets/custom_icon_button.dart';
-import 'package:admin_clinical/constants/app_colors.dart';
 import 'package:admin_clinical/constants/app_decoration.dart';
 import 'package:admin_clinical/features/overview/widgets/custom_table.dart';
 import 'package:admin_clinical/features/patient/controller/patient_page_controller.dart';

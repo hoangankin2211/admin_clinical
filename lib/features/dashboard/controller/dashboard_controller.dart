@@ -3,17 +3,20 @@ import 'package:admin_clinical/features/doctor/screens/doctor_profile_screen.dar
 import 'package:admin_clinical/features/doctor/screens/view_all_doctor.dart';
 import 'package:admin_clinical/features/overview/screens/overview_screen.dart';
 import 'package:admin_clinical/features/patient/screens/list_patients_screen.dart';
+import 'package:admin_clinical/features/settings/screen/setting_main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class DashboardController extends GetxController {
   var pageIndex = 0.obs;
 
-  late final Widget pages = Obx(() => IndexedStack(
-        index: pageIndex.value,
-        alignment: Alignment.topCenter,
-        children: listPage,
-      ));
+  late final Widget pages = Obx(
+    () => IndexedStack(
+      index: pageIndex.value,
+      alignment: Alignment.topCenter,
+      children: listPage,
+    ),
+  );
 
   late final List<NavigationRailDestination> listTabButton =
       AppWidget.listNavigatorTab
@@ -29,9 +32,9 @@ class DashboardController extends GetxController {
     ViewAllDoctor(),
     DoctorProfileScreen(),
     OverviewScreen(),
-    PatientScreen(),
     ListPatientScreen(),
-    Text('Payment'),
+    const Text('Medical Form'),
+    SettingMainScreen(),
   ];
 
   void switchTab(int index) {
