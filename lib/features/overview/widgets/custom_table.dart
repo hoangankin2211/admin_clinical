@@ -1,4 +1,5 @@
 import 'package:admin_clinical/features/overview/widgets/dismissible_table_row.dart';
+import 'package:admin_clinical/features/patient/screens/patient_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -36,7 +37,9 @@ class CurrentPatientTableRow extends StatelessWidget {
       'status': status,
     };
     return InkWell(
-      onTap: color == Colors.white ? () {} : null,
+      onTap: color == Colors.white
+          ? () => Get.to(() => const Material(child: PatientScreen()))
+          : null,
       borderRadius: AppDecoration.primaryRadiusBorder,
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 5),
@@ -144,7 +147,9 @@ class PatientListRow extends StatelessWidget {
       remove: removeEntries,
       index: index,
       child: InkWell(
-        onTap: color == Colors.white ? () {} : null,
+        onTap: color == Colors.white
+            ? () => Get.to(() => const Material(child: PatientScreen()))
+            : null,
         borderRadius: AppDecoration.primaryRadiusBorder,
         child: Container(
           margin: const EdgeInsets.symmetric(vertical: 5),
