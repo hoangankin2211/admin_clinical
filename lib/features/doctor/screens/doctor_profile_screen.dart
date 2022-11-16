@@ -68,65 +68,6 @@ class DoctorProfileScreen extends StatelessWidget {
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
-            Row(
-              children: [
-                Expanded(
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      enabledBorder: InputBorder.none,
-                      prefixIcon: Icon(
-                        Icons.search_outlined,
-                        color: Colors.grey,
-                        size: 20,
-                      ),
-                      hintText: 'Search Appointment, Patient, etc',
-                      hintStyle: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500),
-                    ),
-                  ),
-                ),
-                const Icon(
-                  Icons.notifications_outlined,
-                  size: 25,
-                ),
-                SizedBox(
-                  width: constraints.maxWidth * 0.18,
-                  child: const ListTile(
-                    horizontalTitleGap: 10,
-                    contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
-                    isThreeLine: true,
-                    leading: CircleAvatar(
-                      backgroundColor: Color.fromARGB(255, 217, 236, 246),
-                      child: Icon(
-                        Icons.person,
-                        color: Colors.black,
-                      ),
-                    ),
-                    title: Text(
-                      "Stephen Conley",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    subtitle: Text(
-                      'Staff Admin',
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 12,
-                      ),
-                    ),
-                    trailing: Icon(
-                      Icons.arrow_drop_down,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-              ],
-            ),
             const SizedBox(height: 10.0),
             Expanded(
               child: Row(
