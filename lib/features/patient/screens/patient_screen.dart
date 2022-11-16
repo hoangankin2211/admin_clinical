@@ -262,7 +262,7 @@ class PatientScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(width: 20.0),
+                  const SizedBox(width: 40.0),
                   Expanded(
                     flex: 2,
                     child: Container(
