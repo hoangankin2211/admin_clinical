@@ -9,11 +9,13 @@ import 'package:get/get.dart';
 class DashboardController extends GetxController {
   var pageIndex = 0.obs;
 
-  late final Widget pages = Obx(() => IndexedStack(
-        index: pageIndex.value,
-        alignment: Alignment.topCenter,
-        children: listPage,
-      ));
+  late final Widget pages = Obx(
+    () => IndexedStack(
+      index: pageIndex.value,
+      alignment: Alignment.topCenter,
+      children: listPage,
+    ),
+  );
 
   late final List<NavigationRailDestination> listTabButton =
       AppWidget.listNavigatorTab
@@ -26,17 +28,11 @@ class DashboardController extends GetxController {
           .toList();
 
   late final List<Widget> listPage = [
+    SettingMainScreen(),
     DoctorProfileScreen(),
     OverviewScreen(),
-    PatientScreen(),
     ListPatientScreen(),
-<<<<<<< Updated upstream
-    Text('Payment'),
-=======
-    const Text('Payment'),
     const Text('Medical Form'),
-    SettingMainScreen()
->>>>>>> Stashed changes
   ];
 
   void switchTab(int index) {

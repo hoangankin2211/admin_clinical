@@ -1,10 +1,8 @@
 import 'package:admin_clinical/features/doctor/widgets/doctor_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import '../../../constants/app_colors.dart';
-import '../../../constants/fake_data.dart';
 import '../../../constants/global_widgets/comment_card.dart';
 import '../../../models/doctor.dart';
 import 'package:readmore/readmore.dart';
@@ -66,66 +64,6 @@ class DoctorProfileScreen extends StatelessWidget {
     return LayoutBuilder(builder: (context, constraints) {
       return Column(
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: TextFormField(
-                  decoration: const InputDecoration(
-                    enabledBorder: InputBorder.none,
-                    prefixIcon: Icon(
-                      Icons.search_outlined,
-                      color: Colors.grey,
-                      size: 20,
-                    ),
-                    hintText: 'Search Appointment, Patient, etc',
-                    hintStyle: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500),
-                  ),
-                ),
-              ),
-              const Icon(
-                Icons.notifications_outlined,
-                size: 25,
-              ),
-              SizedBox(
-                width: constraints.maxWidth * 0.18,
-                child: const ListTile(
-                  horizontalTitleGap: 10,
-                  contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
-                  isThreeLine: true,
-                  leading: CircleAvatar(
-                    backgroundColor: Color.fromARGB(255, 217, 236, 246),
-                    child: Icon(
-                      Icons.person,
-                      color: Colors.black,
-                    ),
-                  ),
-                  title: Text(
-                    "Stephen Conley",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  subtitle: Text(
-                    'Staff Admin',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 12,
-                    ),
-                  ),
-                  trailing: Icon(
-                    Icons.arrow_drop_down,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10.0),
           Expanded(
             child: Row(
               children: [

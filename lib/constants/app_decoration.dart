@@ -7,6 +7,11 @@ class AppDecoration {
     BoxShadow(
         offset: const Offset(0, 1), color: Colors.grey[200]!, blurRadius: 2)
   ];
+
+  static final primaryBorder = Border.all(
+    color: Colors.blue[100]!,
+    width: 0.2,
+  );
 }
 
 class AppWidget {
