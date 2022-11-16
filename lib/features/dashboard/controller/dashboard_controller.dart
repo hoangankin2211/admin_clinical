@@ -1,4 +1,5 @@
 import 'package:admin_clinical/constants/app_decoration.dart';
+import 'package:admin_clinical/features/doctor/screens/doctor_profile_screen.dart';
 import 'package:admin_clinical/features/overview/screens/overview_screen.dart';
 import 'package:admin_clinical/features/patient/screens/patient_screen.dart';
 import 'package:admin_clinical/features/patient/screens/list_patients_screen.dart';
@@ -25,9 +26,9 @@ class DashboardController extends GetxController {
           .toList();
 
   late final List<Widget> listPage = [
+    DoctorProfileScreen(),
     OverviewScreen(),
     PatientScreen(),
-    Text('Payment'),
     Text('Medical Form'),
     ListPatientScreen(),
   ];

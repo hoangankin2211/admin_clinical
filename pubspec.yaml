@@ -40,6 +40,8 @@ dependencies:
   badges: ^2.0.3
   percent_indicator: ^4.2.2
   intl: ^0.17.0
+  flutter_svg: ^1.1.6
+  readmore: ^2.2.0
 
 dev_dependencies:
   flutter_test:
