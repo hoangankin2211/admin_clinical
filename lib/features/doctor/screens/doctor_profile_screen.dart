@@ -1,10 +1,8 @@
 import 'package:admin_clinical/features/doctor/widgets/doctor_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import '../../../constants/app_colors.dart';
-import '../../../constants/fake_data.dart';
 import '../../../constants/global_widgets/comment_card.dart';
 import '../../../models/doctor.dart';
 import 'package:readmore/readmore.dart';
@@ -101,6 +99,38 @@ class DoctorProfileScreen extends StatelessWidget {
                                         fontWeight: FontWeight.bold,
                                         fontSize: 20.0),
                                   ),
+      return Column(
+        children: [
+          Expanded(
+            child: Row(
+              children: [
+                _mainProfileField(listInfo, context),
+                const SizedBox(height: 20.0),
+                Container(
+                  height: double.infinity,
+                  width: 0.1,
+                  color: Colors.black,
+                  margin: const EdgeInsets.symmetric(horizontal: 20.0),
+                ),
+                Expanded(
+                  flex: 6,
+                  child: Column(
+                    children: [
+                      Expanded(
+                        flex: 6,
+                        child: SizedBox(
+                          height: double.infinity,
+                          width: double.infinity,
+                          child: Column(
+                            children: [
+                              const Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  'Medical examination inforamation',
+                                  style: TextStyle(
+                                      color: AppColors.headline1TextColor,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20.0)
                                 ),
                                 const SizedBox(height: 10.0),
                                 Expanded(
