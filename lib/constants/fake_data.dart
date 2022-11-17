@@ -216,4 +216,31 @@ class FakeData {
       "count": 400,
     },
   ];
+
+  static List<Map<String, dynamic>> fakeDataMedicalHistory = [
+    {
+      "id": 0,
+      "Medical": "Covid 19",
+      "Doctor": "Nguyen Minh Hung",
+      "cr": "Phong Kham da khoa so 1",
+      "date": DateTime.now(),
+      "status": 0,
+    },
+    {
+      "id": 1,
+      "Medical": "Toothdath",
+      "Doctor": "Truong Huynh Duc Hoang",
+      "cr": "Phong Kham da khoa so 1",
+      "date": DateTime.now(),
+      "status": 1,
+    },
+    {
+      "id": 2,
+      "Medical": "Headath",
+      "Doctor": "Nguyen Trung Hieu",
+      "cr": "Phong Kham da khoa so 1",
+      "date": DateTime.now(),
+      "status": 0,
+    },
+  ];
 }

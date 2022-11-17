@@ -20,6 +20,7 @@ class BtnWithIcon extends StatelessWidget {
     return InkWell(
       onTap: callBack,
       child: Container(
+        alignment: Alignment.center,
         padding: const EdgeInsets.all(11),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5.0),

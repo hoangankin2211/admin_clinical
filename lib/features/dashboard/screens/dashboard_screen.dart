@@ -77,10 +77,10 @@ class DashboardScreen extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    DashboardHeader(width: constraints.maxWidth * 0.18),
+                    DashboardHeader(width: constraints.maxWidth * 0.13),
                     Expanded(
                       child: Container(
-                        padding: const EdgeInsets.all(15),
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: dashboardController.pages,
                       ),
                     ),
