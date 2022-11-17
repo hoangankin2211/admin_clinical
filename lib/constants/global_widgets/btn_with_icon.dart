@@ -4,6 +4,7 @@ class BtnWithIcon extends StatelessWidget {
   final String title;
   final IconData icon;
   final Color color;
+  final bool? checkExpaned;
   final VoidCallback callBack;
   const BtnWithIcon({
     Key? key,
@@ -11,6 +12,7 @@ class BtnWithIcon extends StatelessWidget {
     required this.icon,
     required this.color,
     required this.callBack,
+    this.checkExpaned,
   }) : super(key: key);
 
   @override
@@ -26,13 +28,23 @@ class BtnWithIcon extends StatelessWidget {
         child: Row(
           children: [
             Icon(icon, color: Colors.white),
-            Text(
-              " $title",
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            checkExpaned != null
+                ? Expanded(
+                    child: Text(
+                      " $title",
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  )
+                : Text(
+                    " $title",
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
           ],
         ),
       ),

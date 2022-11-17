@@ -25,6 +25,10 @@ class AppWidget {
       'icon': Icons.person_outline,
     },
     {
+      'label': 'Doctor',
+      'icon': Icons.medical_information_outlined,
+    },
+    {
       'label': 'Payment',
       'icon': Icons.payment_outlined,
     },

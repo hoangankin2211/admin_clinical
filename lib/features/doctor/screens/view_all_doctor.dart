@@ -134,7 +134,8 @@ List<Map<String, dynamic>> fakeData = [
 ];
 
 class ViewAllDoctor extends StatelessWidget {
-  ViewAllDoctor({super.key});
+  final VoidCallback tapBackPage;
+  ViewAllDoctor({super.key, required this.tapBackPage});
   RxInt select = 0.obs;
   RxList<String> listFilter = ["Dentist"].obs;
   @override
@@ -286,55 +287,64 @@ class ViewAllDoctor extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    BtnWithIcon(
-                        title: "Delete Doctor",
-                        icon: Icons.delete,
-                        color: Colors.red.withOpacity(0.6),
-                        callBack: () {
-                          bool isDelete = false;
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                alignment: Alignment.center,
-                                title: const Text('Are you sure ?'),
-                                content: const Text(
-                                    'Do you want to remove the doctor from the list ? '),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      isDelete = true;
-                                      Get.back();
-                                    },
-                                    child: const Text('YES'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      isDelete = false;
-                                      Get.back();
-                                    },
-                                    child: const Text('NO'),
-                                  ),
-                                ],
-                              );
-                            },
-                          ).then((value) {
-                            return isDelete;
-                          });
-                        }),
+                    Expanded(
+                      child: BtnWithIcon(
+                          checkExpaned: true,
+                          title: "Delete Doctor",
+                          icon: Icons.delete,
+                          color: Colors.red.withOpacity(0.6),
+                          callBack: () {
+                            bool isDelete = false;
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  alignment: Alignment.center,
+                                  title: const Text('Are you sure ?'),
+                                  content: const Text(
+                                      'Do you want to remove the doctor from the list ? '),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        isDelete = true;
+                                        Get.back();
+                                      },
+                                      child: const Text('YES'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        isDelete = false;
+                                        Get.back();
+                                      },
+                                      child: const Text('NO'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ).then((value) {
+                              return isDelete;
+                            });
+                          }),
+                    ),
                     const SizedBox(width: 10.0),
-                    BtnWithIcon(
-                        title: "Edit Doctor",
-                        icon: Icons.edit,
-                        color: Colors.green.withOpacity(0.6),
-                        callBack: () {}),
+                    Expanded(
+                      child: BtnWithIcon(
+                          checkExpaned: true,
+                          title: "Edit Doctor",
+                          icon: Icons.edit,
+                          color: Colors.green.withOpacity(0.6),
+                          callBack: () {}),
+                    ),
                     const SizedBox(width: 10.0),
-                    BtnWithIcon(
-                        title: "View Doctor",
-                        icon: Icons.view_agenda,
-                        color: Colors.blue.withOpacity(0.6),
-                        callBack: () => Get.to(
-                            () => Material(child: DoctorProfileScreen()))),
+                    Expanded(
+                      child: BtnWithIcon(
+                          checkExpaned: true,
+                          title: "View Doctor",
+                          icon: Icons.view_agenda,
+                          color: Colors.blue.withOpacity(0.6),
+                          callBack: () => Get.to(
+                              () => Material(child: DoctorProfileScreen()))),
+                    ),
                   ],
                 ),
               ],
@@ -420,12 +430,14 @@ class ViewAllDoctor extends StatelessWidget {
                                   )),
                             ),
                           ),
-                          Text(
-                            ' ${e["name"]}',
-                            style: const TextStyle(
-                              color: AppColors.headline1TextColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 17.0,
+                          Expanded(
+                            child: Text(
+                              ' ${e["name"]}',
+                              style: const TextStyle(
+                                color: AppColors.headline1TextColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 17.0,
+                              ),
                             ),
                           ),
                         ],
@@ -480,6 +492,13 @@ class ViewAllDoctor extends StatelessWidget {
   Row _searchField(double widthDevice, BuildContext context) {
     return Row(
       children: [
+        BtnWithIcon(
+          title: "Back",
+          icon: Icons.arrow_back_ios,
+          color: Colors.red.withOpacity(0.5),
+          callBack: tapBackPage,
+        ),
+        const SizedBox(width: 10.0),
         Container(
           width: widthDevice / 2,
           decoration: BoxDecoration(

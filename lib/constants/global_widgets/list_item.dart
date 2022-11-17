@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class ListItem extends StatelessWidget {
   final List<Widget> widgets;
-  const ListItem({super.key, required this.widgets});
+  final bool? checkHeader;
+  const ListItem({super.key, required this.widgets, this.checkHeader});
 
   @override
   Widget build(BuildContext context) {
@@ -13,11 +14,19 @@ class ListItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(5.0),
         color: Colors.white,
       ),
-      child: Row(
-        children: [
-          ...widgets.map((e) => Expanded(child: e)),
-        ],
-      ),
+      child: checkHeader == null
+          ? Row(
+              children: [
+                ...widgets.map((e) => Expanded(child: e)),
+              ],
+            )
+          : Row(
+              children: [
+                Expanded(flex: 1, child: widgets[0]),
+                for (int i = 1; i < widgets.length; i++)
+                  Expanded(flex: 3, child: widgets[i])
+              ],
+            ),
     );
   }
 }

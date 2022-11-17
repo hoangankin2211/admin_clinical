@@ -29,17 +29,16 @@ class DashboardScreen extends StatelessWidget {
                           filterQuality: FilterQuality.high,
                           'icons/app_icon.png',
                           fit: BoxFit.cover,
+                          color: AppColors.primaryColor,
                           height: 60,
                           width: 60,
                         ),
                         Text(
                           'Clinic Management',
-                          style: Theme.of(context)
-                              .textTheme
-                              .headline2!
-                              .copyWith(
-                                color: const Color.fromARGB(255, 82, 162, 143),
-                              ),
+                          style:
+                              Theme.of(context).textTheme.headline2!.copyWith(
+                                    color: AppColors.primaryColor,
+                                  ),
                         )
                       ],
                     ),
