@@ -13,14 +13,7 @@ class GeneralSettingsTab extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 180, vertical: 20),
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(
-          color: Colors.grey,
-          width: 0.2,
-        ),
-        borderRadius: AppDecoration.primaryRadiusBorder,
-      ),
+      decoration: AppDecoration.primaryDecorationContainer,
       child: LayoutBuilder(
         builder: (context, constraints) {
           return SingleChildScrollView(

@@ -44,6 +44,7 @@ dependencies:
   readmore: ^2.2.0
   flutter_vector_icons: ^2.0.0
   fl_chart: ^0.55.2
+  auto_size_text: ^3.0.0
 
 dev_dependencies:
   flutter_test:

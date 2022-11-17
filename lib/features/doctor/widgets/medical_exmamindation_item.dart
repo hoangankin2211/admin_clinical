@@ -3,13 +3,13 @@ import 'package:intl/intl.dart';
 
 import '../../../constants/app_colors.dart';
 
-class MedicalExmaminationItem extends StatelessWidget {
+class MedicalExaminationItem extends StatelessWidget {
   final String id;
   final DateTime date;
   final String clinicRoom;
   final String patientName;
   final int status;
-  const MedicalExmaminationItem({
+  const MedicalExaminationItem({
     Key? key,
     required this.id,
     required this.date,
@@ -22,7 +22,7 @@ class MedicalExmaminationItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 5.0),
-      padding: const EdgeInsets.all(15.0),
+      padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 6),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5.0),
         color: Colors.white,
