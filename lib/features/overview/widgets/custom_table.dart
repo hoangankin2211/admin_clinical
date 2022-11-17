@@ -148,15 +148,15 @@ class PatientListRow extends StatelessWidget {
       index: index,
       child: InkWell(
         onTap: color == Colors.white
-            ? () => Get.to(() => const Material(child: PatientScreen()))
+            ? () => Get.to(() => Material(child: PatientScreen()))
             : null,
         borderRadius: AppDecoration.primaryRadiusBorder,
         child: Container(
           margin: const EdgeInsets.symmetric(vertical: 5),
-          padding: const EdgeInsets.all(6),
+          padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: color,
-            borderRadius: AppDecoration.primaryRadiusBorder,
+            borderRadius: BorderRadius.circular(5.0),
             boxShadow: [
               BoxShadow(
                   offset: const Offset(0, 0.5),
@@ -174,8 +174,8 @@ class PatientListRow extends StatelessWidget {
                       child: Image.asset(
                         avt,
                         fit: BoxFit.cover,
-                        height: 35,
-                        width: 35,
+                        height: 40,
+                        width: 40,
                       ),
                     )
                   : const SizedBox(

@@ -30,8 +30,9 @@ class DashboardController extends GetxController {
           .toList();
 
   late final List<Widget> listPage = [
+    Text("Overview"),
+    ListPatientScreen(),
     DoctorMainScreen(),
-    ViewAllDoctor(),
     OverviewScreen(),
     ListPatientScreen(),
     SettingMainScreen(),

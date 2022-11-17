@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class FakeData {
   static const List<String> topData = [
     'All',
@@ -63,5 +65,155 @@ class FakeData {
       "readers": 4.3,
       "like": 3.4,
     }
+  ];
+
+  static List<Map<String, dynamic>> fakeDataDoctor = [
+    {
+      "index": 0,
+      "image":
+          "https://res.cloudinary.com/ddopvilpr/image/upload/v1665673146/Macbool%20air%20pro%2022220/thsm0tejxhakjnc1nedk.jpg",
+      "name": "Nguyen Minh Hung",
+      "type": "Dentist",
+      "date": DateTime.now(),
+      "exp": 10,
+      "ratings": 4.8,
+    },
+    {
+      "index": 1,
+      "image":
+          "https://res.cloudinary.com/ddopvilpr/image/upload/v1665673142/Macbool%20air%20pro%2022220/a3gz4jsve2omrw5c4gtv.jpg",
+      "name": "Truong Huynh Duc Hoang",
+      "type": "Nerontist",
+      "date": DateTime.now(),
+      "exp": 8,
+      "ratings": 2.8,
+    },
+    {
+      "index": 2,
+      "image":
+          "https://res.cloudinary.com/ddopvilpr/image/upload/v1665673146/Macbool%20air%20pro%2022220/thsm0tejxhakjnc1nedk.jpg",
+      "name": "Nguyen Trung Hieu",
+      "type": "Nerontist",
+      "date": DateTime.now(),
+      "exp": 8,
+      "ratings": 2.8,
+    },
+    {
+      "index": 3,
+      "image":
+          "https://res.cloudinary.com/ddopvilpr/image/upload/v1665673142/Macbool%20air%20pro%2022220/a3gz4jsve2omrw5c4gtv.jpg",
+      "name": "Phan Thien Nhan",
+      "type": "Nerontist",
+      "date": DateTime.now(),
+      "exp": 8,
+      "ratings": 2.8,
+    },
+    {
+      "index": 2,
+      "image":
+          "https://res.cloudinary.com/ddopvilpr/image/upload/v1665673146/Macbool%20air%20pro%2022220/thsm0tejxhakjnc1nedk.jpg",
+      "name": "Nguyen Trung Hieu",
+      "type": "Nerontist",
+      "date": DateTime.now(),
+      "exp": 8,
+      "ratings": 2.8,
+    },
+    {
+      "index": 3,
+      "image":
+          "https://res.cloudinary.com/ddopvilpr/image/upload/v1665673142/Macbool%20air%20pro%2022220/a3gz4jsve2omrw5c4gtv.jpg",
+      "name": "Phan Thien Nhan",
+      "type": "Nerontist",
+      "date": DateTime.now(),
+      "exp": 8,
+      "ratings": 2.8,
+    },
+    {
+      "index": 2,
+      "image":
+          "https://res.cloudinary.com/ddopvilpr/image/upload/v1665673146/Macbool%20air%20pro%2022220/thsm0tejxhakjnc1nedk.jpg",
+      "name": "Nguyen Trung Hieu",
+      "type": "Nerontist",
+      "date": DateTime.now(),
+      "exp": 8,
+      "ratings": 2.8,
+    },
+    {
+      "index": 3,
+      "image":
+          "https://res.cloudinary.com/ddopvilpr/image/upload/v1665673142/Macbool%20air%20pro%2022220/a3gz4jsve2omrw5c4gtv.jpg",
+      "name": "Phan Thien Nhan",
+      "type": "Nerontist",
+      "date": DateTime.now(),
+      "exp": 8,
+      "ratings": 2.8,
+    },
+    {
+      "index": 2,
+      "image":
+          "https://res.cloudinary.com/ddopvilpr/image/upload/v1665673146/Macbool%20air%20pro%2022220/thsm0tejxhakjnc1nedk.jpg",
+      "name": "Nguyen Trung Hieu",
+      "type": "Nerontist",
+      "date": DateTime.now(),
+      "exp": 8,
+      "ratings": 2.8,
+    },
+    {
+      "index": 3,
+      "image":
+          "https://res.cloudinary.com/ddopvilpr/image/upload/v1665673142/Macbool%20air%20pro%2022220/a3gz4jsve2omrw5c4gtv.jpg",
+      "name": "Phan Thien Nhan",
+      "type": "Nerontist",
+      "date": DateTime.now(),
+      "exp": 8,
+      "ratings": 2.8,
+    },
+    {
+      "index": 2,
+      "image":
+          "https://res.cloudinary.com/ddopvilpr/image/upload/v1665673146/Macbool%20air%20pro%2022220/thsm0tejxhakjnc1nedk.jpg",
+      "name": "Nguyen Trung Hieu",
+      "type": "Nerontist",
+      "date": DateTime.now(),
+      "exp": 8,
+      "ratings": 2.8,
+    },
+    {
+      "index": 3,
+      "image":
+          "https://res.cloudinary.com/ddopvilpr/image/upload/v1665673142/Macbool%20air%20pro%2022220/a3gz4jsve2omrw5c4gtv.jpg",
+      "name": "Phan Thien Nhan",
+      "type": "Nerontist",
+      "date": DateTime.now(),
+      "exp": 8,
+      "ratings": 2.8,
+    }
+  ];
+
+  static const List<Map<String, dynamic>> fakeMedicalDepartment = [
+    {
+      "id": 0,
+      "name": "Dentist",
+      "ratings": 3,
+      "count": 100,
+    },
+    {
+      "id": 1,
+      "name": "Neronist",
+      "ratings": -1,
+      "count": 200,
+    },
+    {
+      "id": 2,
+      "name": "Dentist",
+      "ratings": 2,
+      "count": 300,
+    },
+    {
+      "id": 3,
+      "name": "Nutrition",
+      "ratings": -4,
+      "count": 400,
+    },
   ];
 }
