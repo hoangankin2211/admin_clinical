@@ -1,3 +1,4 @@
+import 'package:admin_clinical/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class AppDecoration {
@@ -12,9 +13,25 @@ class AppDecoration {
     color: Colors.blue[100]!,
     width: 0.2,
   );
+
+  static final primaryDecorationContainer = BoxDecoration(
+    color: Colors.white,
+    border: Border.all(
+      color: Colors.grey,
+      width: 0.2,
+    ),
+    borderRadius: AppDecoration.primaryRadiusBorder,
+  );
+
+  static const primaryPadding = EdgeInsets.all(15);
 }
 
 class AppWidget {
+  static const primaryDivider = Divider(
+    height: 3,
+    color: AppColors.primarySecondColor,
+    thickness: 0.2,
+  );
   static const List<Map<String, dynamic>> listNavigatorTab = [
     {
       'label': 'Overview',

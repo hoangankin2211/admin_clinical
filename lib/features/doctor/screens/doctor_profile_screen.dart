@@ -217,7 +217,7 @@ class DoctorProfileScreen extends StatelessWidget {
           child: Column(
             children: [
               ...fakeData.map(
-                (e) => MedicalExmaminationItem(
+                (e) => MedicalExaminationItem(
                   id: e["id"],
                   date: e["date"],
                   clinicRoom: e["cr"],

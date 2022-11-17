@@ -1,9 +1,9 @@
 import 'package:admin_clinical/constants/app_decoration.dart';
 import 'package:admin_clinical/features/doctor/screens/doctor_main_screen.dart';
-import 'package:admin_clinical/features/doctor/screens/doctor_profile_screen.dart';
 import 'package:admin_clinical/features/doctor/screens/view_all_doctor.dart';
+import 'package:admin_clinical/features/form/screens/medical_examination_tab.dart';
+import 'package:admin_clinical/features/form/screens/medical_form_screen.dart';
 import 'package:admin_clinical/features/overview/screens/overview_screen.dart';
-import 'package:admin_clinical/features/patient/screens/list_patients_screen.dart';
 import 'package:admin_clinical/features/settings/screen/setting_main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -31,10 +31,9 @@ class DashboardController extends GetxController {
 
   late final List<Widget> listPage = [
     Text("Overview"),
-    ListPatientScreen(),
     DoctorMainScreen(),
     OverviewScreen(),
-    ListPatientScreen(),
+    MedicalFormScreen(), // ListPatientScreen(),
     SettingMainScreen(),
   ];
 
