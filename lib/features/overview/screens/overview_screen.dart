@@ -1,7 +1,5 @@
-import 'package:admin_clinical/constants/global_widgets/btn_with_icon.dart';
 import 'package:admin_clinical/constants/global_widgets/list_item.dart';
 import 'package:admin_clinical/features/overview/controller/overview_controller.dart';
-import 'package:admin_clinical/features/overview/widgets/custom_table.dart';
 import 'package:admin_clinical/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -11,7 +9,6 @@ import '../../../constants/global_widgets/chart/column_2_chart.dart';
 import '../../../constants/global_widgets/chart/line_chart_design.dart';
 import '../../../constants/global_widgets/color_title.dart';
 import '../widgets/medical_today.dart';
-import '../widgets/statistic_patient_widget.dart';
 import '../widgets/top_doctor.dart';
 
 class Data {
@@ -126,6 +123,39 @@ List<Data> data1 = [
   ),
 ];
 
+List<Map<String, dynamic>> listFakeSurvey = [
+  {
+    "title": "Total Stuff",
+    "icon": Icons.person,
+    "color": Colors.blue,
+    "data": 200,
+  },
+  {
+    "title": "Number of bed",
+    "icon": Icons.bed,
+    "color": const Color.fromARGB(255, 69, 239, 174),
+    "data": 836,
+  },
+  {
+    "title": "New Patient",
+    "icon": Icons.people,
+    "color": Colors.orange,
+    "data": 653,
+  },
+  {
+    "title": "Daily surgery",
+    "icon": Icons.support_agent,
+    "color": Colors.yellow,
+    "data": 120,
+  },
+  {
+    "title": "Daily Realease",
+    "icon": Icons.cloud_upload,
+    "color": Colors.green,
+    "data": 120,
+  },
+];
+
 // ignore: must_be_immutable
 class OverviewScreen extends StatelessWidget {
   OverviewScreen({super.key});
@@ -143,7 +173,72 @@ class OverviewScreen extends StatelessWidget {
             child: ListView(
               children: [
                 const _headerField(),
+                const SizedBox(height: 10.0),
+                const Divider(thickness: 1),
+                const SizedBox(height: 10.0),
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 20.0),
+                    child: Text(
+                      "Hospital Survey",
+                      style: TextStyle(
+                        color: AppColors.headline1TextColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.0,
+                      ),
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 20.0),
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 20.0),
+                  padding: const EdgeInsets.all(15.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15.0),
+                    color: AppColors.backgroundColor,
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.headline1TextColor.withOpacity(0.3),
+                        blurRadius: 10.0,
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      ...listFakeSurvey.map(
+                        (e) => Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(e["icon"], size: 40.0, color: e["color"]),
+                              const SizedBox(height: 10.0),
+                              Text(
+                                e["data"].toString(),
+                                style: const TextStyle(
+                                    color: AppColors.headline1TextColor,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 24.0),
+                              ),
+                              const SizedBox(height: 5.0),
+                              Text(
+                                e["title"],
+                                style: const TextStyle(
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 22,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 10.0),
+                const Divider(thickness: 1),
+                const SizedBox(height: 10.0),
                 _graphField(),
                 const SizedBox(height: 10),
                 const Divider(thickness: 1),
