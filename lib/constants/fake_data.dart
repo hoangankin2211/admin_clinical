@@ -216,7 +216,48 @@ class FakeData {
       "count": 400,
     },
   ];
-
+  static List<Map<String, dynamic>> fakeDataMedicine = [
+    {
+      "name": "Shakira lala",
+      "image": "assets/images/doctor1.png",
+      "rm": 100,
+      "s": 200,
+      "type": "Thuong Dau dau",
+      "price": 200,
+    },
+    {
+      "name": "Shakira lala1",
+      "image": "assets/images/doctor2.png",
+      "rm": 130,
+      "s": 200,
+      "type": "Thuong Dau Bung",
+      "price": 300,
+    },
+    {
+      "name": "Shakira lala2",
+      "image": "assets/images/doctor3.png",
+      "rm": 110,
+      "s": 200,
+      "type": "Thuong Dau Chan",
+      "price": 400,
+    },
+    {
+      "name": "Shakira lala3",
+      "image": "assets/images/doctor2.png",
+      "rm": 400,
+      "s": 200,
+      "type": "Thuong Dau tay",
+      "price": 500,
+    },
+    {
+      "name": "Shakira lala4",
+      "image": "assets/images/doctor1.png",
+      "rm": 200,
+      "s": 20,
+      "type": "Thuong Dau chim",
+      "price": 600,
+    }
+  ];
   static List<Map<String, dynamic>> fakeDataMedicalHistory = [
     {
       "id": 0,

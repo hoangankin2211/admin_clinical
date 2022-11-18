@@ -1,5 +1,6 @@
 import 'package:admin_clinical/constants/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 
 class AppDecoration {
   static final primaryRadiusBorder = BorderRadius.circular(10);
@@ -56,6 +57,10 @@ class AppWidget {
     {
       'label': 'Clinical Room',
       'icon': Icons.medical_services_outlined,
+    },
+    {
+      'label': 'Medicine',
+      'icon': FontAwesome.medkit,
     },
     {
       'label': 'Setting',
