@@ -54,6 +54,10 @@ class AppWidget {
       'icon': Icons.note_add_outlined,
     },
     {
+      'label': 'Clinical Room',
+      'icon': Icons.medical_services_outlined,
+    },
+    {
       'label': 'Setting',
       'icon': Icons.settings_outlined,
     },

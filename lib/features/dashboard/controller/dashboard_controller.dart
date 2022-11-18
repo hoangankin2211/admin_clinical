@@ -1,4 +1,5 @@
 import 'package:admin_clinical/constants/app_decoration.dart';
+import 'package:admin_clinical/features/clinical_room/screens/clinical_room_screen.dart';
 import 'package:admin_clinical/features/doctor/screens/doctor_main_screen.dart';
 import 'package:admin_clinical/features/doctor/screens/view_all_doctor.dart';
 import 'package:admin_clinical/features/form/screens/medical_examination_tab.dart';
@@ -31,6 +32,7 @@ class DashboardController extends GetxController {
           .toList();
 
   late final List<Widget> listPage = [
+    ClinicalRoom(),
     OverviewScreen(),
     ListPatientScreen(),
     DoctorMainScreen(),
