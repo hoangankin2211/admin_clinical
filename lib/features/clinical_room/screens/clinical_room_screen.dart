@@ -85,6 +85,60 @@ class ClinicalRoom extends StatelessWidget {
       "name": "Dentists",
       "er": 200,
       "ner": 100,
+    },
+    {
+      "id": 3,
+      "name": "Opthalmology",
+      "er": 320,
+      "ner": 200,
+    },
+    {
+      "id": 4,
+      "name": "ENT department",
+      "er": 150,
+      "ner": 100,
+    },
+    {
+      "id": 5,
+      "name": "Dentists",
+      "er": 200,
+      "ner": 100,
+    },
+    {
+      "id": 3,
+      "name": "Opthalmology",
+      "er": 320,
+      "ner": 200,
+    },
+    {
+      "id": 4,
+      "name": "ENT department",
+      "er": 150,
+      "ner": 100,
+    },
+    {
+      "id": 5,
+      "name": "Dentists",
+      "er": 200,
+      "ner": 100,
+    },
+    {
+      "id": 3,
+      "name": "Opthalmology",
+      "er": 320,
+      "ner": 200,
+    },
+    {
+      "id": 4,
+      "name": "ENT department",
+      "er": 150,
+      "ner": 100,
+    },
+    {
+      "id": 5,
+      "name": "Dentists",
+      "er": 200,
+      "ner": 100,
     }
   ].obs;
   @override
