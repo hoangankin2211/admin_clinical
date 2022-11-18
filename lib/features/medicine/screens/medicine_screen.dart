@@ -48,8 +48,8 @@ class MedicineScreen extends StatelessWidget {
   Expanded _rightField() {
     return Expanded(
       flex: 3,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: ListView(
+        // crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             padding: const EdgeInsets.all(15.0),
