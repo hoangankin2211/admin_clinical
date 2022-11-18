@@ -38,7 +38,16 @@ class RecordInformationForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Text(
+          'Record Information',
+          style: Theme.of(context)
+              .textTheme
+              .headline5!
+              .copyWith(color: Colors.red[400]),
+        ),
+        const SizedBox(height: 3),
         Flexible(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,

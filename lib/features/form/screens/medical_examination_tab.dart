@@ -57,7 +57,7 @@ class MedicalExaminationTab extends StatelessWidget {
                 child: Column(
                   children: [
                     Flexible(
-                      flex: 1,
+                      flex: 2,
                       child: Row(
                         children: [
                           Flexible(
@@ -77,7 +77,7 @@ class MedicalExaminationTab extends StatelessWidget {
                     AppWidget.primaryDivider,
                     const SizedBox(height: 5),
                     Flexible(
-                      flex: 2,
+                      flex: 3,
                       child: SingleChildScrollView(
                         child: SizedBox(
                           height: constraints.maxHeight * 0.6,

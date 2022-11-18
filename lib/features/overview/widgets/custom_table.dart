@@ -1,3 +1,4 @@
+import 'package:admin_clinical/constants/app_colors.dart';
 import 'package:admin_clinical/features/overview/widgets/dismissible_table_row.dart';
 import 'package:admin_clinical/features/patient/screens/patient_screen.dart';
 import 'package:admin_clinical/routes/name_route.dart';
@@ -213,6 +214,179 @@ class PatientListRow extends StatelessWidget {
               const SizedBox(width: 5),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class ServiceTableRow extends StatelessWidget {
+  const ServiceTableRow({
+    super.key,
+    required this.name,
+    required this.id,
+    required this.color,
+    required this.departmentID,
+    required this.isSelected,
+    this.onCheckButtonChange,
+  });
+  final String name;
+  final String id;
+  final String departmentID;
+  final bool isSelected;
+  final Color color;
+  final Function(bool)? onCheckButtonChange;
+
+  @override
+  Widget build(BuildContext context) {
+    final Map<String, dynamic> data = {
+      'name': name,
+      'id': id,
+      'departmentID': departmentID,
+    };
+    return InkWell(
+      onTap: color == Colors.white ? () {} : null,
+      borderRadius: AppDecoration.primaryRadiusBorder,
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 5),
+        padding: const EdgeInsets.all(6),
+        decoration: BoxDecoration(
+            color: color,
+            borderRadius: AppDecoration.primaryRadiusBorder,
+            boxShadow: [
+              BoxShadow(
+                  offset: const Offset(0, 0.5),
+                  color: Colors.grey[200]!,
+                  blurRadius: 2)
+            ]),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const SizedBox(width: 5),
+            color == Colors.white
+                ? Expanded(
+                    child: Checkbox(
+                      value: isSelected,
+                      onChanged: (value) {
+                        if (value != null) {
+                          onCheckButtonChange!(value);
+                        }
+                      },
+                    ),
+                  )
+                : const Expanded(
+                    child: Text(
+                      'Select',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Colors.blueGrey,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+            const SizedBox(width: 5),
+            ...data.entries
+                .map(
+                  (e) => Expanded(
+                    child: Text(
+                      e.value,
+                      style: const TextStyle(
+                          color: Colors.blueGrey,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                )
+                .toList(),
+            const SizedBox(width: 5),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ResultServiceTableRow extends StatelessWidget {
+  const ResultServiceTableRow({
+    super.key,
+    required this.name,
+    required this.id,
+    required this.color,
+    required this.departmentID,
+    required this.amount,
+    required this.departmentCharge,
+    required this.pricePerUnit,
+    required this.amountPrice,
+  });
+  final String name;
+  final String id;
+  final String departmentID;
+  final String amount;
+  final String departmentCharge;
+  final Color color;
+  final String pricePerUnit;
+  final String amountPrice;
+
+  @override
+  Widget build(BuildContext context) {
+    final Map<String, dynamic> data = {
+      'name': name,
+      'id': id,
+      'departmentID': departmentID,
+      'departmentCharge': departmentCharge,
+      'amount': amount,
+      'pricePerUnit': pricePerUnit,
+      'amountPrice': amountPrice,
+    };
+    return InkWell(
+      onTap: color == Colors.white ? () {} : null,
+      borderRadius: AppDecoration.primaryRadiusBorder,
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 5),
+        padding: const EdgeInsets.all(6),
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: AppDecoration.primaryRadiusBorder,
+          boxShadow: [
+            BoxShadow(
+                offset: const Offset(0, 0.5),
+                color: Colors.grey[200]!,
+                blurRadius: 2)
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const SizedBox(width: 5),
+            ...data.entries
+                .map(
+                  (e) => Expanded(
+                    child: Text(
+                      e.value,
+                      style: const TextStyle(
+                          color: Colors.blueGrey,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                )
+                .toList(),
+            const SizedBox(width: 5),
+            color == Colors.white
+                ? ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primarySecondColor),
+                    onPressed: () {},
+                    child: const Icon(
+                      Icons.close_outlined,
+                      color: Colors.white,
+                    ),
+                  )
+                : const SizedBox(
+                    width: 52,
+                  ),
+            const SizedBox(width: 5),
+          ],
         ),
       ),
     );
