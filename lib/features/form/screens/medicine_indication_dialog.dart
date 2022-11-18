@@ -1,13 +1,14 @@
-import 'package:admin_clinical/constants/app_decoration.dart';
 import 'package:admin_clinical/features/form/widgets/form_card.dart';
+import 'package:admin_clinical/features/form/widgets/medicine_indication_widgets/medicine_information_form.dart';
+import 'package:admin_clinical/features/form/widgets/medicine_indication_widgets/medicine_search_form.dart';
+import 'package:admin_clinical/features/form/widgets/medicine_indication_widgets/result_medicine_indication.dart';
 import 'package:admin_clinical/features/form/widgets/patient_information_form.dart';
-import 'package:admin_clinical/features/form/widgets/record_information_form.dart';
-import 'package:admin_clinical/features/form/widgets/service_indication_widgets/service_indication_form.dart';
 import 'package:flutter/material.dart';
-import '../widgets/service_indication_widgets/result_indication.dart';
 
-class ServiceIndicationDialog extends StatelessWidget {
-  const ServiceIndicationDialog({super.key});
+import '../../../constants/app_decoration.dart';
+
+class MedicineIndicationDialog extends StatelessWidget {
+  const MedicineIndicationDialog({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,23 +34,23 @@ class ServiceIndicationDialog extends StatelessWidget {
                             child: Column(
                               children: [
                                 Flexible(child: PatientInformationForm()),
+                                const SizedBox(height: 5),
                                 AppWidget.primaryDivider,
-                                const SizedBox(height: 10),
-                                Flexible(child: RecordInformationForm()),
+                                const SizedBox(height: 5),
+                                Flexible(child: MedicineInformationForm()),
                               ],
                             ),
                           ),
                         ),
                         Flexible(
-                            flex: 3,
-                            child: FormCard(child: ServiceIndicationForm()))
+                          flex: 3,
+                          child: FormCard(child: MedicineSearchForm()),
+                        )
                       ],
                     ),
                   ),
                   Flexible(
-                    child: FormCard(
-                      child: ResultIndication(),
-                    ),
+                    child: FormCard(child: ResultMedicineIndication()),
                   ),
                 ],
               ),

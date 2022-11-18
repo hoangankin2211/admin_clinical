@@ -1,17 +1,16 @@
 import 'package:admin_clinical/constants/app_colors.dart';
 import 'package:admin_clinical/constants/app_decoration.dart';
 import 'package:admin_clinical/features/form/controller/medical_form_controller.dart';
-import 'package:admin_clinical/features/form/widgets/form_card.dart';
 import 'package:admin_clinical/features/overview/widgets/custom_table.dart';
+import 'package:admin_clinical/models/medicine.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ServiceIndicationForm extends StatelessWidget {
-  ServiceIndicationForm({super.key});
+class MedicineSearchForm extends StatelessWidget {
+  MedicineSearchForm({super.key});
 
   final medicalIndicationController = Get.find<MedicalFormController>();
-  late final List<Map<String, dynamic>> rowData =
-      medicalIndicationController.rowServiceIndicationData;
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -32,7 +31,7 @@ class ServiceIndicationForm extends StatelessWidget {
                           borderSide: const BorderSide(
                               color: AppColors.primarySecondColor, width: 0.2),
                         ),
-                        hintText: 'Enter Name of Service',
+                        hintText: 'Enter Name of Medicine',
                         hintStyle: Theme.of(context)
                             .textTheme
                             .headline4!
@@ -44,32 +43,31 @@ class ServiceIndicationForm extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 10),
                   DropdownButton<String>(
                     items: [
                       DropdownMenuItem(
-                        value: 'Sieu am am dao 1',
+                        value: 'Thuoc dau bung 1',
                         child: Text(
-                          'Sieu am am dao 1',
+                          'Thuoc dau bung 1',
                           style: Theme.of(context).textTheme.headline4,
                         ),
                       ),
                       DropdownMenuItem(
-                        value: 'Sieu am am dao 2',
+                        value: 'Thuoc dau bung 2',
                         child: Text(
-                          'Sieu am am dao 2 ',
+                          'Thuoc dau bung 2 ',
                           style: Theme.of(context).textTheme.headline4,
                         ),
                       ),
                       DropdownMenuItem(
-                        value: 'Sieu am am dao 3',
+                        value: 'Thuoc dau bung 3',
                         child: Text(
-                          'Sieu am am dao 3',
+                          'Thuoc dau bung 3',
                           style: Theme.of(context).textTheme.headline4,
                         ),
                       ),
                     ],
-                    value: 'Sieu am am dao 1',
+                    value: 'Thuoc dau bung 1',
                     onChanged: (value) {},
                   ),
                   const SizedBox(width: 10),
@@ -82,36 +80,30 @@ class ServiceIndicationForm extends StatelessWidget {
                 ],
               ),
             ),
-            ServiceTableRow(
-              name: rowData[0]['name'],
-              id: rowData[0]['id'],
+            MedicineTableRow(
               color: Colors.blueGrey[100]!,
-              departmentID: rowData[0]['departmentID'],
-              isSelected: (rowData[0]['isSelected'] as RxBool).value,
+              medicine: Medicine(
+                id: "ID",
+                name: "Name",
+                price: 100,
+                provider: 'Provider',
+                type: 'Type',
+                unit: 'Unit',
+              ),
             ),
             SizedBox(
               height: 300,
               child: ListView.builder(
                 itemBuilder: (context, index) {
-                  if (index == 0) {
-                    return const SizedBox();
-                  } else {
-                    return Obx(
-                      () => ServiceTableRow(
-                        onCheckButtonChange: (value) =>
-                            medicalIndicationController.onChoiceServiceChange(
-                                value, index),
-                        name: rowData[index]['name'],
-                        id: rowData[index]['id'],
-                        color: Colors.white,
-                        departmentID: rowData[index]['departmentID'],
-                        isSelected:
-                            (rowData[index]['isSelected'] as Rx<bool>).value,
-                      ),
-                    );
-                  }
+                  return MedicineTableRow(
+                    onCheckButtonChange:
+                        medicalIndicationController.onChoiceMedicineChange,
+                    medicine:
+                        medicalIndicationController.medicines.elementAt(index),
+                    color: Colors.white,
+                  );
                 },
-                itemCount: rowData.length,
+                itemCount: medicalIndicationController.medicines.length,
               ),
             )
           ],

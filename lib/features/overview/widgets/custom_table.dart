@@ -1,6 +1,7 @@
 import 'package:admin_clinical/constants/app_colors.dart';
 import 'package:admin_clinical/features/overview/widgets/dismissible_table_row.dart';
 import 'package:admin_clinical/features/patient/screens/patient_screen.dart';
+import 'package:admin_clinical/models/medicine.dart';
 import 'package:admin_clinical/routes/name_route.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -363,6 +364,180 @@ class ResultServiceTableRow extends StatelessWidget {
                   (e) => Expanded(
                     child: Text(
                       e.value,
+                      style: const TextStyle(
+                          color: Colors.blueGrey,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                )
+                .toList(),
+            const SizedBox(width: 5),
+            color == Colors.white
+                ? ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primarySecondColor),
+                    onPressed: () {},
+                    child: const Icon(
+                      Icons.close_outlined,
+                      color: Colors.white,
+                    ),
+                  )
+                : const SizedBox(
+                    width: 52,
+                  ),
+            const SizedBox(width: 5),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class MedicineTableRow extends StatelessWidget {
+  MedicineTableRow({
+    super.key,
+    required this.color,
+    this.onCheckButtonChange,
+    required this.medicine,
+  });
+  final Medicine medicine;
+  final Color color;
+  final Function(bool, String)? onCheckButtonChange;
+
+//   ValueBuilder<bool>(
+//    initialValue: false,
+//    builder: (value, update) => Switch(
+//    value: value,
+//    onChanged: (flag) {
+//       update( flag );
+//    },),
+//    onUpdate: (value) => print("Value updated: $value"),
+//  ),
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: color == Colors.white ? () {} : null,
+      borderRadius: AppDecoration.primaryRadiusBorder,
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 5),
+        padding: const EdgeInsets.all(6),
+        decoration: BoxDecoration(
+            color: color,
+            borderRadius: AppDecoration.primaryRadiusBorder,
+            boxShadow: [
+              BoxShadow(
+                  offset: const Offset(0, 0.5),
+                  color: Colors.grey[200]!,
+                  blurRadius: 2)
+            ]),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const SizedBox(width: 5),
+            color == Colors.white
+                ? Expanded(
+                    child: ValueBuilder<bool?>(
+                        initialValue: false,
+                        onUpdate: (value) => print("Value updated: $value"),
+                        builder: (value, update) {
+                          return Checkbox(
+                            value: value,
+                            onChanged: (value) {
+                              update(value);
+                              if (value != null) {
+                                onCheckButtonChange!(value, medicine.id);
+                              }
+                            },
+                          );
+                        }),
+                  )
+                : const Expanded(
+                    child: Text(
+                      'Select',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Colors.blueGrey,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+            const SizedBox(width: 5),
+            Expanded(
+              child: Text(
+                medicine.id,
+                style: const TextStyle(
+                    color: Colors.blueGrey,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+            Expanded(
+              child: Text(
+                medicine.name,
+                style: const TextStyle(
+                    color: Colors.blueGrey,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+            Expanded(
+              child: Text(
+                medicine.provider,
+                style: const TextStyle(
+                    color: Colors.blueGrey,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+            const SizedBox(width: 5),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ResultMedicineTableRow extends StatelessWidget {
+  const ResultMedicineTableRow({
+    super.key,
+    required this.color,
+    required this.medicine,
+  });
+  final Color color;
+  final Medicine medicine;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: color == Colors.white ? () {} : null,
+      borderRadius: AppDecoration.primaryRadiusBorder,
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 5),
+        padding: const EdgeInsets.all(6),
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: AppDecoration.primaryRadiusBorder,
+          boxShadow: [
+            BoxShadow(
+              offset: const Offset(0, 0.5),
+              color: Colors.grey[200]!,
+              blurRadius: 2,
+            )
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const SizedBox(width: 5),
+            ...medicine
+                .toMap()
+                .entries
+                .map(
+                  (e) => Expanded(
+                    child: Text(
+                      e.value.toString(),
                       style: const TextStyle(
                           color: Colors.blueGrey,
                           fontSize: 14,

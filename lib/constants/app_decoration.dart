@@ -14,6 +14,11 @@ class AppDecoration {
     width: 0.2,
   );
 
+  static const primarySecondBorder = BorderSide(
+    color: Colors.blueGrey,
+    width: 0.3,
+  );
+
   static final primaryDecorationContainer = BoxDecoration(
     color: Colors.white,
     border: Border.all(

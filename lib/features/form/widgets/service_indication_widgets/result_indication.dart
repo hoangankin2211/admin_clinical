@@ -1,3 +1,4 @@
+import 'package:admin_clinical/features/form/widgets/form_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../constants/app_decoration.dart';
@@ -16,18 +17,7 @@ class ResultIndication extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        return Container(
-          margin: const EdgeInsets.all(10),
-          padding: AppDecoration.primaryPadding,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border.all(
-              color: Colors.grey,
-              width: 0.3,
-            ),
-            borderRadius: AppDecoration.primaryRadiusBorder,
-            boxShadow: AppDecoration.elevationContainer,
-          ),
+        return FormCard(
           child: Column(
             children: [
               ResultServiceTableRow(
@@ -42,30 +32,31 @@ class ResultIndication extends StatelessWidget {
               ),
               Expanded(
                 child: GetBuilder<MedicalFormController>(
-                    assignId: true,
-                    id: 'resultService',
-                    autoRemove: false,
-                    builder: (controller) {
-                      return ListView.builder(
-                        itemBuilder: (context, index) {
-                          if (index != 0) {
-                            return ResultServiceTableRow(
-                              amountPrice: rowData[index]['amountPrice'],
-                              pricePerUnit: rowData[index]['pricePerUnit'],
-                              departmentCharge: rowData[index]
-                                  ['departmentCharge'],
-                              amount: rowData[index]['amount'],
-                              name: rowData[index]['name'],
-                              id: rowData[index]['id'],
-                              color: Colors.white,
-                              departmentID: rowData[index]['departmentID'],
-                            );
-                          }
-                          return const SizedBox();
-                        },
-                        itemCount: rowData.length,
-                      );
-                    }),
+                  assignId: true,
+                  id: 'resultService',
+                  autoRemove: false,
+                  builder: (controller) {
+                    return ListView.builder(
+                      itemBuilder: (context, index) {
+                        if (index != 0) {
+                          return ResultServiceTableRow(
+                            amountPrice: rowData[index]['amountPrice'],
+                            pricePerUnit: rowData[index]['pricePerUnit'],
+                            departmentCharge: rowData[index]
+                                ['departmentCharge'],
+                            amount: rowData[index]['amount'],
+                            name: rowData[index]['name'],
+                            id: rowData[index]['id'],
+                            color: Colors.white,
+                            departmentID: rowData[index]['departmentID'],
+                          );
+                        }
+                        return const SizedBox();
+                      },
+                      itemCount: rowData.length,
+                    );
+                  },
+                ),
               ),
             ],
           ),

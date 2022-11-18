@@ -1,6 +1,11 @@
+import 'dart:ui';
+
+import 'package:admin_clinical/features/form/screens/medical_examination_tab.dart';
+import 'package:admin_clinical/features/form/screens/medicine_indication_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../models/medicine.dart';
 import '../screens/service_indication_dialog.dart';
 
 class MedicalFormController extends GetxController {
@@ -40,15 +45,7 @@ class MedicalFormController extends GetxController {
     {
       'title': 'Medicine Indication',
       'icon': Icons.note_add_outlined,
-      'dialog': Dialog(
-        child: Container(
-          height: 300,
-          width: 300,
-          decoration: const BoxDecoration(
-            color: Colors.red,
-          ),
-        ),
-      ),
+      'dialog': MedicineIndicationDialog(),
     },
   ];
 
@@ -72,6 +69,79 @@ class MedicalFormController extends GetxController {
       )
       .toList();
 
+  final List<Medicine> medicines = [
+    Medicine(
+      id: UniqueKey().toString(),
+      name: 'nacl 0.9 500ml',
+      price: 10000,
+      provider: 'United State',
+      unit: '1 box',
+      type: 'Headache',
+    ),
+    Medicine(
+      id: UniqueKey().toString(),
+      name: 'nacl 0.9 500ml',
+      price: 10000,
+      provider: 'United State',
+      unit: '1 box',
+      type: 'Headache',
+    ),
+    Medicine(
+      id: UniqueKey().toString(),
+      name: 'nacl 0.9 500ml',
+      price: 10000,
+      provider: 'United State',
+      unit: '1 box',
+      type: 'Headache',
+    ),
+    Medicine(
+      id: UniqueKey().toString(),
+      name: 'nacl 0.9 500ml',
+      price: 10000,
+      provider: 'United State',
+      unit: '1 box',
+      type: 'Headache',
+    ),
+    Medicine(
+      id: UniqueKey().toString(),
+      name: 'nacl 0.9 500ml',
+      price: 10000,
+      provider: 'United State',
+      unit: '1 box',
+      type: 'Headache',
+    ),
+  ];
+
+  final Rx<List<Medicine>> listMedicineIndicator = Rx<List<Medicine>>([]);
+
+  void onChoiceMedicineChange(bool value, String id) {
+    int? index;
+    for (int i = 0; i < medicines.length; i++) {
+      if (medicines.elementAt(i).id.compareTo(id) == 0) {
+        index = i;
+        break;
+      }
+    }
+    if (index == null) return;
+    Medicine temp = medicines.elementAt(index);
+    if (value) {
+      listMedicineIndicator.value.add(Medicine(
+        type: temp.type,
+        id: temp.id,
+        name: temp.name,
+        price: temp.price,
+        provider: temp.provider,
+        unit: temp.unit,
+      ));
+      print("added");
+    } else {
+      listMedicineIndicator.value
+          .removeWhere((element) => element.id.compareTo(temp.id) == 0);
+    }
+    print(medicines.length);
+    update(['ResultMedicineTableRow']);
+  }
+
   final List<Map<String, dynamic>> resultIndicationRowData = [
     {
       'id': "ID",
@@ -82,15 +152,6 @@ class MedicalFormController extends GetxController {
       'pricePerUnit': 'Price Per Unit',
       'amountPrice': 'Amount Money'
     },
-    // {
-    //   'id': "123",
-    //   'name': 'Sieu am am dao',
-    //   'departmentID': '63456',
-    //   'amount': '2',
-    //   'departmentCharge': 'Clinical Department',
-    //   'pricePerUnit': '1.000.000',
-    //   'amountPrice': '2.000.000'
-    // },
   ];
 
   final List<Map<String, dynamic>> rowServiceIndicationData = [
