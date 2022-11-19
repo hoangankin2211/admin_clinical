@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 
+import '../app_colors.dart';
+
 class ListItem extends StatelessWidget {
   final List<Widget> widgets;
   final bool? checkHeader;
-  const ListItem({super.key, required this.widgets, this.checkHeader});
+  final bool? checkShadow;
+  const ListItem(
+      {super.key, required this.widgets, this.checkHeader, this.checkShadow});
 
   @override
   Widget build(BuildContext context) {
@@ -13,6 +17,13 @@ class ListItem extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5.0),
         color: Colors.white,
+        boxShadow: [
+          if (checkShadow != null)
+            BoxShadow(
+              color: AppColors.headline1TextColor.withOpacity(0.3),
+              blurRadius: 10.0,
+            ),
+        ],
       ),
       child: checkHeader == null
           ? Row(
@@ -41,10 +52,6 @@ class ListItem1 extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 5.0),
       padding: const EdgeInsets.symmetric(horizontal: 15.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5.0),
-        color: Colors.white,
-      ),
       child: checkHeader == null
           ? Row(
               children: [
