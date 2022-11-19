@@ -153,7 +153,7 @@ class SignUpForm extends StatelessWidget {
             TextFormField(
               obscureText: true,
               decoration: InputDecoration(
-                suffixIcon: Icon(Icons.lock_outline),
+                suffixIcon: const Icon(Icons.lock_outline),
                 contentPadding:
                     const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                 hintText: 'Reenter your Password',
