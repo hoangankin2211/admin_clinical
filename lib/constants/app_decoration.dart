@@ -68,6 +68,10 @@ class AppWidget {
       'icon': FontAwesome.medkit,
     },
     {
+      'label': 'Turnover',
+      'icon': FontAwesome.dollar,
+    },
+    {
       'label': 'Setting',
       'icon': Icons.settings_outlined,
     },

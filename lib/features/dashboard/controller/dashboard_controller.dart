@@ -8,6 +8,7 @@ import 'package:admin_clinical/features/medicine/screens/medicine_screen.dart';
 import 'package:admin_clinical/features/overview/screens/overview_screen.dart';
 import 'package:admin_clinical/features/patient/screens/list_patients_screen.dart';
 import 'package:admin_clinical/features/settings/screen/setting_main_screen.dart';
+import 'package:admin_clinical/features/turnover/screen/turnover_main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -38,6 +39,9 @@ class DashboardController extends GetxController {
           .toList();
 
   late final List<Widget> listPage = [
+    TurnoverMainScreen(),
+    MedicineScreen(),
+    ClinicalRoom(),
     OverviewScreen(),
     ListPatientScreen(),
     DoctorMainScreen(),
