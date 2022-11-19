@@ -1,5 +1,6 @@
 import 'package:admin_clinical/features/invoice/screens/make_invoice_screen.dart';
 import 'package:admin_clinical/features/invoice/screens/verify_invoice_information_screen.dart';
+import 'package:admin_clinical/features/turnover/screen/turnover_main_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
@@ -8,8 +9,9 @@ class InvoiceController extends GetxController {
   late final PageController pageController =
       PageController(initialPage: selectedPage.value, keepPage: true);
   late final List<Widget> pages = [
+    TurnoverMainScreen(),
     MakeInvoiceScreen(),
-    VerifyInvoiceInformationScreen()
+    VerifyInvoiceInformationScreen(),
   ];
 
   void changePage(int value) {
