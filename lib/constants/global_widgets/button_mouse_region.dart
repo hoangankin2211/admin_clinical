@@ -21,7 +21,7 @@ class ButtonMouseRegion extends StatelessWidget {
       onExit: (value) => onIt.value = false,
       child: Obx(
         () => InkWell(
-          onTap: () {},
+          onTap: func,
           child: AnimatedContainer(
             alignment: Alignment.center,
             duration: const Duration(milliseconds: 100),

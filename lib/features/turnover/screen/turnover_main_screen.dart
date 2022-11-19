@@ -1,4 +1,6 @@
 import 'package:admin_clinical/constants/global_widgets/custom_button.dart';
+import 'package:admin_clinical/features/invoice/controllers/invoice_controller.dart';
+import 'package:admin_clinical/features/invoice/screens/invoice_view_screen.dart';
 import 'package:admin_clinical/features/patient/widgets/custom_text_form_field.dart';
 import 'package:admin_clinical/features/patient/widgets/show_entries_widget.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +28,7 @@ List<String> headerTitle = [
 class TurnoverMainScreen extends StatelessWidget {
   TurnoverMainScreen({super.key});
   final patientPageController = Get.put(PatientPageController());
-
+  final invoiceController = Get.find<InvoiceController>();
   List<Widget> listHeader = [
     ...headerTitle.map(
       (e) => Row(
@@ -475,7 +477,7 @@ class TurnoverMainScreen extends StatelessWidget {
                 ),
               ],
             ),
-            func: () {},
+            func: () => invoiceController.changePage(1),
           ),
         ],
       ),
