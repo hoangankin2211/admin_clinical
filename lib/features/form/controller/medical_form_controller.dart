@@ -1,6 +1,3 @@
-import 'dart:ui';
-
-import 'package:admin_clinical/features/form/screens/medical_examination_tab.dart';
 import 'package:admin_clinical/features/form/screens/medicine_indication_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
