@@ -50,6 +50,7 @@ dependencies:
   pdf: ^3.8.4
   syncfusion_flutter_pdfviewer: ^20.3.57
   flutter_pdfview: ^1.2.5
+  url_strategy: ^0.2.0
 
 dev_dependencies:
   flutter_test:
