@@ -1,13 +1,16 @@
 import 'package:admin_clinical/constants/app_colors.dart';
 import 'package:admin_clinical/constants/app_decoration.dart';
+import 'package:admin_clinical/features/auth/controller/auth_controller.dart';
 import 'package:admin_clinical/features/auth/widgets/custom_button.dart';
 import 'package:admin_clinical/routes/name_route.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class LoginForm extends StatelessWidget {
-  const LoginForm({super.key, required this.switchPage});
+import '../../../services/auth_service/auth_service.dart';
 
+class LoginForm extends StatelessWidget {
+  LoginForm({super.key, required this.switchPage});
+  final controller = Get.find<AuthController>();
   final Function(int) switchPage;
 
   @override
@@ -85,6 +88,7 @@ class LoginForm extends StatelessWidget {
             AppDecoration.spaceBetweenElementForm,
             TextFormField(
               autofocus: true,
+              controller: controller.emailController,
               decoration: InputDecoration(
                 suffixIcon: Icon(Icons.email_outlined),
                 hintText: "Enter your Email",
@@ -108,6 +112,7 @@ class LoginForm extends StatelessWidget {
             const SizedBox(height: 20),
             TextFormField(
               obscureText: true,
+              controller: controller.passwordController,
               decoration: InputDecoration(
                 suffixIcon: Icon(Icons.lock_outline),
                 contentPadding:
@@ -163,10 +168,31 @@ class LoginForm extends StatelessWidget {
             SizedBox(
               height: 50,
               width: double.infinity,
-              child: CustomButton(
-                title: 'Login',
-                onPressed: () => Get.toNamed(PageName.dashBoard),
-              ),
+              child: ElevatedButton(
+                  onPressed: () => controller.signInAndLoading(context),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primaryColor,
+                    elevation: 5,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: AppDecoration.primaryRadiusBorder,
+                    ),
+                  ),
+                  child: Obx(
+                    () => !controller.isLoading.value
+                        ? const Text(
+                            "Log In",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          )
+                        : const Center(
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                            ),
+                          ),
+                  )),
             ),
             AppDecoration.spaceBetweenElementForm,
             Row(

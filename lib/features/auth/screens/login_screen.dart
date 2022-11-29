@@ -8,7 +8,7 @@ class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
 
   PageController? controller = PageController();
-
+  // final controller = Get.put()
   void switchPage(int index) {
     controller!.animateToPage(index,
         duration: const Duration(milliseconds: 300), curve: Curves.easeIn);

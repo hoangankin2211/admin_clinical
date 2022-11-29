@@ -51,6 +51,9 @@ dependencies:
   syncfusion_flutter_pdfviewer: ^20.3.57
   flutter_pdfview: ^1.2.5
   url_strategy: ^0.2.0
+  shared_preferences: ^2.0.15
+  file_picker: ^4.6.1
+  image_picker: ^0.8.6
 
 dev_dependencies:
   flutter_test:

@@ -12,7 +12,7 @@ class AppDecoration {
 
   static final primaryBorder = Border.all(
     color: Colors.blue[100]!,
-    width: 0.2,
+    width: 1,
   );
 
   static const primarySecondBorder = BorderSide(
