@@ -28,7 +28,7 @@ class DialogAddNewDoctor extends StatelessWidget {
       padding: const EdgeInsets.all(20.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5.0),
-        color: AppColors.greyBackgroundCOlor,
+        color: Colors.white,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

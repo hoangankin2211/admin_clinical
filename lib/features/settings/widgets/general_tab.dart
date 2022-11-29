@@ -134,13 +134,17 @@ class GeneralSettingsTab extends StatelessWidget {
                             ]),
                       ),
                     ),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(50),
-                      child: Image.asset(
-                        'images/fake_avatar.jpg',
-                        fit: BoxFit.cover,
-                        height: 60,
-                        width: 60,
+                    Container(
+                      height: 80,
+                      width: 80,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                          image: AssetImage('images/fake_avatar.jpg'),
+                        ),
+                        boxShadow: [
+                          BoxShadow(color: Colors.black38, blurRadius: 10.0)
+                        ],
                       ),
                     ),
                     const SizedBox(width: 15),
