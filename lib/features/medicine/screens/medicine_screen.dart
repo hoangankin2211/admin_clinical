@@ -12,7 +12,7 @@ import '../../../constants/global_widgets/chart/column_2_chart.dart';
 import '../../../constants/global_widgets/chart/line_chart_design.dart';
 
 class MedicineScreen extends StatelessWidget {
-  const MedicineScreen({super.key});
+  MedicineScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

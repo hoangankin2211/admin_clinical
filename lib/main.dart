@@ -58,7 +58,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.lightBlue,
       ),
       getPages: PagesRoute.pages,
-      initialRoute: PageName.loginScreen,
+      initialRoute: PageName.splashScreen,
     );
   }
 }

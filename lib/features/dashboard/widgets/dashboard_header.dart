@@ -1,15 +1,21 @@
+import 'package:admin_clinical/features/dashboard/controller/dashboard_controller.dart';
+import 'package:admin_clinical/features/dashboard/widgets/setting_popup_item.dart';
+import 'package:admin_clinical/services/auth_service/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+
+import 'notification_item.dart';
 
 enum Menu { itemOne, itemTwo, itemThree, itemFour }
 
 class DashboardHeader extends StatelessWidget {
-  const DashboardHeader({
+  DashboardHeader({
     super.key,
     required this.width,
   });
   final double width;
-
+  final controller = Get.find<DashboardController>();
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -34,60 +40,38 @@ class DashboardHeader extends StatelessWidget {
             ),
           ),
           PopupMenuButton<Menu>(
+              tooltip: "Notification",
               child:
                   const Icon(Icons.notifications_outlined, color: Colors.black),
               // Callback that sets the selected popup menu item.
               onSelected: (Menu item) {},
               itemBuilder: (BuildContext context) => <PopupMenuEntry<Menu>>[
-                    PopupMenuItem<Menu>(
-                      value: Menu.itemOne,
-                      child: NotificationItem(
-                        mainTitle: 'You have new notification about patient',
-                        time: DateTime.now(),
-                        type: 9,
+                    for (int i = 0; i < 5; i++)
+                      PopupMenuItem<Menu>(
+                        value: Menu.itemFour,
+                        child: NotificationItem(
+                          mainTitle: 'You have new notification about patient',
+                          time: DateTime.now(),
+                          type: 9,
+                        ),
                       ),
-                    ),
-                    PopupMenuItem<Menu>(
-                      value: Menu.itemTwo,
-                      child: NotificationItem(
-                        mainTitle: 'You have new notification about patient',
-                        time: DateTime.now(),
-                        type: 9,
-                      ),
-                    ),
-                    PopupMenuItem<Menu>(
-                      value: Menu.itemThree,
-                      child: NotificationItem(
-                        mainTitle: 'You have new notification abo patient',
-                        time: DateTime.now(),
-                        type: 9,
-                      ),
-                    ),
-                    PopupMenuItem<Menu>(
-                      value: Menu.itemFour,
-                      child: NotificationItem(
-                        mainTitle: 'You have new notification about patient',
-                        time: DateTime.now(),
-                        type: 9,
-                      ),
-                    ),
                   ]),
           SizedBox(
             width: width,
-            child: const ListTile(
+            child: ListTile(
               minVerticalPadding: 20,
               dense: true,
               horizontalTitleGap: 10,
-              contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 20.0),
               isThreeLine: true,
-              leading: CircleAvatar(
+              leading: const CircleAvatar(
                 backgroundColor: Color.fromARGB(255, 217, 236, 246),
                 child: Icon(
                   Icons.person,
                   color: Colors.black,
                 ),
               ),
-              title: Text(
+              title: const Text(
                 "Stephen Conley",
                 style: TextStyle(
                   color: Colors.black,
@@ -95,93 +79,101 @@ class DashboardHeader extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              subtitle: Text(
+              subtitle: const Text(
                 'Staff Admin',
                 style: TextStyle(
                   color: Colors.grey,
                   fontSize: 12,
                 ),
               ),
-              trailing: Icon(
-                Icons.arrow_drop_down,
-                color: Colors.black,
+              trailing: PopupMenuButton<Menu>(
+                tooltip: "Setting",
+                child: const Icon(Icons.arrow_drop_down, color: Colors.black),
+                // Callback that sets the selected popup menu item.
+                onSelected: (Menu item) {},
+                itemBuilder: (BuildContext context) => <PopupMenuEntry<Menu>>[
+                  PopupMenuItem<Menu>(
+                    value: Menu.itemOne,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              height: 60.0,
+                              width: 60.0,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                boxShadow: const [
+                                  BoxShadow(
+                                      color: Colors.black38, blurRadius: 5.0)
+                                ],
+                                image: DecorationImage(
+                                  fit: BoxFit.cover,
+                                  image: NetworkImage(controller.getUser().avt),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10.0),
+                        Text(
+                          controller.getUser().name,
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18.0,
+                          ),
+                        ),
+                        const SizedBox(height: 3.0),
+                        const Text(
+                          'Admin',
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16.0,
+                          ),
+                        ),
+                        const SizedBox(height: 5.0),
+                        const Divider(thickness: 1),
+                      ],
+                    ),
+                  ),
+                  PopupMenuItem<Menu>(
+                    value: Menu.itemOne,
+                    child: SettingPopupItem(
+                      title: "Cai dat quyen rieng tu",
+                      icon: Icons.settings,
+                      press: () {},
+                      type: 0,
+                    ),
+                  ),
+                  PopupMenuItem<Menu>(
+                    value: Menu.itemOne,
+                    child: SettingPopupItem(
+                      title: "Tro giup ho tro",
+                      icon: Icons.question_mark_outlined,
+                      press: () {},
+                      type: 0,
+                    ),
+                  ),
+                  PopupMenuItem<Menu>(
+                    onTap: () => AuthService.instance.logOut(context),
+                    value: Menu.itemOne,
+                    child: SettingPopupItem(
+                      title: "Log Out",
+                      icon: Icons.logout,
+                      press: () {},
+                      type: 1,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
         ],
       ),
-    );
-  }
-}
-
-class NotificationItem extends StatelessWidget {
-  final String mainTitle;
-  final DateTime time;
-  final int type;
-  const NotificationItem({
-    Key? key,
-    required this.mainTitle,
-    required this.time,
-    required this.type,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(children: [
-          Container(
-            width: 45.0,
-            height: 45.0,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                    color: Colors.black.withOpacity(0.3), blurRadius: 5.0),
-              ],
-              image: const DecorationImage(
-                fit: BoxFit.cover,
-                image: AssetImage('assets/icons/app_icon.png'),
-              ),
-            ),
-          ),
-          const SizedBox(width: 10.0),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  mainTitle,
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14.0,
-                  ),
-                ),
-                const SizedBox(height: 3.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    const Icon(Icons.timelapse_rounded,
-                        color: Colors.blue, size: 16.0),
-                    Text(
-                      DateFormat().add_yMMMEd().format(DateTime.now()),
-                      style: const TextStyle(
-                        color: Colors.grey,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12.0,
-                      ),
-                    )
-                  ],
-                ),
-              ],
-            ),
-          )
-        ]),
-        const SizedBox(height: 3.0),
-        const Divider(thickness: 1),
-      ],
     );
   }
 }

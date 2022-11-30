@@ -7,6 +7,8 @@ import 'package:admin_clinical/routes/name_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
+import '../features/splash/screens/splash_screen.dart';
+
 class PagesRoute {
   static final List<GetPage> pages = [
     GetPage(
@@ -22,6 +24,10 @@ class PagesRoute {
     GetPage(
       name: PageName.patientDetailScreen,
       page: () => PatientScreen(),
+    ),
+    GetPage(
+      name: PageName.splashScreen,
+      page: () => SplashScreen(),
     ),
   ];
 }
