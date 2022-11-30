@@ -18,11 +18,28 @@ import '../../../services/auth_service/auth_service.dart';
 class DashboardController extends GetxController {
   var pageIndex = 0.obs;
   late final Widget pages;
-  final _auth = AuthService.instance;
-  User getUser() => _auth.user;
+  final Rx<User> _user = Rx<User>(
+    User(
+      name: '',
+      email: '',
+      password: '',
+      address: '',
+      type: '',
+      id: '',
+      token: '',
+      gender: '',
+      phoneNumber: '',
+      dateBorn: DateTime.now(),
+      avt: '',
+    ),
+  );
+
+  User get user => _user.value;
+
   @override
   void onInit() {
     super.onInit();
+    setUserIfNeed();
     pages = Obx(
       () => IndexedStack(
         index: pageIndex.value,
@@ -30,6 +47,14 @@ class DashboardController extends GetxController {
         children: listPage,
       ),
     );
+  }
+
+  setUserIfNeed() async {
+    bool check = await AuthService.instance.getUserData();
+    if (check) {
+      _user.value = AuthService.instance.user;
+      // print("Get all data success");
+    }
   }
 
   late final List<NavigationRailDestination> listTabButton =

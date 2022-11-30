@@ -100,30 +100,34 @@ class DashboardHeader extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Container(
-                              height: 60.0,
-                              width: 60.0,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                boxShadow: const [
-                                  BoxShadow(
-                                      color: Colors.black38, blurRadius: 5.0)
-                                ],
-                                image: DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: NetworkImage(controller.getUser().avt),
+                            Obx(
+                              () => Container(
+                                height: 60.0,
+                                width: 60.0,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  boxShadow: const [
+                                    BoxShadow(
+                                        color: Colors.black38, blurRadius: 5.0)
+                                  ],
+                                  image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(controller.user.avt),
+                                  ),
                                 ),
                               ),
-                            ),
+                            )
                           ],
                         ),
                         const SizedBox(height: 10.0),
-                        Text(
-                          controller.getUser().name,
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18.0,
+                        Obx(
+                          () => Text(
+                            controller.user.name,
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18.0,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 3.0),

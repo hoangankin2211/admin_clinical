@@ -78,12 +78,20 @@ class DashboardScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     DashboardHeader(width: constraints.maxWidth * 0.13),
-                    Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: dashboardController.pages,
-                      ),
-                    ),
+                    Obx(
+                      () => dashboardController.user.name == ""
+                          ? const Center(
+                              child:
+                                  CircularProgressIndicator(color: Colors.blue),
+                            )
+                          : Expanded(
+                              child: Container(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
+                                child: dashboardController.pages,
+                              ),
+                            ),
+                    )
                   ],
                 ),
               ),

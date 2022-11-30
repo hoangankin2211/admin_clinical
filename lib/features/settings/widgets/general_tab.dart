@@ -1,12 +1,33 @@
+import 'dart:typed_data';
+
 import 'package:admin_clinical/constants/app_decoration.dart';
+import 'package:admin_clinical/constants/global_widgets/custom_button.dart';
 import 'package:admin_clinical/features/patient/widgets/custom_text_form_field.dart';
 import 'package:admin_clinical/features/settings/controller/settings_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
-class GeneralSettingsTab extends StatelessWidget {
+import '../../../constants/utils.dart';
+
+class GeneralSettingsTab extends StatefulWidget {
   GeneralSettingsTab({super.key});
+
+  @override
+  State<GeneralSettingsTab> createState() => _GeneralSettingsTabState();
+}
+
+class _GeneralSettingsTabState extends State<GeneralSettingsTab> {
   final settingController = Get.find<SettingController>();
+  Uint8List? _image;
+  void selectedImage() async {
+    Uint8List image = await pickImage(ImageSource.gallery);
+
+    setState(() {
+      _image = image;
+      //convertoBytes();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,10 +74,11 @@ class GeneralSettingsTab extends StatelessWidget {
                         style: Theme.of(context).textTheme.headline4,
                       ),
                     ),
-                    const Expanded(
+                    Expanded(
                       child: CustomTextFormField(
+                        controller: settingController.firstNameController,
                         title: '',
-                        hintStyle: TextStyle(
+                        hintStyle: const TextStyle(
                             fontSize: 14,
                             color: Colors.grey,
                             fontWeight: FontWeight.w500),
@@ -64,9 +86,10 @@ class GeneralSettingsTab extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 20),
-                    const Expanded(
+                    Expanded(
                       child: CustomTextFormField(
-                        hintStyle: TextStyle(
+                        controller: settingController.lastNameController,
+                        hintStyle: const TextStyle(
                             fontSize: 14,
                             color: Colors.grey,
                             fontWeight: FontWeight.w500),
@@ -91,13 +114,14 @@ class GeneralSettingsTab extends StatelessWidget {
                         style: Theme.of(context).textTheme.headline4,
                       ),
                     ),
-                    const Expanded(
+                    Expanded(
                       child: CustomTextFormField(
-                        prefixWidget: Icon(
+                        controller: settingController.emailController,
+                        prefixWidget: const Icon(
                           Icons.email_outlined,
                           color: Colors.black,
                         ),
-                        hintStyle: TextStyle(
+                        hintStyle: const TextStyle(
                             fontSize: 14,
                             color: Colors.grey,
                             fontWeight: FontWeight.w500),
@@ -134,19 +158,33 @@ class GeneralSettingsTab extends StatelessWidget {
                             ]),
                       ),
                     ),
-                    Container(
-                      height: 80,
-                      width: 80,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          image: AssetImage('images/fake_avatar.jpg'),
-                        ),
-                        boxShadow: [
-                          BoxShadow(color: Colors.black38, blurRadius: 10.0)
-                        ],
-                      ),
-                    ),
+                    _image == null
+                        ? Container(
+                            height: 80,
+                            width: 80,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                fit: BoxFit.cover, //
+                                image: NetworkImage(
+                                    settingController.getUser().avt),
+                              ),
+                              boxShadow: const [
+                                BoxShadow(
+                                    color: Colors.black38, blurRadius: 10.0)
+                              ],
+                            ),
+                          )
+                        : Container(
+                            height: 80.0,
+                            width: 80.0,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                  fit: BoxFit.cover,
+                                  image: MemoryImage(_image!)),
+                            ),
+                          ),
                     const SizedBox(width: 15),
                     Expanded(
                       child: Container(
@@ -164,7 +202,7 @@ class GeneralSettingsTab extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             InkWell(
-                              onTap: () {},
+                              onTap: () => selectedImage(),
                               child: CircleAvatar(
                                 backgroundColor: Colors.blueGrey[50]!,
                                 child: Center(
@@ -334,15 +372,12 @@ class GeneralSettingsTab extends StatelessWidget {
                     Expanded(
                       child: ColoredBox(
                         color: Colors.white,
-                        child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: CustomTextFormField(
-                            hint: 'Enter your Bio',
-                            maxLine: 5,
-                            borderSide: BorderSide(
-                              color: Colors.blue[100]!,
-                              width: 0.2,
-                            ),
+                        child: CustomTextFormField(
+                          hint: 'Enter your Bio',
+                          maxLine: 5,
+                          borderSide: BorderSide(
+                            color: Colors.blue[100]!,
+                            width: 0.2,
                           ),
                         ),
                       ),
@@ -353,6 +388,43 @@ class GeneralSettingsTab extends StatelessWidget {
                   thickness: 0.2,
                   height: 30,
                   color: Colors.grey,
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: constraints.maxWidth * 0.45,
+                      child: Text(
+                        "Date Born",
+                        style: Theme.of(context).textTheme.headline4,
+                      ),
+                    ),
+                    Expanded(
+                      child: CustomButton(
+                        text: "Update Profile",
+                        onTap: () {},
+                      ),
+                    ),
+                  ],
+                ),
+                const Divider(
+                  thickness: 0.2,
+                  height: 30,
+                  color: Colors.grey,
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: constraints.maxWidth * 0.45,
+                    ),
+                    Expanded(
+                      child: CustomButton(
+                        text: "Update Profile",
+                        onTap: () {},
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
