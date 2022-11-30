@@ -1,0 +1,111 @@
+class ThongTinKham {
+  String iId;
+  String iDTTK;
+  String soHoSo;
+  String iDTT;
+  String iDPK;
+  String iDBS;
+  String iDBN;
+  String ngayLap;
+  String nhipTim;
+  String huyetAp;
+  String nhietDo;
+  String chieuCao;
+  String nhipTho;
+  String canNang;
+  String tienKham;
+  String ghiChu;
+  String duDoanBenh;
+  List<Thuoc> thuoc;
+
+  ThongTinKham(
+      {this.iId,
+      this.iDTTK,
+      this.soHoSo,
+      this.iDTT,
+      this.iDPK,
+      this.iDBS,
+      this.iDBN,
+      this.ngayLap,
+      this.nhipTim,
+      this.huyetAp,
+      this.nhietDo,
+      this.chieuCao,
+      this.nhipTho,
+      this.canNang,
+      this.tienKham,
+      this.ghiChu,
+      this.duDoanBenh,
+      this.thuoc});
+
+  ThongTinKham.fromJson(Map<String, dynamic> json) {
+    iId = json['_id'] ?? '';
+    iDTTK = json['ID_TTK'];
+    soHoSo = json['SoHoSo'];
+    iDTT = json['ID_TT'];
+    iDPK = json['ID_PK'];
+    iDBS = json['ID_BS'];
+    iDBN = json['ID_BN'];
+    ngayLap = json['NgayLap'];
+    nhipTim = json['NhipTim'];
+    huyetAp = json['HuyetAp'];
+    nhietDo = json['NhietDo'];
+    chieuCao = json['ChieuCao'];
+    nhipTho = json['NhipTho'];
+    canNang = json['CanNang'];
+    tienKham = json['TienKham'];
+    ghiChu = json['GhiChu'];
+    duDoanBenh = json['DuDoanBenh'];
+    if (json['Thuoc'] != null) {
+      thuoc = new List<Thuoc>();
+      json['Thuoc'].forEach((v) {
+        thuoc.add(new Thuoc.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> data = new Map<String, dynamic>();
+    data['_id'] = this.iId;
+    data['ID_TTK'] = this.iDTTK;
+    data['SoHoSo'] = this.soHoSo;
+    data['ID_TT'] = this.iDTT;
+    data['ID_PK'] = this.iDPK;
+    data['ID_BS'] = this.iDBS;
+    data['ID_BN'] = this.iDBN;
+    data['NgayLap'] = this.ngayLap;
+    data['NhipTim'] = this.nhipTim;
+    data['HuyetAp'] = this.huyetAp;
+    data['NhietDo'] = this.nhietDo;
+    data['ChieuCao'] = this.chieuCao;
+    data['NhipTho'] = this.nhipTho;
+    data['CanNang'] = this.canNang;
+    data['TienKham'] = this.tienKham;
+    data['GhiChu'] = this.ghiChu;
+    data['DuDoanBenh'] = this.duDoanBenh;
+    if (this.thuoc != null) {
+      data['Thuoc'] = this.thuoc.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+
+class Thuoc {
+  String iDThuoc;
+  String soLuong;
+
+  Thuoc({this.iDThuoc, this.soLuong});
+
+  Thuoc.fromJson(Map<String, dynamic> json) {
+    iDThuoc = json['ID_Thuoc'];
+    soLuong = json['SoLuong'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['ID_Thuoc'] = this.iDThuoc;
+    data['SoLuong'] = this.soLuong;
+    return data;
+  }
+}
