@@ -16,7 +16,8 @@ class ThongTinBenhNhan {
       required this.ngaySinh,
       required this.sDT});
 
-  ThongTinBenhNhan.fromJson(Map<String, dynamic> json, this.diaChi, this.gioiTinh, this.hoTen, this.iDBN, this.iId, this.ngaySinh, this.sDT) {
+  ThongTinBenhNhan.fromJson(Map<String, dynamic> json, this.diaChi,
+      this.gioiTinh, this.hoTen, this.iDBN, this.iId, this.ngaySinh, this.sDT) {
     iId = json['_id'] ?? '';
     iDBN = json['ID_BN'];
     hoTen = json['HoTen'];
@@ -25,7 +26,7 @@ class ThongTinBenhNhan {
     ngaySinh = json['NgaySinh'];
     sDT = json['SDT'];
   }
-  
+
   get data => null;
 
   Map<String, dynamic> toJson() {

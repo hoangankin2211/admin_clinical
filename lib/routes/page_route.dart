@@ -12,6 +12,10 @@ import '../features/splash/screens/splash_screen.dart';
 class PagesRoute {
   static final List<GetPage> pages = [
     GetPage(
+      name: PageName.splashScreen,
+      page: () => SplashScreen(),
+    ),
+    GetPage(
       name: PageName.loginScreen,
       page: () => LoginScreen(),
       binding: AuthBinding(),
@@ -24,10 +28,6 @@ class PagesRoute {
     GetPage(
       name: PageName.patientDetailScreen,
       page: () => PatientScreen(),
-    ),
-    GetPage(
-      name: PageName.splashScreen,
-      page: () => SplashScreen(),
     ),
   ];
 }

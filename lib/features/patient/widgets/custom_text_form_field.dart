@@ -14,6 +14,7 @@ class CustomTextFormField extends StatefulWidget {
     this.hintStyle,
     this.borderSide,
     this.isPasswordField,
+    this.controller,
   });
   final String? title;
   final double? width;
@@ -24,6 +25,7 @@ class CustomTextFormField extends StatefulWidget {
   final Widget? prefixWidget;
   final TextStyle? hintStyle;
   final bool? isPasswordField;
+  final TextEditingController? controller;
   @override
   State<CustomTextFormField> createState() => _CustomTextFormFieldState();
 }
@@ -35,6 +37,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
     return SizedBox(
       width: widget.width ?? double.infinity,
       child: TextFormField(
+        controller: widget.controller,
         obscureText: isObscure,
         maxLines: widget.maxLine,
         decoration: InputDecoration(

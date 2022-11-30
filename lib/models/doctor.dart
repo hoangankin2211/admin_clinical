@@ -38,9 +38,6 @@ class Doctor {
     timeStart = (json['timeStart']);
     timeFinish = (json['timeFinish']);
     experience = (json['experience']);
-    // timeStart = 0;
-    // timeFinish = 300;
-    // experience = 300;
   }
 
   Map<String, dynamic> toJson() {

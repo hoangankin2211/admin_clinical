@@ -7,7 +7,25 @@ import '../../../services/auth_service/auth_service.dart';
 
 class SettingController extends GetxController {
   final _auth = AuthService.instance;
+  /////////////TextEditingController
+  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController lastNameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+
   User getUser() => _auth.user;
+
+  void onInit() {
+    super.onInit();
+    displayData();
+    // _user.value = _auth.user;
+    // update();
+  }
+
+  void displayData() {
+    firstNameController.text = getUser().name;
+    lastNameController.text = getUser().name;
+    emailController.text = getUser().email;
+  }
 
   final List<String> dropDownRoleChoice = [
     'Doctor',
