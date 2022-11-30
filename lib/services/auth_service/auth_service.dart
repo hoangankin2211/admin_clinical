@@ -64,16 +64,16 @@ class AuthService extends ChangeNotifier {
     return false;
   }
 
-  // void logOut(BuildContext context) async {
-  //   try {
-  //     SharedPreferences sharedPreferences =
-  //         await SharedPreferences.getInstance();
-  //     await sharedPreferences.setString('x-auth-token', '');
-  //     Get.offAllNamed(RouteNames.introScreen);
-  //   } catch (e) {
-  //     showSnackBar(context, e.toString());
-  //   }
-  // }
+  void logOut(BuildContext context) async {
+    try {
+      SharedPreferences sharedPreferences =
+          await SharedPreferences.getInstance();
+      await sharedPreferences.setString('x-auth-token', '');
+      Get.offAllNamed(PageName.loginScreen);
+    } catch (e) {
+      // showSnackBar(context, e.toString());
+    }
+  }
 
   void signIn(
       {required BuildContext context,
@@ -106,15 +106,14 @@ class AuthService extends ChangeNotifier {
         context: context,
         onSuccess: () async {
           SharedPreferences prefs = await SharedPreferences.getInstance();
-          // ignore: use_build_context_synchronously
-          // DataService.instance.fetchAllData();
           AuthService.instance.setUser(res.body);
           await prefs.setString('x-auth-token', jsonDecode(res.body)['token']);
-          // Get.offAllNamed(RouteNames.dashboardScreen);
           Get.toNamed(PageName.dashBoard);
         },
       );
-    } catch (e) {}
+    } catch (e) {
+      updataLoading();
+    }
   }
 
   // void updateAvata(

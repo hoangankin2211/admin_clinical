@@ -12,10 +12,14 @@ import 'package:admin_clinical/features/turnover/screen/turnover_main_screen.dar
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../models/user.dart';
+import '../../../services/auth_service/auth_service.dart';
+
 class DashboardController extends GetxController {
   var pageIndex = 0.obs;
   late final Widget pages;
-
+  final _auth = AuthService.instance;
+  User getUser() => _auth.user;
   @override
   void onInit() {
     super.onInit();
