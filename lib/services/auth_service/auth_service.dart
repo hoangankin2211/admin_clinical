@@ -164,6 +164,7 @@ class AuthService extends ChangeNotifier {
     required String gender,
     required String phoneNumber,
     required String address,
+    required String? image,
     required var dateBorn,
     required VoidCallback callBack,
     required BuildContext context,
@@ -180,6 +181,7 @@ class AuthService extends ChangeNotifier {
           'phoneNumber': phoneNumber,
           'dateBorn': dateBorn,
           'address': address,
+          'avt': image,
         }),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -199,6 +201,39 @@ class AuthService extends ChangeNotifier {
     }
   }
 
+  void changePassWord(
+      {required String password,
+      required String newPassword,
+      required BuildContext context,
+      required VoidCallback callBack}) async {
+    try {
+      http.Response res = await http.post(
+        Uri.parse(
+          '${ApiLink.uri}/api/changePassword',
+        ),
+        body: jsonEncode({
+          'email': AuthService.instance.user.email,
+          'password': password,
+          'newPassword': newPassword,
+        }),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+      print(res.body);
+      httpErrorHandle(
+        response: res,
+        context: context,
+        onSuccess: () async {
+          AuthService.instance.setUser(res.body);
+          callBack();
+        },
+      );
+    } catch (e) {
+      callBack();
+    }
+    callBack();
+  }
   // void insertDoctor({
   //   required String type,
   //   required String description,

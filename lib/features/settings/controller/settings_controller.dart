@@ -1,7 +1,14 @@
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:path_provider/path_provider.dart';
 
+import '../../../constants/global_widgets/custom_dialog_error/error_dialog.dart';
+import '../../../constants/global_widgets/custom_dialog_error/success_dialog.dart';
 import '../../../models/user.dart';
 import '../../../services/auth_service/auth_service.dart';
 
@@ -11,6 +18,16 @@ class SettingController extends GetxController {
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
+  final TextEditingController phoneNumberController = TextEditingController();
+
+  final TextEditingController oldPasswordController = TextEditingController();
+  final TextEditingController newPasswordController = TextEditingController();
+  final TextEditingController rePasswordController = TextEditingController();
+
+  ////////////value Rx
+  RxBool isLoading1 = false.obs;
+  RxBool isLoading2 = false.obs;
+  Rx<DateTime> dateController = DateTime.now().obs;
 
   User getUser() => _auth.user;
 
@@ -25,12 +42,13 @@ class SettingController extends GetxController {
     firstNameController.text = getUser().name;
     lastNameController.text = getUser().name;
     emailController.text = getUser().email;
+    phoneNumberController.text = getUser().phoneNumber;
   }
 
   final List<String> dropDownRoleChoice = [
-    'Doctor',
-    'Assistant',
-    'Director',
+    'Male',
+    'FeMale',
+    // 'Director',
   ];
   Rx<int?> selectedRole = Rx<int?>(0);
 
@@ -41,4 +59,80 @@ class SettingController extends GetxController {
     'Indian': 'icons/india.png',
   };
   Rx<String> selectedCountry = Rx<String>('Vietnam');
+
+  ///////////////////Field edit profile
+  void editProfile(BuildContext context, Uint8List? image) async {
+    var timeStamp = dateController.value.millisecondsSinceEpoch;
+    isLoading1.value = true;
+    String imageUrl = "";
+    if (image != null) {
+      final cloudinary = CloudinaryPublic('ddopvilpr', 'evzte9pr');
+      CloudinaryResponse imageRes = await cloudinary.uploadFile(
+        CloudinaryFile.fromBytesData(image, identifier: getUser().email),
+      );
+      imageUrl = imageRes.secureUrl;
+    }
+    _auth.editProfile(
+        name: firstNameController.text,
+        email: getUser().email,
+        gender: dropDownRoleChoice[selectedRole.value!],
+        phoneNumber: phoneNumberController.text,
+        address: getUser().address,
+        dateBorn: timeStamp,
+        image: imageUrl != "" ? imageUrl : getUser().avt,
+        callBack: () {
+          isLoading1.value = true;
+          update();
+          showDialog(
+            context: context,
+            builder: (context) => const SuccessDialog(
+              question: "Edit Profile",
+              title1: "Edit Profile Success",
+            ),
+          );
+        },
+        context: context);
+  }
+
+  showDialogChagepassword(String title, BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => ErrorDialog(
+        question: "Change password",
+        title1: title,
+      ),
+    );
+  }
+
+  void changePassword(BuildContext context) async {
+    if (newPasswordController.text.length >= 8) {
+      if (newPasswordController.text == rePasswordController.text) {
+        isLoading2.value = true;
+        update();
+        _auth.changePassWord(
+          password: oldPasswordController.text,
+          newPassword: newPasswordController.text,
+          context: context,
+          callBack: () {
+            oldPasswordController.clear();
+            newPasswordController.clear();
+            rePasswordController.clear();
+            isLoading2.value = false;
+            update();
+            showDialog(
+              context: context,
+              builder: (context) => const SuccessDialog(
+                question: "Change password",
+                title1: "Update Password Success",
+              ),
+            );
+          },
+        );
+      } else {
+        showDialogChagepassword('RePassword is invalid', context);
+      }
+    } else {
+      showDialogChagepassword('Newpass is too short', context);
+    }
+  }
 }

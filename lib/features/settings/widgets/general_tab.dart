@@ -7,6 +7,7 @@ import 'package:admin_clinical/features/settings/controller/settings_controller.
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 
 import '../../../constants/utils.dart';
 
@@ -20,9 +21,9 @@ class GeneralSettingsTab extends StatefulWidget {
 class _GeneralSettingsTabState extends State<GeneralSettingsTab> {
   final settingController = Get.find<SettingController>();
   Uint8List? _image;
+  Rx<DateTime> date = DateTime.now().obs;
   void selectedImage() async {
     Uint8List image = await pickImage(ImageSource.gallery);
-
     setState(() {
       _image = image;
       //convertoBytes();
@@ -85,17 +86,6 @@ class _GeneralSettingsTabState extends State<GeneralSettingsTab> {
                         hint: 'First Name',
                       ),
                     ),
-                    const SizedBox(width: 20),
-                    Expanded(
-                      child: CustomTextFormField(
-                        controller: settingController.lastNameController,
-                        hintStyle: const TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey,
-                            fontWeight: FontWeight.w500),
-                        hint: 'Last Name',
-                      ),
-                    )
                   ],
                 ),
                 const Divider(
@@ -119,7 +109,7 @@ class _GeneralSettingsTabState extends State<GeneralSettingsTab> {
                         controller: settingController.emailController,
                         prefixWidget: const Icon(
                           Icons.email_outlined,
-                          color: Colors.black,
+                          color: Colors.grey,
                         ),
                         hintStyle: const TextStyle(
                             fontSize: 14,
@@ -250,7 +240,7 @@ class _GeneralSettingsTabState extends State<GeneralSettingsTab> {
                     SizedBox(
                       width: constraints.maxWidth * 0.45,
                       child: Text(
-                        "Role",
+                        "Gender",
                         style: Theme.of(context).textTheme.headline4,
                       ),
                     ),
@@ -400,9 +390,83 @@ class _GeneralSettingsTabState extends State<GeneralSettingsTab> {
                       ),
                     ),
                     Expanded(
-                      child: CustomButton(
-                        text: "Update Profile",
-                        onTap: () {},
+                      child: Container(
+                        padding: const EdgeInsets.all(15.0),
+                        decoration: BoxDecoration(
+                          border: Border.all(width: 0.5, color: Colors.grey),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: Row(
+                          children: [
+                            Obx(
+                              () => Expanded(
+                                child: Text(
+                                  DateFormat().add_yMMMEd().format(
+                                      settingController.dateController.value),
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 16.0,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () async {
+                                final choice = await showDatePicker(
+                                  context: context,
+                                  firstDate: DateTime(2010),
+                                  lastDate: DateTime(2030),
+                                  initialDate: DateTime.now(),
+                                  builder: (context, child) {
+                                    return Center(
+                                        child: SizedBox(
+                                      width: 1000.0,
+                                      height: 1100.0,
+                                      child: child,
+                                    ));
+                                  },
+                                );
+                                if (choice != null) {
+                                  settingController.dateController.value =
+                                      choice;
+                                }
+                              },
+                              child: const Icon(
+                                Icons.calendar_month,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const Divider(
+                  thickness: 0.2,
+                  height: 30,
+                  color: Colors.grey,
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: constraints.maxWidth * 0.45,
+                      child: Text(
+                        "Phone Number",
+                        style: Theme.of(context).textTheme.headline4,
+                      ),
+                    ),
+                    Expanded(
+                      child: CustomTextFormField(
+                        controller: settingController.phoneNumberController,
+                        title: '',
+                        hintStyle: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w500),
+                        hint: 'Phone Number',
                       ),
                     ),
                   ],
@@ -421,7 +485,8 @@ class _GeneralSettingsTabState extends State<GeneralSettingsTab> {
                     Expanded(
                       child: CustomButton(
                         text: "Update Profile",
-                        onTap: () {},
+                        onTap: () =>
+                            settingController.editProfile(context, _image),
                       ),
                     ),
                   ],
