@@ -80,7 +80,7 @@ class _SettingMainScreenState extends State<SettingMainScreen>
                 controller: tabController,
                 children: [
                   GeneralSettingsTab(),
-                  ChangePasswordTab(),
+                  const ChangePasswordTab(),
                   NotificationSettingTab(),
                 ],
               ),
