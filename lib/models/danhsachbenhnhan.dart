@@ -4,11 +4,10 @@ class DanhSachBenhNhan {
   String iDTTK;
 
   DanhSachBenhNhan(
-  {required this.iId,
-   required this.iDBN,
-   required this.iDTTK});
+      {required this.iId, required this.iDBN, required this.iDTTK});
 
-  DanhSachBenhNhan.fromJson(Map<String, dynamic> json, this.iDBN, this.iDTTK, this.iId) {
+  DanhSachBenhNhan.fromJson(
+      Map<String, dynamic> json, this.iDBN, this.iDTTK, this.iId) {
     iId = json['_id'] ?? '';
     iDBN = json['ID_BN'];
     iDTTK = json['ID_TTK'];

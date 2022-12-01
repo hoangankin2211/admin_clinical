@@ -3,12 +3,10 @@ import 'package:admin_clinical/features/clinical_room/screens/clinical_room_scre
 import 'package:admin_clinical/features/doctor/screens/doctor_main_screen.dart';
 import 'package:admin_clinical/features/form/screens/medical_form_screen.dart';
 import 'package:admin_clinical/features/invoice/screens/invoice_view_screen.dart';
-import 'package:admin_clinical/features/invoice/screens/verify_invoice_information_screen.dart';
 import 'package:admin_clinical/features/medicine/screens/medicine_screen.dart';
 import 'package:admin_clinical/features/overview/screens/overview_screen.dart';
 import 'package:admin_clinical/features/patient/screens/list_patients_screen.dart';
 import 'package:admin_clinical/features/settings/screen/setting_main_screen.dart';
-import 'package:admin_clinical/features/turnover/screen/turnover_main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

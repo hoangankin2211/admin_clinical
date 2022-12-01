@@ -1,11 +1,16 @@
+import 'dart:convert';
+
 import 'package:admin_clinical/constants/app_colors.dart';
 import 'package:admin_clinical/constants/app_decoration.dart';
 import 'package:admin_clinical/features/auth/controller/auth_controller.dart';
 import 'package:admin_clinical/features/auth/widgets/custom_button.dart';
+import 'package:admin_clinical/features/auth/widgets/forget_password_form.dart';
 import 'package:admin_clinical/routes/name_route.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'package:http/http.dart' as http;
+import '../../../constants/api_link.dart';
+import '../../../constants/error_handing.dart';
 import '../../../services/auth_service/auth_service.dart';
 
 class LoginForm extends StatelessWidget {
@@ -156,7 +161,9 @@ class LoginForm extends StatelessWidget {
                 ),
                 const Spacer(),
                 TextButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      Get.dialog(const ForgetPasswordForm());
+                    },
                     child: const Text("Forgot Password",
                         style: TextStyle(
                             color: AppColors.primaryColor,
