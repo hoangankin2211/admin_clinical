@@ -1,16 +1,16 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:admin_clinical/routes/name_route.dart';
 import 'package:flutter/material.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:get/get.dart';
+// ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
 import 'package:cloudinary_public/cloudinary_public.dart';
 
 import '../../constants/api_link.dart';
 import '../../constants/error_handing.dart';
-import '../../features/dashboard/screens/dashboard_screen.dart';
 import '../../models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,6 +18,7 @@ class AuthService extends ChangeNotifier {
   AuthService._privateConstructor();
   static final AuthService instance = AuthService._privateConstructor();
   // ignore: prefer_final_fields
+
   User _user = User(
     name: '',
     email: '',
@@ -85,6 +86,8 @@ class AuthService extends ChangeNotifier {
       required VoidCallback updataLoading}) async {
     try {
       print("sign in function is called");
+      ;
+      ;
       var clinet = http.Client();
       http.Response res = await clinet.post(
         Uri.parse(
@@ -116,6 +119,63 @@ class AuthService extends ChangeNotifier {
       );
     } catch (e) {
       updataLoading();
+    }
+  }
+
+  Future<Map<String, dynamic>> forgetPassword(
+      BuildContext context, String email, IO.Socket socket) async {
+    try {
+      http.Response res = await http.post(
+        Uri.parse(
+          '${ApiLink.uri}/api/forgetPassword',
+        ),
+        body: jsonEncode(
+          {
+            'email': email,
+          },
+        ),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+
+      Map<String, dynamic> extractedData = jsonDecode(res.body);
+      print(extractedData);
+      if (extractedData['isSentLink'] as bool) {
+        socket.emit(
+          'verify-success',
+          {"token": extractedData['token']},
+        );
+      }
+
+      return extractedData;
+    } catch (e) {
+      print(e.toString());
+      rethrow;
+    }
+  }
+
+  static Future<bool> applyNewPassword(String email, String newPassword) async {
+    try {
+      http.Response res = await http.post(
+        Uri.parse(
+          '${ApiLink.uri}/api/restorePassword',
+        ),
+        body: jsonEncode(
+          {
+            'email': email,
+            'newPassword': newPassword,
+          },
+        ),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+      bool result = jsonDecode(res.body)['isSuccess'];
+      return result;
+    } catch (e) {
+      print('applyNewPassword:$e');
+      return false;
     }
   }
 

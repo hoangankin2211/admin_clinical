@@ -1,4 +1,7 @@
+import 'package:admin_clinical/features/doctor/controller/doctor_main_controller.dart';
+import 'package:admin_clinical/services/data_service/data_service.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../constants/app_colors.dart';
 import '../../../constants/fake_data.dart';
@@ -8,10 +11,11 @@ import '../widgets/top_doctor_card.dart';
 
 class DoctorOverView extends StatelessWidget {
   final VoidCallback tapNextPage;
-  const DoctorOverView({
+  DoctorOverView({
     Key? key,
     required this.tapNextPage,
   }) : super(key: key);
+  final controller = Get.find<DoctorMainController>();
 
   @override
   Widget build(BuildContext context) {
@@ -105,8 +109,9 @@ class DoctorOverView extends StatelessWidget {
                   const Divider(thickness: 1),
                   const SizedBox(height: 10.0),
                   Expanded(flex: 4, child: _allDoctoField()),
-                  const SizedBox(height: 10.0),
+                  const SizedBox(height: 20.0),
                   Expanded(flex: 4, child: _allMedicalDepartMentField()),
+                  const SizedBox(height: 40.0),
                   Expanded(
                       flex: 1,
                       child: Align(
@@ -123,7 +128,7 @@ class DoctorOverView extends StatelessWidget {
                               color: AppColors.primaryColor.withOpacity(0.7),
                             ),
                             child: const Text(
-                              "Go to thao tac all",
+                              "See More",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -163,66 +168,64 @@ class DoctorOverView extends StatelessWidget {
         ),
         Expanded(
           child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Column(
-              children: [
-                ...FakeData.fakeMedicalDepartment.map(
-                  (e) => Column(
-                    children: [
-                      ListItem(
-                        checkHeader: true,
-                        widgets: [
-                          Text(
-                            '${e["id"]}',
-                            style: const TextStyle(
-                              color: AppColors.primarySecondColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 17.0,
-                            ),
-                          ),
-                          Text(
-                            '${e["name"]}',
-                            style: const TextStyle(
-                              color: AppColors.headline1TextColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 17.0,
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              (e["ratings"] > 0)
-                                  ? const Icon(Icons.trending_up_outlined,
-                                      color: Colors.green)
-                                  : const Icon(Icons.trending_down_outlined,
+              scrollDirection: Axis.vertical,
+              child: Obx(
+                () => Column(
+                  children: [
+                    ...DataService.instance.listDepartMent.value.map(
+                      (e) => Column(
+                        children: [
+                          ListItem(
+                            checkHeader: true,
+                            widgets: [
+                              Text(
+                                '${e.id}',
+                                style: const TextStyle(
+                                  color: AppColors.primarySecondColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 17.0,
+                                ),
+                              ),
+                              Text(
+                                '${e.name}',
+                                style: const TextStyle(
+                                  color: AppColors.headline1TextColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 17.0,
+                                ),
+                              ),
+                              Row(
+                                children: const [
+                                  const Icon(Icons.trending_down_outlined,
                                       color: Colors.red),
-                              Expanded(
-                                child: Text(
-                                  '${(e["ratings"]).abs()} %',
-                                  style: const TextStyle(
-                                    color: AppColors.headline1TextColor,
-                                    fontWeight: FontWeight.bold,
+                                  Expanded(
+                                    child: Text(
+                                      '29 %',
+                                      style: const TextStyle(
+                                        color: AppColors.headline1TextColor,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
                                   ),
+                                ],
+                              ),
+                              const Text(
+                                '200',
+                                style: TextStyle(
+                                  color: AppColors.primarySecondColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 17.0,
                                 ),
                               ),
                             ],
                           ),
-                          Text(
-                            '${e["count"]}',
-                            style: const TextStyle(
-                              color: AppColors.primarySecondColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 17.0,
-                            ),
-                          ),
+                          const Divider(thickness: 1),
                         ],
                       ),
-                      const Divider(thickness: 1),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
+              )),
         ),
       ],
     );
@@ -250,53 +253,53 @@ class DoctorOverView extends StatelessWidget {
         ),
         Expanded(
           child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Column(
-              children: [
-                ...FakeData.fakeDataDoctor.map(
-                  (e) => Column(
-                    children: [
-                      ListItem(
-                        checkHeader: true,
-                        widgets: [
-                          Text(
-                            '${e["index"]}',
-                            style: const TextStyle(
-                              color: AppColors.primarySecondColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 17.0,
-                            ),
-                          ),
-                          Text(
-                            '${e["name"]}',
-                            style: const TextStyle(
-                              color: AppColors.headline1TextColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 17.0,
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              const Icon(Icons.star,
-                                  color: Colors.yellowAccent),
+              scrollDirection: Axis.vertical,
+              child: Obx(
+                () => Column(
+                  children: [
+                    ...DataService.instance.listDoctor.value.map(
+                      (e) => Column(
+                        children: [
+                          ListItem(
+                            checkHeader: true,
+                            widgets: [
                               Text(
-                                '${e["ratings"]} rating',
+                                e.iDBS!,
+                                style: const TextStyle(
+                                  color: AppColors.primarySecondColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 17.0,
+                                ),
+                              ),
+                              Text(
+                                e.name!,
                                 style: const TextStyle(
                                   color: AppColors.headline1TextColor,
                                   fontWeight: FontWeight.bold,
+                                  fontSize: 17.0,
                                 ),
+                              ),
+                              Row(
+                                children: const [
+                                  Icon(Icons.star, color: Colors.yellowAccent),
+                                  Text(
+                                    '37 rating',
+                                    style: TextStyle(
+                                      color: AppColors.headline1TextColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
+                          const Divider(thickness: 1),
                         ],
                       ),
-                      const Divider(thickness: 1),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
+              )),
         ),
       ],
     );

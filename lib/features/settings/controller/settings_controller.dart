@@ -43,6 +43,7 @@ class SettingController extends GetxController {
     lastNameController.text = getUser().name;
     emailController.text = getUser().email;
     phoneNumberController.text = getUser().phoneNumber;
+    selectedRole.value = getUser().gender == "Male" ? 0 : 1;
   }
 
   final List<String> dropDownRoleChoice = [

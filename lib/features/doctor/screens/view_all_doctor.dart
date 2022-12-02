@@ -1,3 +1,4 @@
+import 'package:admin_clinical/features/doctor/controller/doctor_main_controller.dart';
 import 'package:admin_clinical/features/doctor/screens/doctor_profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,6 +8,7 @@ import '../../../constants/app_colors.dart';
 import '../../../constants/global_widgets/btn_with_icon.dart';
 import '../../../constants/global_widgets/header_list_item.dart';
 import '../../../constants/global_widgets/list_item.dart';
+import '../../../services/data_service/data_service.dart';
 import '../widgets/dialog_add_new_doctor.dart';
 import '../widgets/dialog_select_filter.dart';
 
@@ -138,6 +140,7 @@ class ViewAllDoctor extends StatelessWidget {
   ViewAllDoctor({super.key, required this.tapBackPage});
   RxInt select = 0.obs;
   RxList<String> listFilter = ["Dentist"].obs;
+  final controller = Get.find<DoctorMainController>();
   @override
   Widget build(BuildContext context) {
     var widthDevice = MediaQuery.of(context).size.width;
@@ -207,7 +210,8 @@ class ViewAllDoctor extends StatelessWidget {
                     ],
                     image: DecorationImage(
                       fit: BoxFit.cover,
-                      image: NetworkImage(fakeData[select.value]["image"]),
+                      image: NetworkImage(DataService.instance.listDoctor
+                          .value[controller.selectDoctor.value].avt!),
                     ),
                   ),
                 ),
@@ -217,7 +221,7 @@ class ViewAllDoctor extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        "${fakeData[select.value]["exp"]} Years",
+                        "${DataService.instance.listDoctor.value[controller.selectDoctor.value].experience} Years",
                         textAlign: TextAlign.end,
                         style: const TextStyle(
                           color: AppColors.primaryColor,
@@ -250,7 +254,8 @@ class ViewAllDoctor extends StatelessWidget {
                 ),
                 const SizedBox(height: 10.0),
                 Text(
-                  fakeData[select.value]["name"],
+                  DataService.instance.listDoctor
+                      .value[controller.selectDoctor.value].name!,
                   style: const TextStyle(
                       color: AppColors.headline1TextColor,
                       fontWeight: FontWeight.bold,
@@ -265,19 +270,20 @@ class ViewAllDoctor extends StatelessWidget {
                       fontSize: 24.0),
                 ),
                 const SizedBox(height: 10.0),
-                const ReadMoreText(
-                  "Doctors, also known as physicians, are licensed health professionals who maintain and restore human health through the practice of medicine. They examine patients, review their medical history, diagnose illnesses or injuries, administer treatment, and counsel patients on their health and well-being.",
+                ReadMoreText(
+                  DataService.instance.listDoctor
+                      .value[controller.selectDoctor.value].description!,
                   trimLines: 4,
                   colorClickableText: Colors.pink,
                   trimMode: TrimMode.Line,
                   trimCollapsedText: ' Show more',
                   trimExpandedText: ' Show less',
-                  moreStyle: TextStyle(
+                  moreStyle: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
                     color: AppColors.primaryColor,
                   ),
-                  lessStyle: TextStyle(
+                  lessStyle: const TextStyle(
                     fontSize: 1,
                     fontWeight: FontWeight.bold,
                     color: AppColors.primaryColor,
@@ -402,88 +408,97 @@ class ViewAllDoctor extends StatelessWidget {
         const SizedBox(height: 10.0),
         Expanded(
           child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Column(children: [
-              ...fakeData.map(
-                (e) => InkWell(
-                  onTap: () => select.value = e["index"],
-                  child: ListItem(
-                    widgets: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: 40.0,
-                            height: 40.0,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                    color: AppColors.headline1TextColor
-                                        .withOpacity(0.2),
-                                    blurRadius: 10.0),
-                              ],
-                              image: DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: NetworkImage(
-                                    e["image"],
-                                  )),
-                            ),
-                          ),
-                          Expanded(
-                            child: Text(
-                              ' ${e["name"]}',
-                              style: const TextStyle(
-                                color: AppColors.headline1TextColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 17.0,
+              scrollDirection: Axis.vertical,
+              child: Obx(
+                () => Column(children: [
+                  for (int i = 0;
+                      i < DataService.instance.listDoctor.value.length;
+                      i++)
+                    InkWell(
+                      onTap: () => controller.selectDoctor.value = i,
+                      child: ListItem(
+                        widgets: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: 40.0,
+                                height: 40.0,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: AppColors.headline1TextColor
+                                            .withOpacity(0.2),
+                                        blurRadius: 10.0),
+                                  ],
+                                  image: DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: NetworkImage(
+                                        DataService
+                                            .instance.listDoctor.value[i].avt!,
+                                      )),
+                                ),
                               ),
-                            ),
+                              Expanded(
+                                child: Text(
+                                  ' ${DataService.instance.listDoctor.value[i].name}',
+                                  style: const TextStyle(
+                                    color: AppColors.headline1TextColor,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 17.0,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      Text(
-                        e["type"],
-                        style: const TextStyle(
-                          color: AppColors.headline1TextColor,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 17.0,
-                        ),
-                      ),
-                      Text(
-                        DateFormat().add_yMd().format(e["date"]),
-                        style: const TextStyle(
-                          color: AppColors.headline1TextColor,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 17.0,
-                        ),
-                      ),
-                      Text(
-                        "${e["exp"]} Years",
-                        style: const TextStyle(
-                          color: AppColors.primaryColor,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 17.0,
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          const Icon(Icons.star, color: Colors.yellowAccent),
                           Text(
-                            '${e["ratings"]} rating',
+                            controller
+                                .getDepartMent(
+                                    DataService.instance.listDoctor.value[i]
+                                        .departMent!,
+                                    DataService.instance.listDepartMent.value)
+                                .name!,
                             style: const TextStyle(
                               color: AppColors.headline1TextColor,
                               fontWeight: FontWeight.bold,
+                              fontSize: 17.0,
                             ),
+                          ),
+                          Text(
+                            DateFormat().add_yMd().format(DataService
+                                .instance.listDoctor.value[i].dateBorn!),
+                            style: const TextStyle(
+                              color: AppColors.headline1TextColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 17.0,
+                            ),
+                          ),
+                          Text(
+                            "${DataService.instance.listDoctor.value[i].experience} Years",
+                            style: const TextStyle(
+                              color: AppColors.primaryColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 17.0,
+                            ),
+                          ),
+                          Row(
+                            children: const [
+                              Icon(Icons.star, color: Colors.yellowAccent),
+                              Text(
+                                '4.5 rating',
+                                style: TextStyle(
+                                  color: AppColors.headline1TextColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                ),
-              )
-            ]),
-          ),
+                    ),
+                ]),
+              )),
         ),
       ],
     );
