@@ -27,7 +27,9 @@ void httpErrorHandle({
       showDialog(
         context: context,
         builder: (context) => ErrorDialog(
-            question: "Sign In", title1: jsonDecode(response.body)['error']),
+          question: "Sign In",
+          title1: jsonDecode(response.body)['error'],
+        ),
       );
       break;
     default:

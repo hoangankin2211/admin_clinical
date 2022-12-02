@@ -105,30 +105,26 @@ class SettingController extends GetxController {
     );
   }
 
-  void changePassword(BuildContext context) async {
+  Future<void> changePassword(BuildContext context) async {
     if (newPasswordController.text.length >= 8) {
       if (newPasswordController.text == rePasswordController.text) {
-        isLoading2.value = true;
-        update();
-        _auth.changePassWord(
+        final isSuccess = await _auth.changePassword(
           password: oldPasswordController.text,
           newPassword: newPasswordController.text,
           context: context,
-          callBack: () {
-            oldPasswordController.clear();
-            newPasswordController.clear();
-            rePasswordController.clear();
-            isLoading2.value = false;
-            update();
-            showDialog(
-              context: context,
-              builder: (context) => const SuccessDialog(
-                question: "Change password",
-                title1: "Update Password Success",
-              ),
-            );
-          },
         );
+
+        if (isSuccess) {
+          oldPasswordController.clear();
+          newPasswordController.clear();
+          rePasswordController.clear();
+          Get.dialog(
+            const SuccessDialog(
+              question: "Change password",
+              title1: "Update Password Success",
+            ),
+          );
+        }
       } else {
         showDialogChagepassword('RePassword is invalid', context);
       }

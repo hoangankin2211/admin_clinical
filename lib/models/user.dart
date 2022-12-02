@@ -3,7 +3,7 @@ import 'dart:convert';
 class User {
   User userFromJson(String str) => User.fromJson(json.decode(str));
 
-  String userToJson(User data) => json.encode(data.toJson());
+  static String userToJson(User data) => json.encode(data.toJson());
   User({
     required this.name,
     required this.email,
@@ -36,7 +36,7 @@ class User {
         address: json["address"],
         type: json["type"],
         id: json["_id"],
-        token: json["token"],
+        token: json["token"] ?? '',
         gender: json["gender"],
         phoneNumber: json["phoneNumber"],
         dateBorn: DateTime.fromMillisecondsSinceEpoch(json["dateBorn"]),

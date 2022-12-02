@@ -12,7 +12,7 @@ import 'package:intl/intl.dart';
 import '../../../constants/utils.dart';
 
 class GeneralSettingsTab extends StatefulWidget {
-  GeneralSettingsTab({super.key});
+  const GeneralSettingsTab({super.key});
 
   @override
   State<GeneralSettingsTab> createState() => _GeneralSettingsTabState();

@@ -8,7 +8,6 @@ import 'package:admin_clinical/features/medicine/screens/medicine_screen.dart';
 import 'package:admin_clinical/features/overview/screens/overview_screen.dart';
 import 'package:admin_clinical/features/patient/screens/list_patients_screen.dart';
 import 'package:admin_clinical/features/settings/screen/setting_main_screen.dart';
-import 'package:admin_clinical/features/turnover/screen/turnover_main_screen.dart';
 import 'package:admin_clinical/services/data_service/data_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -38,10 +37,10 @@ class DashboardController extends GetxController {
   User get user => _user.value;
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
-    fetchAllBasicData();
-    setUserIfNeed();
+    await fetchAllBasicData();
+    await setUserIfNeed();
     pages = Obx(
       () => IndexedStack(
         index: pageIndex.value,
@@ -81,7 +80,7 @@ class DashboardController extends GetxController {
     MedicalFormScreen(),
     ClinicalRoom(),
     MedicineScreen(),
-    SettingMainScreen(),
+    const SettingMainScreen(),
   ];
 
   void switchTab(int index) {

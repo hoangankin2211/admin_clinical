@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:admin_clinical/constants/global_widgets/custom_dialog_error/error_dialog.dart';
 import 'package:admin_clinical/routes/name_route.dart';
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -261,11 +262,11 @@ class AuthService extends ChangeNotifier {
     }
   }
 
-  void changePassWord(
-      {required String password,
-      required String newPassword,
-      required BuildContext context,
-      required VoidCallback callBack}) async {
+  Future<bool> changePassword({
+    required String password,
+    required String newPassword,
+    required BuildContext context,
+  }) async {
     try {
       http.Response res = await http.post(
         Uri.parse(
@@ -280,20 +281,57 @@ class AuthService extends ChangeNotifier {
           'Content-Type': 'application/json; charset=UTF-8',
         },
       );
+
       print(res.body);
+
       httpErrorHandle(
         response: res,
         context: context,
-        onSuccess: () async {
-          AuthService.instance.setUser(res.body);
-          callBack();
+        onSuccess: () {
+          _user.password = newPassword;
         },
       );
+
+      return true;
     } catch (e) {
-      callBack();
+      return false;
     }
-    callBack();
   }
+
+  // void changePassWord(
+  //     {required String password,
+  //     required String newPassword,
+  //     required BuildContext context,
+  //     required VoidCallback callBack}) async {
+  //   try {
+  //     http.Response res = await http.post(
+  //       Uri.parse(
+  //         '${ApiLink.uri}/api/changePassword',
+  //       ),
+  //       body: jsonEncode({
+  //         'email': AuthService.instance.user.email,
+  //         'password': password,
+  //         'newPassword': newPassword,
+  //       }),
+  //       headers: <String, String>{
+  //         'Content-Type': 'application/json; charset=UTF-8',
+  //       },
+  //     );
+  //     print(res.body);
+  //     httpErrorHandle(
+  //       response: res,
+  //       context: context,
+  //       onSuccess: () async {
+  //         AuthService.instance.setUser(res.body);
+  //         callBack();
+  //       },
+  //     );
+  //   } catch (e) {
+  //     callBack();
+  //   }
+  //   callBack();
+  // }
+
   // void insertDoctor({
   //   required String type,
   //   required String description,
