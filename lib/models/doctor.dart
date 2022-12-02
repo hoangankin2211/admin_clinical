@@ -59,3 +59,53 @@ class Doctor {
   Doctor userFromJson(String str) => Doctor.fromJson(json.decode(str));
   factory Doctor.fromMap(Map<String, dynamic> json) => Doctor();
 }
+
+class Doctor1 {
+  String? iDBS;
+  String? name;
+  String? address;
+  DateTime? dateBorn;
+  String? phoneNumber;
+  String? departMent;
+  String? avt;
+  String? description;
+  int? experience;
+
+  Doctor1({
+    required this.iDBS,
+    required this.name,
+    required this.address,
+    required this.dateBorn,
+    required this.phoneNumber,
+    required this.avt,
+    required this.departMent,
+    required this.experience,
+    required this.description,
+  });
+
+  Doctor1.fromJson(Map<String, dynamic> json) {
+    iDBS = json['iDBS'];
+    name = json['name'];
+    address = json['address'];
+    dateBorn = DateTime.fromMillisecondsSinceEpoch(json["dateBorn"]);
+    phoneNumber = json['phoneNumber'];
+    avt = json['avt'];
+    departMent = json['departMent'];
+    experience = json['experience'];
+    description = json['description'];
+  }
+
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> data = ({});
+    data['iDBS'] = iDBS;
+    data['name'] = name;
+    data['address'] = address;
+    data['dateBorn'] = dateBorn;
+    data['phoneNumber'] = phoneNumber;
+    data['avt'] = avt;
+    data['departMent'] = departMent;
+    data['experience'] = experience;
+    data['description'] = description;
+    return data;
+  }
+}

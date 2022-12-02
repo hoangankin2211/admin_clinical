@@ -1,6 +1,7 @@
 import 'package:admin_clinical/constants/fake_data.dart';
 import 'package:admin_clinical/constants/global_widgets/header_list_item.dart';
 import 'package:admin_clinical/constants/global_widgets/list_item.dart';
+import 'package:admin_clinical/features/doctor/controller/doctor_main_controller.dart';
 import 'package:admin_clinical/features/doctor/screens/view_all_doctor.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,12 +16,12 @@ PageController pageController = PageController(initialPage: 0, keepPage: true);
 void onButtonTape(int index) {
   pageController.animateToPage(index,
       duration: const Duration(milliseconds: 600), curve: Curves.fastOutSlowIn);
-//  pageController.jumpToPage(index);
 }
 
 class DoctorMainScreen extends StatelessWidget {
   DoctorMainScreen({super.key});
   RxInt checkPage = 0.obs;
+  final controller = Get.put(DoctorMainController());
   @override
   Widget build(BuildContext context) {
     List<Widget> listView = [
