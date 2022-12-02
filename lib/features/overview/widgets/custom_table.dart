@@ -2,7 +2,9 @@ import 'package:admin_clinical/constants/app_colors.dart';
 import 'package:admin_clinical/features/overview/widgets/dismissible_table_row.dart';
 import 'package:admin_clinical/features/patient/screens/patient_screen.dart';
 import 'package:admin_clinical/models/medicine.dart';
+import 'package:admin_clinical/models/thongtinbenhnhan.dart';
 import 'package:admin_clinical/routes/name_route.dart';
+import 'package:admin_clinical/services/data_service/patient_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -145,6 +147,10 @@ class PatientListRow extends StatelessWidget {
       'Payment': payment,
     };
     return DismissibleTableRow(
+      yesHandleSelection: () async {
+        final result = await PatientService.deletePatient(
+            '6389dac5f4bfd933a9b8dc08', context);
+      },
       isTitleRow: color != Colors.white,
       id: id,
       remove: removeEntries,

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:ui';
 
+import 'package:admin_clinical/services/data_service/patient_service.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import '../../constants/api_link.dart';
@@ -19,6 +20,9 @@ class DataService extends GetxController {
     }
     if (listDepartMent.value.isEmpty) {
       fetchAllDeparMent((value) => listDepartMent.value = value);
+    }
+    if (PatientService.listPatients.isEmpty) {
+      PatientService.fetchAllPatientData();
     }
   }
 

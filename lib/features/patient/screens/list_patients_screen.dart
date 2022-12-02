@@ -1,14 +1,21 @@
+import 'dart:convert';
+
 import 'package:admin_clinical/commons/widgets/custom_icon_button.dart';
+import 'package:admin_clinical/constants/api_link.dart';
 import 'package:admin_clinical/constants/app_decoration.dart';
 import 'package:admin_clinical/features/overview/widgets/custom_table.dart';
 import 'package:admin_clinical/features/patient/controller/patient_page_controller.dart';
+import 'package:admin_clinical/models/thongtinbenhnhan.dart';
+import 'package:admin_clinical/services/auth_service/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+import '../../../services/data_service/data_service.dart';
 import '../widgets/add_patient_dialog.dart';
 import '../widgets/filter_card.dart';
 import '../widgets/show_entries_widget.dart';
+import 'package:http/http.dart' as http;
 
 class ListPatientScreen extends StatelessWidget {
   ListPatientScreen({super.key});
@@ -68,7 +75,9 @@ class ListPatientScreen extends StatelessWidget {
                   ),
                 ),
                 CustomIconButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    // await DataService.fetchAllPatientData();
+                  },
                   label: Text(
                     'Filter',
                     style: Theme.of(context).textTheme.headline4,
