@@ -1,16 +1,16 @@
 import 'package:admin_clinical/constants/app_colors.dart';
 import 'package:admin_clinical/routes/name_route.dart';
 import 'package:admin_clinical/routes/page_route.dart';
+import 'package:admin_clinical/services/socket_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:url_strategy/url_strategy.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
-
-import 'constants/api_link.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+
   setPathUrlStrategy();
+  SocketService.connectSocket();
 
   runApp(const MyApp());
 }

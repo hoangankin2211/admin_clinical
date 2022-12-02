@@ -1,4 +1,3 @@
-import 'package:admin_clinical/main.dart';
 import 'package:admin_clinical/services/auth_service/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -6,6 +5,7 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 import '../../../constants/api_link.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_decoration.dart';
+import '../../../services/socket_service.dart';
 
 class ForgetPasswordForm extends StatefulWidget {
   const ForgetPasswordForm({super.key});
@@ -13,8 +13,6 @@ class ForgetPasswordForm extends StatefulWidget {
   @override
   State<ForgetPasswordForm> createState() => _ForgetPasswordFormState();
 }
-
-late final IO.Socket socket;
 
 class _ForgetPasswordFormState extends State<ForgetPasswordForm> {
   late final PageController pageController;
@@ -39,23 +37,6 @@ class _ForgetPasswordFormState extends State<ForgetPasswordForm> {
   void initState() {
     super.initState();
     pageController = PageController(initialPage: 0, keepPage: true);
-    socket = IO.io(
-      ApiLink.uri,
-      IO.OptionBuilder().setTransports(['websocket']).setQuery(
-              {'test': '123'}) // for Flutter or Dart VM
-          .build(),
-    );
-    socket.onConnect((data) {
-      print(data);
-      socket.emit('/test', 'test');
-    });
-    socket.onConnectError((data) => print(data));
-    socket.onDisconnect((data) => print('disconnect,$data'));
-    socket.on('verify', (jsonData) {
-      print(jsonData);
-      Get.back();
-    });
-    print(socket.connected);
   }
 
   @override
@@ -153,8 +134,8 @@ class EnterEmailPage extends StatelessWidget {
             child: ElevatedButton(
               onPressed: () async {
                 if (textController.text.isNotEmpty) {
-                  final response = await AuthService.instance
-                      .forgetPassword(context, textController.text, socket);
+                  final response = await AuthService.instance.forgetPassword(
+                      context, textController.text, SocketService.socket);
                   if (response['isSentLink'] as bool) {}
                 }
               },
