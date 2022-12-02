@@ -121,7 +121,6 @@ class PatientListRow extends StatelessWidget {
     required this.avt,
     required this.payment,
     required this.removeEntries,
-    required this.index,
   });
   final String avt;
   final String name;
@@ -131,9 +130,8 @@ class PatientListRow extends StatelessWidget {
   final String diseases;
   final String status;
   final String payment;
-  final int index;
   final Color color;
-  final Function(int) removeEntries;
+  final Function(String) removeEntries;
 
   @override
   Widget build(BuildContext context) {
@@ -148,13 +146,11 @@ class PatientListRow extends StatelessWidget {
     };
     return DismissibleTableRow(
       yesHandleSelection: () async {
-        final result = await PatientService.deletePatient(
-            '6389dac5f4bfd933a9b8dc08', context);
+        final result = await PatientService.deletePatient(id, context);
       },
       isTitleRow: color != Colors.white,
       id: id,
       remove: removeEntries,
-      index: index,
       child: InkWell(
         onTap: color == Colors.white
             ? () => Get.toNamed(PageName.patientDetailScreen)

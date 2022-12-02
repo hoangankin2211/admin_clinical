@@ -6,14 +6,12 @@ class DismissibleTableRow extends StatelessWidget {
       {super.key,
       required this.id,
       required this.remove,
-      required this.index,
       required this.child,
       required this.isTitleRow,
       required this.yesHandleSelection});
   final String id;
   final Function() yesHandleSelection;
-  final Function(int) remove;
-  final int index;
+  final Function(String) remove;
   final Widget child;
   final bool isTitleRow;
   @override
@@ -36,7 +34,7 @@ class DismissibleTableRow extends StatelessWidget {
               ),
             ),
             onDismissed: (direction) {
-              remove(index);
+              remove(id);
             },
             direction: DismissDirection.endToStart,
             confirmDismiss: (direction) {
@@ -54,6 +52,7 @@ class DismissibleTableRow extends StatelessWidget {
                         onPressed: () async {
                           isDelete = true;
                           Get.back();
+                          await yesHandleSelection();
                         },
                         child: const Text('YES'),
                       ),
@@ -68,7 +67,6 @@ class DismissibleTableRow extends StatelessWidget {
                   );
                 },
               ).then((value) async {
-                await yesHandleSelection();
                 return isDelete;
               });
             },

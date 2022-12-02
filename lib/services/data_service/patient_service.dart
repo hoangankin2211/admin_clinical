@@ -1,12 +1,10 @@
 import 'dart:convert';
 
 import 'package:admin_clinical/constants/error_handing.dart';
-import 'package:admin_clinical/constants/global_widgets/custom_dialog_error/success_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 import '../../constants/api_link.dart';
-import '../../constants/global_widgets/custom_dialog_error/error_dialog.dart';
 import '../../models/thongtinbenhnhan.dart';
 import 'package:http/http.dart' as http;
 
