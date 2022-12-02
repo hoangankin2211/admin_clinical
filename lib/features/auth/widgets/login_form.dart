@@ -6,6 +6,7 @@ import 'package:admin_clinical/features/auth/controller/auth_controller.dart';
 import 'package:admin_clinical/features/auth/widgets/custom_button.dart';
 import 'package:admin_clinical/features/auth/widgets/forget_password_form.dart';
 import 'package:admin_clinical/routes/name_route.dart';
+import 'package:admin_clinical/services/socket_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -27,9 +28,13 @@ class LoginForm extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              'Login',
-              style: Theme.of(context).textTheme.headline1,
+            GestureDetector(
+              onTap: () => print(
+                  "SocketService.socket.connected:${SocketService.socket.connected}"),
+              child: Text(
+                'Login',
+                style: Theme.of(context).textTheme.headline1,
+              ),
             ),
             AppDecoration.spaceBetweenElementForm,
             InkWell(
