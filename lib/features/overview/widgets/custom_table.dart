@@ -120,7 +120,7 @@ class PatientListRow extends StatelessWidget {
     required this.color,
     required this.avt,
     required this.payment,
-    required this.removeEntries,
+    this.removeEntries,
   });
   final String avt;
   final String name;
@@ -131,7 +131,7 @@ class PatientListRow extends StatelessWidget {
   final String status;
   final String payment;
   final Color color;
-  final Function(String) removeEntries;
+  final Function(String)? removeEntries;
 
   @override
   Widget build(BuildContext context) {
@@ -150,7 +150,7 @@ class PatientListRow extends StatelessWidget {
       },
       isTitleRow: color != Colors.white,
       id: id,
-      remove: removeEntries,
+      remove: removeEntries ?? (_) {},
       child: InkWell(
         onTap: color == Colors.white
             ? () => Get.toNamed(PageName.patientDetailScreen)
