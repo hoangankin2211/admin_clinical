@@ -120,7 +120,7 @@ class AuthService extends ChangeNotifier {
   }
 
   Future<Map<String, dynamic>> forgetPassword(
-      BuildContext context, String email) async {
+      BuildContext context, String email, IO.Socket socket) async {
     try {
       http.Response res = await http.post(
         Uri.parse(
@@ -141,54 +141,8 @@ class AuthService extends ChangeNotifier {
       if (extractedData['isSentLink'] as bool) {
         socket.emit(
           'verify-success',
-          jsonEncode(
-            {
-              'verify-success': 'verify-success',
-              'token': extractedData['token']
-            },
-          ),
+          {"token": extractedData['token']},
         );
-        // IO.Socket socket = IO.io(
-        //     ApiLink.uri,
-        //     IO.OptionBuilder()
-        //         .setTransports(['websocket']) // for Flutter or Dart VM
-        //         .build());
-        // socket.onConnect(
-        //   (_) {
-        //     print('sasdfsadf');
-        //     socket.emit(
-        //       'verify-success',
-        //       jsonEncode(
-        //         {
-        //           'verify-success': 'verify-success',
-        //           'token': extractedData['token']
-        //         },
-        //       ),
-        //     );
-        //   },
-        // );
-
-        // socket.on('verify', (jsonData) {
-        //   print(jsonData);
-        // });
-        // socket.onDisconnect((_) => print('disconnect'));
-
-        // socket.on('fromServer', (_) => print(_));
-        // SocketIO socketIO = SocketIOManager().createSocketIO(ApiLink.uri, '/',
-        //     query: 'token=${(extractedData['token']) as String}');
-        // await socketIO.init();
-        // await socketIO.subscribe('verify', (jsonData) {
-        //   Map<String, dynamic> data = json.decode(jsonData);
-        //   print(data);
-        // });
-        // await socketIO.connect();
-
-        // await socketIO.sendMessage(
-        //   'verify-success',
-        //   json.encode({
-        //     'content': 'verify-success-sent',
-        //   }),
-        // );
       }
 
       return extractedData;
@@ -197,23 +151,6 @@ class AuthService extends ChangeNotifier {
       rethrow;
     }
   }
-
-  // void init() {
-  //   currentUser = users[0];
-  //   friendList =
-  //       users.where((user) => user.chatID != currentUser.chatID).toList();
-  //   socketIO = SocketIOManager().createSocketIO(
-  //       '<ENTER_YOUR_SERVER_URL_HERE>', '/',
-  //       query: 'chatID=${currentUser.chatID}');
-  //   socketIO.init();
-  //   socketIO.subscribe('receive_message', (jsonData) {
-  //     Map<String, dynamic> data = json.decode(jsonData);
-  //     messages.add(Message(
-  //         data['content'], data['senderChatID'], data['receiverChatID']));
-  //     notifyListeners();
-  //   });
-  //   socketIO.connect();
-  // }
 
   void updateAvata(
       {required File file,

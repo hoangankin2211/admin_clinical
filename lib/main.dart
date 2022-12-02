@@ -8,21 +8,10 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import 'constants/api_link.dart';
 
-IO.Socket socket = IO.io(
-  ApiLink.uri,
-  IO.OptionBuilder().setTransports(['websocket']) // for Flutter or Dart VM
-      .build(),
-);
-
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   setPathUrlStrategy();
-  socket.onConnect((_) => print('connected'));
-  socket.on('verify', (jsonData) {
-    print(jsonData);
-    Get.back();
-  });
-  socket.onDisconnect((_) => print('disconnect'));
+
   runApp(const MyApp());
 }
 

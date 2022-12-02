@@ -56,7 +56,7 @@ dependencies:
   image_picker: ^0.8.6
   cloudinary_public: ^0.20.0
   # flutter_socket_io: ^0.6.0
-  socket_io_client: ^2.0.0
+  socket_io_client: ^1.0.2
 
 dev_dependencies:
   flutter_test:
