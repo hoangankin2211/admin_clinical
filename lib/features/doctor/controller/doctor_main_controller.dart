@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:admin_clinical/constants/global_widgets/custom_dialog_error/error_dialog.dart';
 import 'package:admin_clinical/constants/global_widgets/custom_dialog_error/success_dialog.dart';
+import 'package:admin_clinical/constants/utils.dart';
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -33,6 +34,7 @@ class DoctorMainController extends GetxController {
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
+
   RxInt experince = 0.obs;
   RxString departMent = "01".obs;
   Rx<DateTime> dateBorn = DateTime.now().obs;
@@ -66,6 +68,59 @@ class DoctorMainController extends GetxController {
     }, id: id);
   }
 
+  void initAllDataDialogEdit() {
+    Doctor1 sel = listDoctor.value[selectDoctor.value];
+    nameController.text = sel.name!;
+    addressController.text = sel.address!;
+    dateBorn.value = sel.dateBorn!;
+    phoneController.text = sel.phoneNumber!;
+    descriptionController.text = sel.description!;
+    experince.value = sel.experience!;
+  }
+
+  editDoctor(BuildContext context, Uint8List? image) async {
+    if (nameController.text == "" ||
+        addressController.text == "" ||
+        phoneController.text == "") {
+      await showDialog(
+        context: context,
+        builder: (context) => const ErrorDialog(
+            question: "Edit new Doctor", title1: "Field is null"),
+      );
+    } else {
+      String imageUrl = "";
+      if (image != null) {
+        imageUrl = await convertUti8ListToUrl(
+            image, listDepartMent.value[selectDepartMent.value].id!);
+      }
+      // ignore: use_build_context_synchronously
+      DataService.instance.editDoctor(
+        context,
+        (value) {
+          listDoctor.value = value;
+          showDialog(
+            context: context,
+            builder: (context) =>
+                const SuccessDialog(question: "Edit Doctor", title1: "Success"),
+          );
+          update(['listDoctor']);
+        },
+        id: listDoctor.value[selectDoctor.value].iDBS!,
+        name: nameController.text,
+        address: addressController.text,
+        phoneNumber: phoneController.text,
+        av: imageUrl != ""
+            ? imageUrl
+            : listDoctor.value[selectDoctor.value].avt!,
+        departMent: DataService
+            .instance.listDepartMent.value[selectDepartMent.value].id!,
+        description: descriptionController.text,
+        dateBorn: dateBorn.value,
+        experience: experince.value,
+      );
+    }
+  }
+
   insertDoctor(BuildContext context, Uint8List? image) async {
     if (nameController.text == "" ||
         addressController.text == "" ||
@@ -78,12 +133,7 @@ class DoctorMainController extends GetxController {
             const ErrorDialog(question: "Insert new Doctor", title1: "Failed"),
       );
     } else {
-      String imageUrl = "";
-      final cloudinary = CloudinaryPublic('ddopvilpr', 'evzte9pr');
-      CloudinaryResponse imageRes = await cloudinary.uploadFile(
-        CloudinaryFile.fromBytesData(image!, identifier: emailController.text),
-      );
-      imageUrl = imageRes.secureUrl;
+      String imageUrl = await convertUti8ListToUrl(image, emailController.text);
       // ignore: use_build_context_synchronously
       DataService.instance.insertNewDoctor(
         context,
@@ -92,7 +142,7 @@ class DoctorMainController extends GetxController {
           showDialog(
             context: context,
             builder: (context) => const SuccessDialog(
-                question: "Insert new Doctor", title1: "Sucess"),
+                question: "Insert new Doctor", title1: "Success"),
           );
           update(['listDoctor']);
         },

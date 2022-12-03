@@ -1,18 +1,25 @@
+import 'package:admin_clinical/constants/global_widgets/custom_button.dart';
 import 'package:admin_clinical/features/doctor/controller/doctor_main_controller.dart';
 import 'package:admin_clinical/features/doctor/screens/doctor_profile_screen.dart';
 import 'package:admin_clinical/models/department.dart';
 import 'package:admin_clinical/routes/name_route.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:readmore/readmore.dart';
 import '../../../constants/app_colors.dart';
+import '../../../constants/app_decoration.dart';
 import '../../../constants/global_widgets/btn_with_icon.dart';
 import '../../../constants/global_widgets/header_list_item.dart';
 import '../../../constants/global_widgets/list_item.dart';
+import '../../../constants/utils.dart';
 import '../../../models/doctor.dart';
 import '../../../services/data_service/data_service.dart';
+import '../../patient/widgets/custom_text_form_field.dart';
 import '../widgets/dialog_add_new_doctor.dart';
+import '../widgets/dialog_edit_doctor.dart';
 import '../widgets/dialog_select_filter.dart';
 
 class ViewAllDoctor extends StatelessWidget {
@@ -235,7 +242,13 @@ class ViewAllDoctor extends StatelessWidget {
                                 title: "Edit Doctor",
                                 icon: Icons.edit,
                                 color: Colors.green.withOpacity(0.6),
-                                callBack: () {}),
+                                callBack: () {
+                                  controller.initAllDataDialogEdit();
+                                  Get.dialog(Dialog(
+                                    backgroundColor: Colors.transparent,
+                                    child: DialogEditDoctor(),
+                                  ));
+                                }),
                           ),
                           const SizedBox(width: 10.0),
                           Expanded(
@@ -270,12 +283,14 @@ class ViewAllDoctor extends StatelessWidget {
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text(
-            "866 found",
-            style: TextStyle(
-              color: AppColors.headline1TextColor,
-              fontWeight: FontWeight.bold,
-              fontSize: 20.0,
+          Obx(
+            () => Text(
+              "${controller.listSearchDoctor.value.length} found",
+              style: const TextStyle(
+                color: AppColors.headline1TextColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 20.0,
+              ),
             ),
           ),
           const SizedBox(width: 10.0),

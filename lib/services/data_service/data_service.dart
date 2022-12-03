@@ -137,17 +137,64 @@ class DataService extends GetxController {
     return doctorList;
   }
 
-  editDoctor(BuildContext context, Function(List<Doctor1>) callBackk,
-      {required String name,
+  editDoctor(BuildContext context, Function(List<Doctor1>) callBack,
+      {required String id,
+      required String name,
       required String address,
       required String phoneNumber,
       required String av,
       required String departMent,
       required String description,
-      required String email,
-      required String password,
       required DateTime dateBorn,
-      required int experience}) async {}
+      required int experience}) async {
+    try {
+      print("Edit Doctor function is called");
+      var timeStamp = dateBorn.millisecondsSinceEpoch;
+      http.Response res = await http.post(
+        Uri.parse(
+          '${ApiLink.uri}/api/doctors/editDoctor',
+        ),
+        body: jsonEncode({
+          'id': id,
+          'name': name,
+          'address': address,
+          'avt': av,
+          'dateBorn': timeStamp,
+          'departMent': departMent,
+          'experience': experience,
+          'phoneNumber': phoneNumber,
+          'description': description,
+        }),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+      httpErrorHandle(
+        response: res,
+        context: context,
+        onSuccess: () async {
+          callBack(listDoctor.value);
+        },
+      );
+    } catch (e) {
+      //
+    } finally {
+      final index =
+          listDoctor.value.indexWhere((element) => element.iDBS == id);
+      listDoctor.value[index] = Doctor1(
+        name: name,
+        address: address,
+        avt: av,
+        dateBorn: dateBorn,
+        departMent: departMent,
+        experience: experience,
+        iDBS: listDoctor.value[index].iDBS,
+        phoneNumber: phoneNumber,
+        description: description,
+      );
+      callBack(listDoctor.value);
+    }
+  }
 
   void insertNewDoctor(BuildContext context, Function(List<Doctor1>) callBack,
       {required String name,
