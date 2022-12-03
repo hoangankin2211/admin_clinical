@@ -31,9 +31,9 @@ class TopDoctorCard extends StatelessWidget {
             decoration: const BoxDecoration(
               color: AppColors.primaryColor,
             ),
-            child: const Text(
-              "Dr.Nguyem Minh Hung",
-              style: TextStyle(
+            child: Text(
+              "Dr.$name",
+              style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                   fontSize: 18.0),
@@ -63,7 +63,7 @@ class TopDoctorCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       fit: BoxFit.cover,
-                      image: AssetImage(
+                      image: NetworkImage(
                         image,
                       ),
                     ),
@@ -74,10 +74,10 @@ class TopDoctorCard extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: Row(
                     children: [
-                      Expanded(
+                      const Expanded(
                         child: Text(
-                          name,
-                          style: const TextStyle(
+                          "HEAD OF THE DEPARTMENT",
+                          style: TextStyle(
                               color: Colors.blueGrey,
                               fontWeight: FontWeight.bold,
                               fontSize: 18.0),

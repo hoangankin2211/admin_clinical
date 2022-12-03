@@ -46,7 +46,7 @@ class ViewAllDoctor extends StatelessWidget {
                     children: [
                       Expanded(
                         flex: 6,
-                        child: _doctorListField(),
+                        child: _doctorListField(context),
                       ),
                       const SizedBox(width: 10.0),
                       Obx(
@@ -278,7 +278,7 @@ class ViewAllDoctor extends StatelessWidget {
     );
   }
 
-  Column _doctorListField() {
+  Column _doctorListField(BuildContext context) {
     return Column(children: [
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -295,21 +295,44 @@ class ViewAllDoctor extends StatelessWidget {
           ),
           const SizedBox(width: 10.0),
           Obx(
-            () => RichText(
-              text: TextSpan(
-                style: const TextStyle(
-                    fontSize: 20.0, fontWeight: FontWeight.bold),
-                children: [
-                  const TextSpan(
-                      text: "Filter: ",
-                      style: TextStyle(color: AppColors.headline1TextColor)),
-                  ...listFilter.value.map(
-                    (e) => TextSpan(
-                        text: ' $e',
-                        style: const TextStyle(color: AppColors.primaryColor)),
+            () => Row(
+              children: [
+                const Text(
+                  'Department:  ',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20.0,
                   ),
-                ],
-              ),
+                ),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 1.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: AppDecoration.primaryBorder,
+                    borderRadius: AppDecoration.primaryRadiusBorder,
+                  ),
+                  child: DropdownButton<int>(
+                    underline: const SizedBox(),
+                    items: DataService.instance.listDepartMent.value
+                        .asMap()
+                        .entries
+                        .map((e) => DropdownMenuItem<int>(
+                              value: e.key,
+                              child: Text(
+                                e.value.name!,
+                                style: Theme.of(context).textTheme.headline4,
+                              ),
+                            ))
+                        .toList(),
+                    value: controller.selectDepartMent.value,
+                    onChanged: (value) {
+                      controller.selectDepartMent.value = value!;
+                    },
+                  ),
+                ),
+              ],
             ),
           )
         ],
@@ -413,17 +436,19 @@ class ViewAllDoctor extends StatelessWidget {
         ),
         const SizedBox(width: 10.0),
         BtnWithIcon(
-          title: "Add new Doctor",
-          icon: Icons.add,
-          color: AppColors.primaryColor.withOpacity(0.5),
-          callBack: () async => await showDialog(
-            context: context,
-            builder: (context) => Dialog(
-              backgroundColor: Colors.transparent,
-              child: DialogAddNewDoctor(),
-            ),
-          ),
-        ),
+            title: "Add new Doctor",
+            icon: Icons.add,
+            color: AppColors.primaryColor.withOpacity(0.5),
+            callBack: () async {
+              controller.nullAllTextField();
+              await showDialog(
+                context: context,
+                builder: (context) => Dialog(
+                  backgroundColor: Colors.transparent,
+                  child: DialogAddNewDoctor(),
+                ),
+              );
+            }),
         const SizedBox(width: 10.0),
         BtnWithIcon(
           title: "Filter",

@@ -13,6 +13,7 @@ import '../../../services/data_service/data_service.dart';
 
 class DoctorMainController extends GetxController {
   RxList<Department> listDepartMent = <Department>[].obs;
+  RxList<Department> listDepartMentForSearch = <Department>[].obs;
   RxList<Doctor1> listDoctor = <Doctor1>[].obs;
   RxList<Doctor1> listSearchDoctor = <Doctor1>[].obs;
 
@@ -21,12 +22,20 @@ class DoctorMainController extends GetxController {
     super.onInit();
     listDepartMent.value = DataService.instance.listDepartMent.value;
     listDoctor.value = DataService.instance.listDoctor.value;
+    listDepartMentForSearch.value = DataService.instance.listDepartMent.value;
+    listDepartMentForSearch.value.add(Department(id: '00', name: 'All'));
     update(['listDoctor']);
   }
 
   Department getDepartMent(String id, List<Department> list) =>
       list.firstWhere((element) => element.id == id);
   RxInt selectDoctor = 0.obs;
+  RxInt selectDepartMent = 0.obs;
+  RxInt selectDepartMentFotSearch = 0.obs;
+  RxInt experince = 0.obs;
+  RxString departMent = "01".obs;
+  Rx<DateTime> dateBorn = DateTime.now().obs;
+  RxInt gender = 0.obs;
   // Text Editting controller
   final TextEditingController searchController = TextEditingController();
 
@@ -35,20 +44,24 @@ class DoctorMainController extends GetxController {
   final TextEditingController addressController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
 
-  RxInt experince = 0.obs;
-  RxString departMent = "01".obs;
-  Rx<DateTime> dateBorn = DateTime.now().obs;
-  RxInt gender = 0.obs;
-
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passController = TextEditingController();
 
-  RxInt selectDepartMent = 0.obs;
+  //function
+
+  getCountDoctorInDepart(String id) {
+    int count = 0;
+    listDoctor.value.forEach(
+        (element) => (element.departMent == id) ? count += 1 : count += 0);
+    return count;
+  }
 
   fetchSearchDoctor(BuildContext context, String searchQuery) async {
     if (searchQuery != "") {
-      listSearchDoctor.value =
-          await DataService.instance.searchDoctor(context, searchQuery);
+      listSearchDoctor.value = await DataService.instance.searchDoctor(
+          context,
+          searchQuery,
+          listDepartMentForSearch.value[selectDepartMentFotSearch.value].id!);
     } else {
       listSearchDoctor.value.clear();
     }
@@ -76,6 +89,16 @@ class DoctorMainController extends GetxController {
     phoneController.text = sel.phoneNumber!;
     descriptionController.text = sel.description!;
     experince.value = sel.experience!;
+  }
+
+  void nullAllTextField() {
+    nameController.clear();
+    addressController.clear();
+    addressController.clear();
+    dateBorn.value = DateTime.now();
+    phoneController.clear();
+    descriptionController.clear();
+    experince.value = 0;
   }
 
   editDoctor(BuildContext context, Uint8List? image) async {
