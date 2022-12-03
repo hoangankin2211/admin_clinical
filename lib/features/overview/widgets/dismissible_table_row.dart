@@ -6,12 +6,12 @@ class DismissibleTableRow extends StatelessWidget {
       {super.key,
       required this.id,
       required this.remove,
-      required this.index,
       required this.child,
-      required this.isTitleRow});
+      required this.isTitleRow,
+      required this.yesHandleSelection});
   final String id;
-  final Function(int) remove;
-  final int index;
+  final Function() yesHandleSelection;
+  final Function(String) remove;
   final Widget child;
   final bool isTitleRow;
   @override
@@ -34,7 +34,7 @@ class DismissibleTableRow extends StatelessWidget {
               ),
             ),
             onDismissed: (direction) {
-              remove(index);
+              remove(id);
             },
             direction: DismissDirection.endToStart,
             confirmDismiss: (direction) {
@@ -49,9 +49,10 @@ class DismissibleTableRow extends StatelessWidget {
                         'Do you want to remove the patient from the list ? '),
                     actions: [
                       TextButton(
-                        onPressed: () {
+                        onPressed: () async {
                           isDelete = true;
                           Get.back();
+                          await yesHandleSelection();
                         },
                         child: const Text('YES'),
                       ),
@@ -65,7 +66,7 @@ class DismissibleTableRow extends StatelessWidget {
                     ],
                   );
                 },
-              ).then((value) {
+              ).then((value) async {
                 return isDelete;
               });
             },

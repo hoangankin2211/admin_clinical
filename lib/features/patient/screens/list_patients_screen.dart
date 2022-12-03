@@ -2,6 +2,7 @@ import 'package:admin_clinical/commons/widgets/custom_icon_button.dart';
 import 'package:admin_clinical/constants/app_decoration.dart';
 import 'package:admin_clinical/features/overview/widgets/custom_table.dart';
 import 'package:admin_clinical/features/patient/controller/patient_page_controller.dart';
+import 'package:admin_clinical/services/data_service/patient_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -9,6 +10,17 @@ import 'package:intl/intl.dart';
 import '../widgets/add_patient_dialog.dart';
 import '../widgets/filter_card.dart';
 import '../widgets/show_entries_widget.dart';
+import 'package:http/http.dart' as http;
+
+const Map<String, String> patientListField = {
+  'name': 'Patient Name',
+  'id': 'Id',
+  'date': 'Date',
+  'gender': 'Gender',
+  'diseases': 'Diseases',
+  'status': 'Status',
+  'payment': 'Payment',
+};
 
 class ListPatientScreen extends StatelessWidget {
   ListPatientScreen({super.key});
@@ -68,7 +80,9 @@ class ListPatientScreen extends StatelessWidget {
                   ),
                 ),
                 CustomIconButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    await PatientService.fetchAllPatientData();
+                  },
                   label: Text(
                     'Filter',
                     style: Theme.of(context).textTheme.headline4,
@@ -121,6 +135,17 @@ class ListPatientScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 30),
+            PatientListRow(
+              name: patientListField['name']!,
+              id: patientListField['id']!,
+              date: patientListField['date']!,
+              gender: patientListField['gender']!,
+              diseases: patientListField['diseases']!,
+              status: patientListField['status']!,
+              color: Colors.blueGrey[50]!,
+              avt: 'images/fake_avatar.jpg',
+              payment: patientListField['payment']!,
+            ),
             SizedBox(
               height: patientPageController.numberOfEntries.value * 60,
               child: Obx(
@@ -128,19 +153,28 @@ class ListPatientScreen extends StatelessWidget {
                   itemExtent: 60,
                   itemCount: patientPageController.numberOfEntries.value,
                   itemBuilder: (context, index) => PatientListRow(
-                    index: index,
                     removeEntries: patientPageController.removeEntries,
-                    name: patientPageController.data.value[index]['name']!,
-                    id: patientPageController.data.value[index]['id']!,
-                    date: patientPageController.data.value[index]['date']!,
-                    gender: patientPageController.data.value[index]['gender']!,
-                    diseases: patientPageController.data.value[index]
-                        ['diseases']!,
-                    status: patientPageController.data.value[index]['status']!,
-                    payment: patientPageController.data.value[index]
-                        ['payment']!,
+                    name: patientPageController.data.value.values
+                        .elementAt(index)
+                        .name,
+                    id: patientPageController.data.value.values
+                        .elementAt(index)
+                        .id,
+                    date: patientPageController.data.value.values
+                        .elementAt(index)
+                        .dob,
+                    gender: patientPageController.data.value.values
+                        .elementAt(index)
+                        .gender,
+                    diseases: patientPageController.data.value.values
+                        .elementAt(index)
+                        .name,
+                    status: patientPageController.data.value.values
+                        .elementAt(index)
+                        .status,
+                    payment: '100000',
                     avt: 'images/fake_avatar.jpg',
-                    color: index == 0 ? Colors.blueGrey[50]! : Colors.white,
+                    color: Colors.white,
                   ),
                 ),
               ),

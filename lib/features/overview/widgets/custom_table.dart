@@ -2,7 +2,9 @@ import 'package:admin_clinical/constants/app_colors.dart';
 import 'package:admin_clinical/features/overview/widgets/dismissible_table_row.dart';
 import 'package:admin_clinical/features/patient/screens/patient_screen.dart';
 import 'package:admin_clinical/models/medicine.dart';
+import 'package:admin_clinical/models/thongtinbenhnhan.dart';
 import 'package:admin_clinical/routes/name_route.dart';
+import 'package:admin_clinical/services/data_service/patient_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -118,8 +120,7 @@ class PatientListRow extends StatelessWidget {
     required this.color,
     required this.avt,
     required this.payment,
-    required this.removeEntries,
-    required this.index,
+    this.removeEntries,
   });
   final String avt;
   final String name;
@@ -129,9 +130,8 @@ class PatientListRow extends StatelessWidget {
   final String diseases;
   final String status;
   final String payment;
-  final int index;
   final Color color;
-  final Function(int) removeEntries;
+  final Function(String)? removeEntries;
 
   @override
   Widget build(BuildContext context) {
@@ -145,10 +145,12 @@ class PatientListRow extends StatelessWidget {
       'Payment': payment,
     };
     return DismissibleTableRow(
+      yesHandleSelection: () async {
+        final result = await PatientService.deletePatient(id, context);
+      },
       isTitleRow: color != Colors.white,
       id: id,
-      remove: removeEntries,
-      index: index,
+      remove: removeEntries ?? (_) {},
       child: InkWell(
         onTap: color == Colors.white
             ? () => Get.toNamed(PageName.patientDetailScreen)

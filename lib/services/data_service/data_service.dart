@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:admin_clinical/services/data_service/patient_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -22,6 +23,9 @@ class DataService extends GetxController {
     }
     if (listDepartMent.value.isEmpty) {
       fetchAllDeparMent((value) => listDepartMent.value = value);
+    }
+    if (PatientService.listPatients.isEmpty) {
+      PatientService.fetchAllPatientData();
     }
   }
 

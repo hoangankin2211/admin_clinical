@@ -1,63 +1,12 @@
+import 'package:admin_clinical/models/thongtinbenhnhan.dart';
+import 'package:admin_clinical/services/data_service/patient_service.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class PatientPageController extends GetxController {
-  final Rx<List<Map<String, String>>> data = Rx<List<Map<String, String>>>([
-    {
-      'name': 'Patient Name',
-      'id': 'Id',
-      'date': 'Date',
-      'gender': 'Gender',
-      'diseases': 'Diseases',
-      'status': 'Status',
-      'payment': 'Payment',
-    },
-    {
-      'name': 'Hoang Ankin',
-      'id': '20120481',
-      'date': DateFormat().add_yMd().format(DateTime.now()).toString(),
-      'gender': 'Male',
-      'diseases': 'Nothing',
-      'status': 'Out-Patient',
-      'payment': 'Private Cash',
-    },
-    {
-      'name': 'Hoang Ankin',
-      'id': '20120482',
-      'date': DateFormat().add_yMd().format(DateTime.now()).toString(),
-      'gender': 'Male',
-      'diseases': 'Nothing',
-      'status': 'Out-Patient',
-      'payment': 'Private Cash',
-    },
-    {
-      'name': 'Hoang Ankin',
-      'id': '20120483',
-      'date': DateFormat().add_yMd().format(DateTime.now()).toString(),
-      'gender': 'Male',
-      'diseases': 'Nothing',
-      'status': 'Out-Patient',
-      'payment': 'Private Cash',
-    },
-    {
-      'name': 'Hoang Ankin',
-      'id': '20120484',
-      'date': DateFormat().add_yMd().format(DateTime.now()).toString(),
-      'gender': 'Male',
-      'diseases': 'Nothing',
-      'status': 'Out-Patient',
-      'payment': 'Private Cash',
-    },
-    {
-      'name': 'Hoang Ankin',
-      'id': '20120485',
-      'date': DateFormat().add_yMd().format(DateTime.now()).toString(),
-      'gender': 'Male',
-      'diseases': 'Nothing',
-      'status': 'Out-Patient',
-      'payment': 'Private Cash',
-    },
-  ]);
+  late final Rx<Map<String, Patient>> data =
+      Rx<Map<String, Patient>>(PatientService.listPatients);
 
   void applyEntries(int value) {
     if (value >= 1 && value <= data.value.length - 1) {
@@ -65,11 +14,21 @@ class PatientPageController extends GetxController {
     }
   }
 
-  void removeEntries(int index) {
+  void removeEntries(String id) {
     numberOfEntries.value--;
-    data.value.removeAt(index);
+    data.value.removeWhere((key, value) => key == id);
+  }
+
+  void addEntries(Map<String, Patient> newPatient) {
+    data.value.addAll(newPatient);
+    numberOfEntries.value++;
   }
 
   late var numberOfEntries =
       (data.value.length - 1 > 5 ? 6 : data.value.length).obs;
+
+  Future<bool> addPatientToDataBase(
+      Patient patient, BuildContext context) async {
+    return await PatientService.insertPatient(patient, context);
+  }
 }
