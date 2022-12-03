@@ -196,7 +196,7 @@ class DoctorOverView extends StatelessWidget {
                               ),
                               Row(
                                 children: const [
-                                  const Icon(Icons.trending_down_outlined,
+                                  Icon(Icons.trending_down_outlined,
                                       color: Colors.red),
                                   Expanded(
                                     child: Text(
@@ -266,6 +266,7 @@ class DoctorOverView extends StatelessWidget {
                               Text(
                                 e.iDBS!,
                                 style: const TextStyle(
+                                  overflow: TextOverflow.ellipsis,
                                   color: AppColors.primarySecondColor,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 17.0,

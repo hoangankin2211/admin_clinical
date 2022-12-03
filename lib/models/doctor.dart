@@ -84,12 +84,13 @@ class Doctor1 {
   });
 
   Doctor1.fromJson(Map<String, dynamic> json) {
-    iDBS = json['iDBS'];
+    iDBS = json['_id'];
     name = json['name'];
     address = json['address'];
     dateBorn = DateTime.fromMillisecondsSinceEpoch(json["dateBorn"]);
     phoneNumber = json['phoneNumber'];
     avt = json['avt'];
+
     departMent = json['departMent'];
     experience = json['experience'];
     description = json['description'];
@@ -97,7 +98,7 @@ class Doctor1 {
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> data = ({});
-    data['iDBS'] = iDBS;
+    data['_id'] = iDBS;
     data['name'] = name;
     data['address'] = address;
     data['dateBorn'] = dateBorn;

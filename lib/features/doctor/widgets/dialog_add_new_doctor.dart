@@ -1,8 +1,12 @@
+import 'dart:typed_data';
+
 import 'package:admin_clinical/features/auth/widgets/custom_button.dart';
 import 'package:admin_clinical/features/doctor/screens/doctor_profile_screen.dart';
 import 'package:admin_clinical/features/patient/screens/list_patients_screen.dart';
+import 'package:admin_clinical/services/data_service/data_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:readmore/readmore.dart';
 
@@ -11,20 +15,44 @@ import '../../../constants/app_decoration.dart';
 import '../../../constants/fake_data.dart';
 import '../../../constants/global_widgets/custom_password_field.dart';
 import '../../../constants/global_widgets/custom_text_field_icon_btn.dart';
+import '../../../constants/utils.dart';
 import '../../patient/widgets/custom_text_form_field.dart';
+import '../controller/doctor_main_controller.dart';
 
-class DialogAddNewDoctor extends StatelessWidget {
+class DialogAddNewDoctor extends StatefulWidget {
   DialogAddNewDoctor({
     Key? key,
   }) : super(key: key);
-  final _passController = TextEditingController();
+
+  @override
+  State<DialogAddNewDoctor> createState() => _DialogAddNewDoctorState();
+}
+
+class _DialogAddNewDoctorState extends State<DialogAddNewDoctor> {
   RxInt _value = 0.obs;
+
+  final _passController = TextEditingController();
+  Uint8List? _image;
+  Rx<DateTime> date = DateTime.now().obs;
+  void selectedImage() async {
+    Uint8List image = await pickImage(ImageSource.gallery);
+    setState(() {
+      _image = image;
+      //convertoBytes();
+    });
+  }
+
   final _rePassController = TextEditingController();
+
+  final controller = Get.find<DoctorMainController>();
+
   @override
   Widget build(BuildContext context) {
+    final heightDevice = MediaQuery.of(context).size.height;
+    final widthDevice = MediaQuery.of(context).size.width;
     return Container(
-      width: double.infinity,
-      height: double.infinity,
+      width: widthDevice - 200,
+      height: heightDevice - 200,
       padding: const EdgeInsets.all(20.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5.0),
@@ -66,41 +94,23 @@ class DialogAddNewDoctor extends StatelessWidget {
                   child: Column(
                     children: [
                       Row(
-                        children: const [
+                        children: [
                           Expanded(
                               child: CustomTextFormField(
-                            title: "First Name",
-                            width: double.infinity,
-                            hint: "Enter First Name",
-                            trailingIcon: Icon(Icons.person),
-                          )),
-                          SizedBox(width: 20.0),
-                          Expanded(
-                              child: CustomTextFormField(
-                            title: "Last Name",
-                            width: double.infinity,
-                            hint: "Enter Last Name",
-                            trailingIcon: Icon(Icons.person),
-                          )),
-                        ],
-                      ),
-                      const SizedBox(height: 30.0),
-                      Row(
-                        children: const [
-                          Expanded(
-                              child: CustomTextFormField(
+                            controller: controller.nameController,
                             title: "UserName",
                             width: double.infinity,
                             hint: "Enter Username",
-                            trailingIcon: Icon(Icons.person),
+                            trailingIcon: const Icon(Icons.person),
                           )),
-                          SizedBox(width: 20.0),
+                          const SizedBox(width: 20.0),
                           Expanded(
                               child: CustomTextFormField(
+                            controller: controller.emailController,
                             title: "Email",
                             width: double.infinity,
                             hint: "Enter Email",
-                            trailingIcon: Icon(Icons.person),
+                            trailingIcon: const Icon(Icons.person),
                           )),
                         ],
                       ),
@@ -109,15 +119,58 @@ class DialogAddNewDoctor extends StatelessWidget {
                         children: [
                           Expanded(
                               child: CustomPasswordField(
-                                  controller: _passController,
+                                  controller: controller.passController,
                                   hintText: "Enter Password",
                                   labelText: "Password")),
                           const SizedBox(width: 20.0),
                           Expanded(
-                            child: CustomPasswordField(
-                                controller: _rePassController,
-                                hintText: "Enter Re-Password",
-                                labelText: "Confirm Password"),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Gender",
+                                  style: Theme.of(context).textTheme.headline4,
+                                ),
+                                const SizedBox(width: 10.0),
+                                Expanded(
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20, vertical: 1.0),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      border: AppDecoration.primaryBorder,
+                                      borderRadius:
+                                          AppDecoration.primaryRadiusBorder,
+                                    ),
+                                    child: Obx(
+                                      () => DropdownButton<int>(
+                                        underline: const SizedBox(),
+                                        items: DataService
+                                            .instance.listDepartMent.value
+                                            .asMap()
+                                            .entries
+                                            .map((e) => DropdownMenuItem<int>(
+                                                  value: e.key,
+                                                  child: Text(
+                                                    e.value.name!,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headline4,
+                                                  ),
+                                                ))
+                                            .toList(),
+                                        value:
+                                            controller.selectDepartMent.value,
+                                        onChanged: (value) {
+                                          controller.selectDepartMent.value =
+                                              value!;
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
@@ -125,12 +178,56 @@ class DialogAddNewDoctor extends StatelessWidget {
                       Row(
                         children: [
                           Expanded(
-                            child: CustomTextFieldIconBtn(
-                              title: "Day of Birth",
-                              width: double.infinity,
-                              callBack: () {},
-                              trailingIcon: const Icon(Icons.calendar_month),
-                              hint: "Select Day of Birth",
+                            child: Container(
+                              padding: const EdgeInsets.all(15.0),
+                              decoration: BoxDecoration(
+                                border:
+                                    Border.all(width: 0.2, color: Colors.black),
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: Row(
+                                children: [
+                                  Obx(
+                                    () => Expanded(
+                                      child: Text(
+                                        DateFormat()
+                                            .add_yMMMEd()
+                                            .format(controller.dateBorn.value),
+                                        style: const TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16.0,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: () async {
+                                      final choice = await showDatePicker(
+                                        context: context,
+                                        firstDate: DateTime(2010),
+                                        lastDate: DateTime(2030),
+                                        initialDate: DateTime.now(),
+                                        builder: (context, child) {
+                                          return Center(
+                                              child: SizedBox(
+                                            width: 1000.0,
+                                            height: 1100.0,
+                                            child: child,
+                                          ));
+                                        },
+                                      );
+                                      if (choice != null) {
+                                        controller.dateBorn.value = choice;
+                                      }
+                                    },
+                                    child: const Icon(
+                                      Icons.calendar_month,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                           const SizedBox(width: 20.0),
@@ -182,21 +279,23 @@ class DialogAddNewDoctor extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: 30.0),
-                      const CustomTextFormField(
+                      CustomTextFormField(
+                        controller: controller.addressController,
                         title: "Address",
                         width: double.infinity,
                         hint: "Enter Address",
-                        trailingIcon: Icon(Icons.location_on_sharp),
+                        trailingIcon: const Icon(Icons.location_on_sharp),
                       ),
                       const SizedBox(height: 30.0),
                       Row(
                         children: [
-                          const Expanded(
+                          Expanded(
                               child: CustomTextFormField(
+                            controller: controller.phoneController,
                             title: "Phone Number",
                             width: double.infinity,
                             hint: "Enter Phone Number",
-                            trailingIcon: Icon(Icons.phone),
+                            trailingIcon: const Icon(Icons.phone),
                           )),
                           const SizedBox(width: 20.0),
                           Expanded(
@@ -205,13 +304,14 @@ class DialogAddNewDoctor extends StatelessWidget {
                               width: double.infinity,
                               callBack: () {},
                               trailingIcon: const Icon(Icons.arrow_drop_down),
-                              hint: "Select Day of Country",
+                              hint: " Country",
                             ),
                           ),
                         ],
                       ),
                       const SizedBox(height: 30.0),
-                      const CustomTextFormField(
+                      CustomTextFormField(
+                        controller: controller.descriptionController,
                         title: "Description",
                         maxLine: 4,
                         width: double.infinity,
@@ -240,21 +340,36 @@ class DialogAddNewDoctor extends StatelessWidget {
                     children: [
                       Stack(
                         children: [
-                          Container(
-                            width: double.infinity,
-                            height: MediaQuery.of(context).size.height / 4,
-                            decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(5.0),
-                                  topRight: Radius.circular(5.0)),
-                              image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: AssetImage(
-                                  'assets/images/fake_avatar.jpg',
+                          _image == null
+                              ? Container(
+                                  width: double.infinity,
+                                  height:
+                                      MediaQuery.of(context).size.height / 4,
+                                  decoration: const BoxDecoration(
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(5.0),
+                                        topRight: Radius.circular(5.0)),
+                                    image: DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: AssetImage(
+                                        'assets/images/fake_avatar.jpg',
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : Container(
+                                  width: double.infinity,
+                                  height:
+                                      MediaQuery.of(context).size.height / 4,
+                                  decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.only(
+                                        topLeft: Radius.circular(5.0),
+                                        topRight: Radius.circular(5.0)),
+                                    image: DecorationImage(
+                                        fit: BoxFit.cover,
+                                        image: MemoryImage(_image!)),
+                                  ),
                                 ),
-                              ),
-                            ),
-                          ),
                           Container(
                             width: double.infinity,
                             height: MediaQuery.of(context).size.height / 4,
@@ -272,7 +387,7 @@ class DialogAddNewDoctor extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   InkWell(
-                                    onTap: () {},
+                                    onTap: () => selectedImage(),
                                     child: Container(
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 10.0, vertical: 5.0),
@@ -304,23 +419,15 @@ class DialogAddNewDoctor extends StatelessWidget {
                         ],
                       ),
                       const Spacer(),
-                      InkWell(
-                        onTap: () {},
-                        child: Container(
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: SizedBox(
                           width: double.infinity,
-                          height: 70,
-                          alignment: Alignment.center,
-                          margin: const EdgeInsets.all(10.0),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5.0),
-                            color: AppColors.primaryColor.withOpacity(0.7),
-                          ),
-                          child: const Text(
-                            "Create Doctor",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20.0),
+                          height: 50.0,
+                          child: CustomButton(
+                            title: "Create Doctor",
+                            onPressed: () =>
+                                controller.insertDoctor(context, _image),
                           ),
                         ),
                       ),

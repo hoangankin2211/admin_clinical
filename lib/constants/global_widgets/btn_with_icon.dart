@@ -34,6 +34,7 @@ class BtnWithIcon extends StatelessWidget {
                     child: Text(
                       " $title",
                       style: const TextStyle(
+                        overflow: TextOverflow.ellipsis,
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                       ),

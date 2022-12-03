@@ -4,4 +4,5 @@ class PageName {
   static const String loginScreen = '/login_screen';
   static const String patientDetailScreen = '/patient_detail_screen';
   static const String splashScreen = '/splash_screen';
+  static const String doctorDetailScreen = '/doctor_detail_screen';
 }

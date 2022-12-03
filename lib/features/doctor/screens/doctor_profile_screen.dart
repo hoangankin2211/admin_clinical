@@ -1,6 +1,9 @@
+import 'package:admin_clinical/features/doctor/controller/doctor_detai_controller.dart';
 import 'package:admin_clinical/features/doctor/widgets/doctor_card.dart';
+import 'package:admin_clinical/services/data_service/data_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/global_widgets/comment_card.dart';
@@ -43,8 +46,8 @@ List<Map<String, dynamic>> fakeData = [
 ];
 
 class DoctorProfileScreen extends StatelessWidget {
-  const DoctorProfileScreen({super.key});
-
+  DoctorProfileScreen({super.key});
+  final controller = Get.find<DoctorDetailController>();
   @override
   Widget build(BuildContext context) {
     List<Map<String, dynamic>> listInfo = [
@@ -56,84 +59,86 @@ class DoctorProfileScreen extends StatelessWidget {
       {
         'image': 'assets/icons/experiences.svg',
         'title': 'year experiences',
-        'data': '10'
+        'data': controller.doctor.experience.toString(),
       },
       {'image': 'assets/icons/star.svg', 'title': 'rating', 'data': '4.8'},
       {'image': 'assets/icons/chat.svg', 'title': 'reviews', 'data': '4.942'},
     ];
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: LayoutBuilder(builder: (context, constraints) {
-        return Column(
-          children: [
-            Expanded(
-              child: Row(
-                children: [
-                  _mainProfileField(listInfo, context),
-                  const SizedBox(height: 20.0),
-                  Container(
-                    height: double.infinity,
-                    width: 0.1,
-                    color: Colors.black,
-                    margin: const EdgeInsets.symmetric(horizontal: 20.0),
-                  ),
-                  Expanded(
-                    flex: 6,
-                    child: Column(
-                      children: [
-                        Expanded(
-                          flex: 6,
-                          child: SizedBox(
-                            height: double.infinity,
-                            width: double.infinity,
-                            child: Column(
-                              children: [
-                                const Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                      'Medical examination inforamation',
-                                      style: TextStyle(
-                                          color: AppColors.headline1TextColor,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20.0)),
-                                ),
-                                Expanded(
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                          flex: 3,
-                                          child: _patientInformationFiled()),
-                                      const SizedBox(width: 10.0),
-                                      Container(
-                                          width: 0.2,
-                                          height: double.infinity,
-                                          color: Colors.grey),
-                                      const SizedBox(width: 10.0),
-                                      Expanded(
-                                        flex: 6,
-                                        child: _examinationInformationField(),
-                                      ),
-                                    ],
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: LayoutBuilder(builder: (context, constraints) {
+          return Column(
+            children: [
+              Expanded(
+                child: Row(
+                  children: [
+                    _mainProfileField(listInfo, context),
+                    const SizedBox(height: 20.0),
+                    Container(
+                      height: double.infinity,
+                      width: 0.1,
+                      color: Colors.black,
+                      margin: const EdgeInsets.symmetric(horizontal: 20.0),
+                    ),
+                    Expanded(
+                      flex: 6,
+                      child: Column(
+                        children: [
+                          Expanded(
+                            flex: 6,
+                            child: SizedBox(
+                              height: double.infinity,
+                              width: double.infinity,
+                              child: Column(
+                                children: [
+                                  const Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                        'Medical examination inforamation',
+                                        style: TextStyle(
+                                            color: AppColors.headline1TextColor,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20.0)),
                                   ),
-                                ),
-                              ],
+                                  Expanded(
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                            flex: 3,
+                                            child: _patientInformationFiled()),
+                                        const SizedBox(width: 10.0),
+                                        Container(
+                                            width: 0.2,
+                                            height: double.infinity,
+                                            color: Colors.grey),
+                                        const SizedBox(width: 10.0),
+                                        Expanded(
+                                          flex: 6,
+                                          child: _examinationInformationField(),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                        const Divider(color: Colors.grey, thickness: 0.3),
-                        Expanded(
-                          flex: 5,
-                          child: _medicalExmainationField(),
-                        ),
-                      ],
+                          const Divider(color: Colors.grey, thickness: 0.3),
+                          Expanded(
+                            flex: 5,
+                            child: _medicalExmainationField(),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
-        );
-      }),
+            ],
+          );
+        }),
+      ),
     );
   }
 
@@ -639,16 +644,18 @@ class DoctorProfileScreen extends StatelessWidget {
             DoctorCard1(
                 doctor: Doctor(
               email: "hungnguyen.201102ak@gmail.com",
-              name: "Nguyen Minh Hung",
-              dateBorn: DateTime.now(),
-              avt:
-                  "https://res.cloudinary.com/ddopvilpr/image/upload/v1665673142/Macbool%20air%20pro%2022220/a3gz4jsve2omrw5c4gtv.jpg",
+              name: controller.doctor.name,
+              dateBorn: controller.doctor.dateBorn,
+              avt: controller.doctor.avt,
               timeStart: 20,
               timeFinish: 200,
-              type: "Dentist",
-              description: "oke la",
-              experience: 10,
-              address: "Thi Xa An Khe tinh Gia Lai",
+              type: controller
+                  .getDepartMent(controller.doctor.departMent!,
+                      DataService.instance.listDepartMent.value)
+                  .name,
+              description: controller.doctor.description,
+              experience: controller.doctor.experience,
+              address: controller.doctor.address,
               gender: "Male",
             )),
             const SizedBox(height: 10),
@@ -716,21 +723,21 @@ class DoctorProfileScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-            const Padding(
+            Padding(
               padding: EdgeInsets.symmetric(horizontal: 10.0),
               child: ReadMoreText(
-                "Doctors, also known as physicians, are licensed health professionals who maintain and restore human health through the practice of medicine. They examine patients, review their medical history, diagnose illnesses or injuries, administer treatment, and counsel patients on their health and well-being.",
+                controller.doctor.description!,
                 trimLines: 5,
                 colorClickableText: Colors.pink,
                 trimMode: TrimMode.Line,
                 trimCollapsedText: ' Show more',
                 trimExpandedText: ' Show less',
-                moreStyle: TextStyle(
+                moreStyle: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
                   color: AppColors.primaryColor,
                 ),
-                lessStyle: TextStyle(
+                lessStyle: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
                   color: AppColors.primaryColor,

@@ -87,8 +87,6 @@ class AuthService extends ChangeNotifier {
       required VoidCallback updataLoading}) async {
     try {
       print("sign in function is called");
-      ;
-      ;
       var clinet = http.Client();
       http.Response res = await clinet.post(
         Uri.parse(
@@ -104,7 +102,6 @@ class AuthService extends ChangeNotifier {
           'Content-Type': 'application/json; charset=UTF-8',
         },
       );
-      print(res.body);
       if (res.statusCode == 200) {
         updataLoading();
       }

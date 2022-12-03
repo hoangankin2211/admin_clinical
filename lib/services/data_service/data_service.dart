@@ -1,9 +1,12 @@
 import 'dart:convert';
+import 'dart:math';
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import '../../constants/api_link.dart';
+import '../../constants/error_handing.dart';
 import '../../models/department.dart';
 import '../../models/doctor.dart';
 
@@ -73,13 +76,84 @@ class DataService extends GetxController {
     }
   }
 
-  void insertNewDoctor(VoidCallback callBack,
+  void deleteDoctor(BuildContext context, Function(List<Doctor1>) callBack,
+      {required String id}) async {
+    try {
+      print("Delete doctor function is called");
+      http.Response res = await http.post(
+        Uri.parse('${ApiLink.uri}/api/doctors/deleteDoctor'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode({
+          'id': id,
+        }),
+      );
+      httpErrorHandle(
+        response: res,
+        context: context,
+        onSuccess: () {
+          callBack(listDoctor.value);
+        },
+      );
+    } catch (e) {
+//
+    } finally {
+      listDoctor.value.removeWhere((item) => item.iDBS == id);
+      callBack(listDoctor.value);
+    }
+  }
+
+  Future<List<Doctor1>> searchDoctor(
+      BuildContext context, String searchQuery) async {
+    List<Doctor1> doctorList = [];
+    try {
+      http.Response res = await http.get(
+        Uri.parse('${ApiLink.uri}/api/doctors/searchDoctor/$searchQuery'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+      httpErrorHandle(
+        response: res,
+        context: context,
+        onSuccess: () {
+          for (int i = 0; i < jsonDecode(res.body).length; i++) {
+            doctorList.clear();
+            for (int i = 0; i < jsonDecode(res.body).length; i++) {
+              Map<String, dynamic> map = jsonDecode(res.body)[i];
+              doctorList.add(Doctor1.fromJson(map));
+            }
+          }
+        },
+      );
+    } catch (e) {
+      //
+    } finally {}
+    return doctorList;
+  }
+
+  editDoctor(BuildContext context, Function(List<Doctor1>) callBackk,
       {required String name,
       required String address,
       required String phoneNumber,
       required String av,
       required String departMent,
       required String description,
+      required String email,
+      required String password,
+      required DateTime dateBorn,
+      required int experience}) async {}
+
+  void insertNewDoctor(BuildContext context, Function(List<Doctor1>) callBack,
+      {required String name,
+      required String address,
+      required String phoneNumber,
+      required String av,
+      required String departMent,
+      required String description,
+      required String email,
+      required String password,
       required DateTime dateBorn,
       required int experience}) async {
     try {
@@ -89,18 +163,35 @@ class DataService extends GetxController {
       http.Response res = await http.post(
         Uri.parse('${ApiLink.uri}/api/doctors/insertDoctor'),
         body: jsonEncode(
-          {},
+          {
+            'iDBS': '0',
+            'name': name,
+            'address': address,
+            'dateBorn': timeStamp,
+            'phoneNumber': phoneNumber,
+            'avt': av,
+            'departMent': departMent,
+            'description': description,
+            'experience': experience,
+            'email': email,
+            'password': password,
+          },
         ),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
       );
-      if (res.statusCode == 200) {
-        callBack();
-      }
+      httpErrorHandle(
+        response: res,
+        context: context,
+        onSuccess: () async {
+          callBack(listDoctor.value);
+        },
+      );
     } catch (e) {
       // print('err: ${e.toString()}');
     } finally {
+      // ignore: invalid_use_of_protected_member
       listDoctor.value.add(Doctor1(
         name: name,
         address: address,
@@ -112,7 +203,7 @@ class DataService extends GetxController {
         phoneNumber: phoneNumber,
         description: description,
       ));
-      callBack();
+      callBack(listDoctor.value);
     }
   }
 }
