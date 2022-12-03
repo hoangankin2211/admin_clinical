@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 import '../../constants/api_link.dart';
-import '../../models/thongtinbenhnhan.dart';
+import '../../models/patient.dart';
 import 'package:http/http.dart' as http;
 
 class PatientService {
@@ -38,9 +38,9 @@ class PatientService {
     }
   }
 
-  static Future<bool> insertPatient(
+  static Future<Map<String, dynamic>?> insertPatient(
       Patient patient, BuildContext context) async {
-    bool result = false;
+    Map<String, dynamic>? result;
 
     try {
       final response = await http.post(
@@ -58,11 +58,11 @@ class PatientService {
           final decodeResponse = jsonDecode(response.body);
 
           print(decodeResponse);
-          result = decodeResponse['isSuccess'] ?? false;
+          result = decodeResponse;
         },
       );
     } catch (e) {
-      result = false;
+      result = null;
       print('insertPatient:$e');
     }
     return result;

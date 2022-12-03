@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'dart:typed_data';
 
+import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
@@ -32,5 +34,25 @@ pickImage(ImageSource source) async {
   XFile? _file = await _imagePicker.pickImage(source: source);
   if (_file != null) {
     return await _file.readAsBytes();
+  }
+}
+
+class Utils {
+  static const spaceSizeBoxAddPatientDialog = SizedBox(height: 20);
+
+  static Future<String?> convertAssetsToUrl(
+      Uint8List? source, String identifier) async {
+    if (source == null) {
+      return null;
+    }
+    String? result;
+
+    final cloudinary = CloudinaryPublic('ddopvilpr', 'evzte9pr');
+    CloudinaryResponse imageConverter = await cloudinary.uploadFile(
+      CloudinaryFile.fromBytesData(source, identifier: identifier),
+    );
+    result = imageConverter.secureUrl;
+
+    return result;
   }
 }
