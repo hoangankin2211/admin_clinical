@@ -11,6 +11,7 @@ class SuccessDialog extends StatelessWidget {
 
   final String question;
   final String title1;
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -74,7 +75,6 @@ class SuccessDialog extends StatelessWidget {
                   ElevatedButton(
                       onPressed: () => Get.back(result: true),
                       style: ElevatedButton.styleFrom(
-                        // primary: Colors.green.withOpacity(0.5),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)),
                         alignment: Alignment.center,

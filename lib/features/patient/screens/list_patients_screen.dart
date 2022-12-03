@@ -71,12 +71,12 @@ class ListPatientScreen extends StatelessWidget {
               children: [
                 Obx(
                   () => ShowEntriesWidget(
+                    maxEntries: patientPageController.data.value.length,
                     applyEntries: patientPageController.applyEntries,
                     numberOfEntries:
-                        patientPageController.numberOfEntries.value - 1,
+                        patientPageController.numberOfEntries.value,
                     width: constraints.maxWidth * 0.03,
                     height: constraints.maxHeight * 0.05,
-                    maxEntries: patientPageController.data.value.length - 1,
                   ),
                 ),
                 CustomIconButton(
@@ -146,35 +146,41 @@ class ListPatientScreen extends StatelessWidget {
               avt: 'images/fake_avatar.jpg',
               payment: patientListField['payment']!,
             ),
-            SizedBox(
-              height: patientPageController.numberOfEntries.value * 60,
-              child: Obx(
-                () => ListView.builder(
-                  itemExtent: 60,
-                  itemCount: patientPageController.numberOfEntries.value,
-                  itemBuilder: (context, index) => PatientListRow(
-                    removeEntries: patientPageController.removeEntries,
-                    name: patientPageController.data.value.values
-                        .elementAt(index)
-                        .name,
-                    id: patientPageController.data.value.values
-                        .elementAt(index)
-                        .id,
-                    date: patientPageController.data.value.values
-                        .elementAt(index)
-                        .dob,
-                    gender: patientPageController.data.value.values
-                        .elementAt(index)
-                        .gender,
-                    diseases: patientPageController.data.value.values
-                        .elementAt(index)
-                        .name,
-                    status: patientPageController.data.value.values
-                        .elementAt(index)
-                        .status,
-                    payment: '100000',
-                    avt: 'images/fake_avatar.jpg',
-                    color: Colors.white,
+            Expanded(
+              child: GetBuilder<PatientPageController>(
+                id: 'list_patients_screen',
+                assignId: true,
+                autoRemove: false,
+                builder: (controller) => Obx(
+                  () => ListView.builder(
+                    itemExtent: 60,
+                    itemCount: patientPageController.numberOfEntries.value,
+                    itemBuilder: (context, index) => PatientListRow(
+                      removeEntries: patientPageController.removeEntries,
+                      name: patientPageController.data.value.values
+                          .elementAt(index)
+                          .name,
+                      id: patientPageController.data.value.values
+                          .elementAt(index)
+                          .id,
+                      date: patientPageController.data.value.values
+                          .elementAt(index)
+                          .dob,
+                      gender: patientPageController.data.value.values
+                          .elementAt(index)
+                          .gender,
+                      diseases: patientPageController.data.value.values
+                          .elementAt(index)
+                          .name,
+                      status: patientPageController.data.value.values
+                          .elementAt(index)
+                          .status,
+                      payment: '100000',
+                      avt: patientPageController.data.value.values
+                          .elementAt(index)
+                          .avt,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),

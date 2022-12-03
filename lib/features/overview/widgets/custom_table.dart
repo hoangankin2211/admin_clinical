@@ -2,7 +2,7 @@ import 'package:admin_clinical/constants/app_colors.dart';
 import 'package:admin_clinical/features/overview/widgets/dismissible_table_row.dart';
 import 'package:admin_clinical/features/patient/screens/patient_screen.dart';
 import 'package:admin_clinical/models/medicine.dart';
-import 'package:admin_clinical/models/thongtinbenhnhan.dart';
+import 'package:admin_clinical/models/patient.dart';
 import 'package:admin_clinical/routes/name_route.dart';
 import 'package:admin_clinical/services/data_service/patient_service.dart';
 import 'package:flutter/material.dart';
@@ -118,11 +118,11 @@ class PatientListRow extends StatelessWidget {
     required this.diseases,
     required this.status,
     required this.color,
-    required this.avt,
+    this.avt,
     required this.payment,
     this.removeEntries,
   });
-  final String avt;
+  final String? avt;
   final String name;
   final String id;
   final String date;
@@ -135,6 +135,7 @@ class PatientListRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(avt);
     final Map<String, String> data = {
       'Patient Name': name,
       'Id': id,
@@ -174,14 +175,14 @@ class PatientListRow extends StatelessWidget {
             children: [
               const SizedBox(width: 5),
               color == Colors.white
-                  ? ClipRRect(
-                      borderRadius: BorderRadius.circular(50),
-                      child: Image.asset(
-                        avt,
-                        fit: BoxFit.cover,
-                        height: 40,
-                        width: 40,
-                      ),
+                  ? CircleAvatar(
+                      backgroundColor: Colors.grey[100],
+                      backgroundImage: (avt != null && avt!.isNotEmpty)
+                          ? NetworkImage(
+                              avt!,
+                            ) as ImageProvider
+                          : const AssetImage('images/user.png'),
+                      radius: 20,
                     )
                   : const SizedBox(
                       height: 35,

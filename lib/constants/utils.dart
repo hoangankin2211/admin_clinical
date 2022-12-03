@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:flutter/foundation.dart';
@@ -45,4 +46,24 @@ Future<String> convertUti8ListToUrl(Uint8List? image, String name) async {
   );
   imageUrl = imageRes.secureUrl;
   return imageUrl;
+}
+
+class Utils {
+  static const spaceSizeBoxAddPatientDialog = SizedBox(height: 20);
+
+  static Future<String?> convertAssetsToUrl(
+      Uint8List? source, String identifier) async {
+    if (source == null) {
+      return null;
+    }
+    String? result;
+
+    final cloudinary = CloudinaryPublic('ddopvilpr', 'evzte9pr');
+    CloudinaryResponse imageConverter = await cloudinary.uploadFile(
+      CloudinaryFile.fromBytesData(source, identifier: identifier),
+    );
+    result = imageConverter.secureUrl;
+
+    return result;
+  }
 }
