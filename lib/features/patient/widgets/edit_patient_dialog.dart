@@ -173,8 +173,9 @@ class EditPatientDialog extends StatelessWidget {
                                           backgroundColor: Colors.grey[100],
                                           backgroundImage: image.value,
                                           radius: Get.width * 0.1,
-                                          child: (patient.avt != null &&
-                                                  patient.avt!.isNotEmpty &&
+                                          child: ((patient.avt != null &&
+                                                      patient
+                                                          .avt!.isNotEmpty) ||
                                                   (_avt.value != null &&
                                                       _avt.value!.isNotEmpty))
                                               ? null
