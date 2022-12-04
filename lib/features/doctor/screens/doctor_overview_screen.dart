@@ -47,31 +47,43 @@ class DoctorOverView extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
-                    children: const [
+                    children: [
                       TopDoctorCard(
-                        name: "HEAD OF THE DEPARTMENT",
-                        image: "assets/images/doctor1.png",
+                        name: controller.listDoctor.value[0].name!,
+                        image: controller.listDoctor.value[0].avt!,
                         description:
-                            "Doctors, also known as physicians, are licensed health professionals who maintain and restore human health through the practice of medicine. They examine patients, review their medical history, diagnose illnesses or injuries, administer treatment, and counsel patients on their health and well-being.",
-                        type: "Dentist",
+                            controller.listDoctor.value[0].description!,
+                        type: controller
+                            .getDepartMent(
+                                controller.listDoctor.value[0].departMent!,
+                                controller.listDepartMent.value)
+                            .name!,
                         ratings: 4.8,
                       ),
                       TopDoctorCard(
-                        name: "HEAD OF THE DEPARTMENT",
-                        image: "assets/images/doctor3.png",
+                        name: controller.listDoctor.value[1].name!,
+                        image: controller.listDoctor.value[1].avt!,
                         description:
-                            "Doctors, also known as physicians, are licensed health professionals who maintain and restore human health through the practice of medicine. They examine patients, review their medical history, diagnose illnesses or injuries, administer treatment, and counsel patients on their health and well-being.",
-                        type: "Dentist",
+                            controller.listDoctor.value[1].description!,
+                        type: controller
+                            .getDepartMent(
+                                controller.listDoctor.value[1].departMent!,
+                                controller.listDepartMent.value)
+                            .name!,
                         ratings: 4.8,
                       ),
                       TopDoctorCard(
-                        name: "HEAD OF THE DEPARTMENT",
-                        image: "assets/images/doctor2.png",
+                        name: controller.listDoctor.value[2].name!,
+                        image: controller.listDoctor.value[2].avt!,
                         description:
-                            "Doctors, also known as physicians, are licensed health professionals who maintain and restore human health through the practice of medicine. They examine patients, review their medical history, diagnose illnesses or injuries, administer treatment, and counsel patients on their health and well-being.",
-                        type: "Dentist",
+                            controller.listDoctor.value[2].description!,
+                        type: controller
+                            .getDepartMent(
+                                controller.listDoctor.value[2].departMent!,
+                                controller.listDepartMent.value)
+                            .name!,
                         ratings: 4.8,
-                      )
+                      ),
                     ],
                   ),
                 ),
@@ -172,7 +184,7 @@ class DoctorOverView extends StatelessWidget {
               child: Obx(
                 () => Column(
                   children: [
-                    ...DataService.instance.listDepartMent.value.map(
+                    ...controller.listDepartMent.value.map(
                       (e) => Column(
                         children: [
                           ListItem(
@@ -209,9 +221,11 @@ class DoctorOverView extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              const Text(
-                                '200',
-                                style: TextStyle(
+                              Text(
+                                controller
+                                    .getCountDoctorInDepart(e.id!)
+                                    .toString(),
+                                style: const TextStyle(
                                   color: AppColors.primarySecondColor,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 17.0,
@@ -257,7 +271,7 @@ class DoctorOverView extends StatelessWidget {
               child: Obx(
                 () => Column(
                   children: [
-                    ...DataService.instance.listDoctor.value.map(
+                    ...controller.listDoctor.value.map(
                       (e) => Column(
                         children: [
                           ListItem(

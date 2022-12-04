@@ -109,11 +109,13 @@ class DataService extends GetxController {
   }
 
   Future<List<Doctor1>> searchDoctor(
-      BuildContext context, String searchQuery) async {
+      BuildContext context, String searchQuery, String filter) async {
     List<Doctor1> doctorList = [];
+    print(filter);
     try {
       http.Response res = await http.get(
-        Uri.parse('${ApiLink.uri}/api/doctors/searchDoctor/$searchQuery'),
+        Uri.parse(
+            '${ApiLink.uri}/api/doctors/searchDoctor/$searchQuery/$filter'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
         },

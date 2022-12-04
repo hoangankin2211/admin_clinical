@@ -244,7 +244,7 @@ class _DialogEditDoctorState extends State<DialogEditDoctor> {
                   children: [
                     Expanded(
                       child: CustomTextFormField(
-                        controller: controller.addressController,
+                        controller: controller.phoneController,
                         title: "Phone Number",
                         width: double.infinity,
                         hint: "Enter phone number",
@@ -274,7 +274,7 @@ class _DialogEditDoctorState extends State<DialogEditDoctor> {
                                 () => DropdownButton<int>(
                                   underline: const SizedBox(),
                                   items:
-                                      DataService.instance.listDepartMent.value
+                                      controller.listDepartMentForSearch.value
                                           .asMap()
                                           .entries
                                           .map((e) => DropdownMenuItem<int>(
@@ -287,9 +287,11 @@ class _DialogEditDoctorState extends State<DialogEditDoctor> {
                                                 ),
                                               ))
                                           .toList(),
-                                  value: controller.selectDepartMent.value,
+                                  value: controller
+                                      .selectDepartMentFotSearch.value,
                                   onChanged: (value) {
-                                    controller.selectDepartMent.value = value!;
+                                    controller.selectDepartMentFotSearch.value =
+                                        value!;
                                   },
                                 ),
                               ),
