@@ -30,7 +30,7 @@ class ListPatientScreen extends StatelessWidget {
 
   final patientPageController = Get.put(PatientPageController());
 
-  final Rx<Patient?> _selectedPatient = Rx(null);
+  final Rx<String?> _selectedPatient = Rx(null);
 
   @override
   Widget build(BuildContext context) {
@@ -172,11 +172,11 @@ class ListPatientScreen extends StatelessWidget {
                                 .elementAt(index);
                             return PatientListRow(
                               onClick: () =>
-                                  _selectedPatient.value = tempPatient,
+                                  _selectedPatient.value = tempPatient.id,
                               removeEntries:
                                   patientPageController.removeEntries,
                               name: tempPatient.name,
-                              id: tempPatient.id.substring(6),
+                              id: tempPatient.id,
                               date: tempPatient.dob,
                               gender: tempPatient.gender,
                               diseases: tempPatient.name,
@@ -196,8 +196,12 @@ class ListPatientScreen extends StatelessWidget {
           ),
           Flexible(
             flex: 3,
-            child:
-                Obx(() => PatientProfileCard(patient: _selectedPatient.value)),
+            child: Obx(
+              () => PatientProfileCard(
+                  patient: _selectedPatient.value != null
+                      ? patientPageController.data.value[_selectedPatient.value]
+                      : null),
+            ),
           ),
         ],
       );

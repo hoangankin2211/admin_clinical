@@ -53,4 +53,20 @@ class PatientPageController extends GetxController {
     }
     return false;
   }
+
+  Future<bool> editPatientData(Patient patient, BuildContext context) async {
+    try {
+      final response = await PatientService.editPatient(patient, context);
+      if (response != null) {
+        if (response['isSuccess'] != null && response['isSuccess'] == true) {
+          PatientService.listPatients
+              .update(patient.id, (value) => value = patient);
+          return true;
+        }
+      }
+    } catch (e) {
+      print('editPatientData: ${e.toString()}');
+    }
+    return false;
+  }
 }

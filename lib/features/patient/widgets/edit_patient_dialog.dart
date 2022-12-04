@@ -35,24 +35,25 @@ class EditPatientDialog extends StatelessWidget {
   late var statusCode = dropDownItemStatus.first.obs;
   final patientPageController = Get.find<PatientPageController>();
 
-  TextEditingController firstNameController = TextEditingController();
-  TextEditingController lastNameController = TextEditingController();
+  TextEditingController fullNameController = TextEditingController();
   TextEditingController locationController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController symptomController = TextEditingController();
-  final Rx<String?> _avt = Rx(null);
-  final Rx<Uint8List?> newAvt = Rx(null);
+  final Rx<Uint8List?> _avt = Rx(null);
+  final Rx<ImageProvider> image = Rx(const AssetImage('images/user.png'));
+  // final Rx<Uint8List?> newAvt = Rx(null);
   final _isLoading = false.obs;
 
   Future<bool> _fetchDataToField() async {
-    firstNameController.text = patient.name.split(" ").elementAt(0);
-    lastNameController.text = patient.name.split(" ").elementAt(1);
+    fullNameController.text = patient.name;
     locationController.text = patient.address;
     emailController.text = patient.email ?? "";
     phoneNumberController.text = patient.phoneNumber.split(" ").elementAt(1);
     symptomController.text = patient.symptom ?? "";
-    _avt.value = patient.avt;
+    image.value = patient.avt == null || patient.avt!.isEmpty
+        ? const AssetImage('images/user.png')
+        : NetworkImage(patient.avt!) as ImageProvider;
     phoneCode.value = patient.phoneNumber.split(" ").elementAt(0);
     genderCode.value = patient.gender;
     statusCode.value = patient.status;
@@ -63,20 +64,20 @@ class EditPatientDialog extends StatelessWidget {
   Future _handleProcessEditData(BuildContext context) async {
     _isLoading.value = true;
 
-    String? result;
-    // =
-    //     await Utils.convertAssetsToUrl(_avt.value, emailController.text);
+    String? result =
+        await Utils.convertAssetsToUrl(_avt.value, emailController.text);
 
-    final response = await patientPageController.addPatientToDataBase(
+    final response = await patientPageController.editPatientData(
       Patient(
-        id: '',
-        name: "${firstNameController.text} ${lastNameController.text}",
+        email: emailController.text,
+        id: patient.id,
+        name: fullNameController.text,
         gender: genderCode.value,
         address: locationController.text,
         dob: '22-11-2002',
-        phoneNumber: "${phoneCode.value}  ${phoneNumberController.text}",
+        phoneNumber: "${phoneCode.value} ${phoneNumberController.text}",
         status: statusCode.value,
-        avt: result,
+        avt: result ?? patient.avt,
         symptom: symptomController.text,
       ),
       Get.context ?? context,
@@ -92,7 +93,8 @@ class EditPatientDialog extends StatelessWidget {
       Get.dialog(
         const ErrorDialog(
           question: 'ERROR',
-          title1: 'Can\'t create new patient !!! Some error have occurred',
+          title1:
+              'Can\'t update new patient information !!! Some error have occurred, check your internet connection',
         ),
       );
       Get.back();
@@ -101,7 +103,8 @@ class EditPatientDialog extends StatelessWidget {
 
   void _selectedImage() async {
     Uint8List avt = await pickImage(ImageSource.gallery);
-    newAvt.value = avt;
+    _avt.value = avt;
+    image.value = MemoryImage(avt);
   }
 
   @override
@@ -168,13 +171,12 @@ class EditPatientDialog extends StatelessWidget {
                                       child: Center(
                                         child: CircleAvatar(
                                           backgroundColor: Colors.grey[100],
-                                          backgroundImage: (_avt.value != null)
-                                              ? NetworkImage(_avt.value!)
-                                                  as ImageProvider
-                                              : const AssetImage(
-                                                  'images/user.png'),
+                                          backgroundImage: image.value,
                                           radius: Get.width * 0.1,
-                                          child: (_avt.value != null)
+                                          child: (patient.avt != null &&
+                                                  patient.avt!.isNotEmpty &&
+                                                  (_avt.value != null &&
+                                                      _avt.value!.isNotEmpty))
                                               ? null
                                               : Container(
                                                   padding: const EdgeInsets
@@ -187,12 +189,6 @@ class EditPatientDialog extends StatelessWidget {
                                                             20.0),
                                                     color: Colors.black
                                                         .withOpacity(0.2),
-                                                    image: (_avt.value != null)
-                                                        ? DecorationImage(
-                                                            image: NetworkImage(
-                                                                _avt.value!),
-                                                          )
-                                                        : null,
                                                   ),
                                                   child: Row(
                                                     mainAxisAlignment:
@@ -219,37 +215,16 @@ class EditPatientDialog extends StatelessWidget {
                                     ),
                                     Utils.spaceSizeBoxAddPatientDialog,
                                     Utils.spaceSizeBoxAddPatientDialog,
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        CustomTextFormField(
-                                          controller: firstNameController,
-                                          width: width * 0.4,
-                                          title: 'First Name',
-                                          hint: 'Enter your first Name',
-                                          validator: (value) {
-                                            if (value == null ||
-                                                value.isEmpty) {
-                                              return "This Field can not be emptied";
-                                            }
-                                            return null;
-                                          },
-                                        ),
-                                        const Spacer(),
-                                        CustomTextFormField(
-                                          width: width * 0.4,
-                                          title: 'Last Name',
-                                          hint: 'Enter your last name',
-                                          validator: (value) {
-                                            if (value == null ||
-                                                value.isEmpty) {
-                                              return "This Field can not be emptied";
-                                            }
-                                            return null;
-                                          },
-                                        ),
-                                      ],
+                                    CustomTextFormField(
+                                      controller: fullNameController,
+                                      title: 'First Name',
+                                      hint: 'Enter your first Name',
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return "This Field can not be emptied";
+                                        }
+                                        return null;
+                                      },
                                     ),
                                     Utils.spaceSizeBoxAddPatientDialog,
                                     CustomTextFormField(

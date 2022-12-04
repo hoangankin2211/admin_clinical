@@ -68,6 +68,36 @@ class PatientService {
     return result;
   }
 
+  static Future<Map<String, dynamic>?> editPatient(
+      Patient patient, BuildContext context) async {
+    Map<String, dynamic>? result;
+
+    try {
+      final response = await http.post(
+        Uri.parse('${ApiLink.uri}/api/editPatient/'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: patient.toJson(),
+      );
+
+      httpErrorHandle(
+        response: response,
+        context: context,
+        onSuccess: () {
+          final decodeResponse = jsonDecode(response.body);
+
+          print(decodeResponse);
+          result = decodeResponse;
+        },
+      );
+    } catch (e) {
+      result = null;
+      print('editPatient:$e');
+    }
+    return result;
+  }
+
   static Future<bool> deletePatient(String id, BuildContext context) async {
     bool result = false;
 

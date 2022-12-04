@@ -38,7 +38,8 @@ pickImage(ImageSource source) async {
   }
 }
 
-Future<String> convertUti8ListToUrl(Uint8List? image, String name) async {
+Future<String?> convertUti8ListToUrl(Uint8List? image, String name) async {
+  if (image == null) return null;
   String imageUrl = "";
   final cloudinary = CloudinaryPublic('ddopvilpr', 'evzte9pr');
   CloudinaryResponse imageRes = await cloudinary.uploadFile(
