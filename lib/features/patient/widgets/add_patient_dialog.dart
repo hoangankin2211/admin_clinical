@@ -2,14 +2,9 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:admin_clinical/constants/utils.dart';
-import 'package:admin_clinical/features/doctor/screens/doctor_main_screen.dart';
-import 'package:admin_clinical/features/form/widgets/form_card.dart';
 import 'package:admin_clinical/features/patient/controller/patient_page_controller.dart';
 import 'package:admin_clinical/models/patient.dart';
-import 'package:admin_clinical/services/data_service/patient_service.dart';
-import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -34,8 +29,7 @@ class AddPatientDialog extends StatelessWidget {
   late var statusCode = dropDownItemStatus.first.obs;
   final patientPageController = Get.find<PatientPageController>();
 
-  TextEditingController firstNameController = TextEditingController();
-  TextEditingController lastNameController = TextEditingController();
+  TextEditingController fullNameController = TextEditingController();
   TextEditingController locationController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
@@ -52,11 +46,12 @@ class AddPatientDialog extends StatelessWidget {
     final response = await patientPageController.addPatientToDataBase(
       Patient(
         id: '',
-        name: "${firstNameController.text} ${lastNameController.text}",
+        name: fullNameController.text,
         gender: genderCode.value,
+        email: emailController.text,
         address: locationController.text,
         dob: '22-11-2002',
-        phoneNumber: "${phoneCode.value}  ${phoneNumberController.text}",
+        phoneNumber: "${phoneCode.value} ${phoneNumberController.text}",
         status: statusCode.value,
         avt: result,
         symptom: symptomController.text,
@@ -182,34 +177,16 @@ class AddPatientDialog extends StatelessWidget {
                         ),
                         Utils.spaceSizeBoxAddPatientDialog,
                         Utils.spaceSizeBoxAddPatientDialog,
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            CustomTextFormField(
-                              controller: firstNameController,
-                              width: width * 0.4,
-                              title: 'First Name',
-                              hint: 'Enter your first Name',
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return "This Field can not be emptied";
-                                }
-                                return null;
-                              },
-                            ),
-                            const Spacer(),
-                            CustomTextFormField(
-                              width: width * 0.4,
-                              title: 'Last Name',
-                              hint: 'Enter your last name',
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return "This Field can not be emptied";
-                                }
-                                return null;
-                              },
-                            ),
-                          ],
+                        CustomTextFormField(
+                          controller: fullNameController,
+                          title: 'First Name',
+                          hint: 'Enter your full Name',
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "This Field can not be emptied";
+                            }
+                            return null;
+                          },
                         ),
                         Utils.spaceSizeBoxAddPatientDialog,
                         CustomTextFormField(

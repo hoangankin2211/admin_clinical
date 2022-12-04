@@ -14,9 +14,11 @@ class PatientPageController extends GetxController {
 
   @override
   void onReady() {
-    // // TODO: implement onReady
     PatientService.listPatients.listen((newData) {
       data.value = (newData);
+      if (numberOfEntries.value == data.value.length - 1) {
+        numberOfEntries.value++;
+      }
       update(['list_patients_screen']);
     });
     super.onReady();
@@ -48,6 +50,22 @@ class PatientPageController extends GetxController {
         addEntries({patient.id: patient});
         return true;
       }
+    }
+    return false;
+  }
+
+  Future<bool> editPatientData(Patient patient, BuildContext context) async {
+    try {
+      final response = await PatientService.editPatient(patient, context);
+      if (response != null) {
+        if (response['isSuccess'] != null && response['isSuccess'] == true) {
+          PatientService.listPatients
+              .update(patient.id, (value) => value = patient);
+          return true;
+        }
+      }
+    } catch (e) {
+      print('editPatientData: ${e.toString()}');
     }
     return false;
   }

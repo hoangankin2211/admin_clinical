@@ -111,7 +111,7 @@ class DoctorMainController extends GetxController {
             question: "Edit new Doctor", title1: "Field is null"),
       );
     } else {
-      String imageUrl = "";
+      String? imageUrl = "";
       if (image != null) {
         imageUrl = await convertUti8ListToUrl(
             image, listDepartMent.value[selectDepartMent.value].id!);
@@ -132,9 +132,7 @@ class DoctorMainController extends GetxController {
         name: nameController.text,
         address: addressController.text,
         phoneNumber: phoneController.text,
-        av: imageUrl != ""
-            ? imageUrl
-            : listDoctor.value[selectDoctor.value].avt!,
+        av: imageUrl ?? listDoctor.value[selectDoctor.value].avt!,
         departMent: DataService
             .instance.listDepartMent.value[selectDepartMent.value].id!,
         description: descriptionController.text,
@@ -156,7 +154,8 @@ class DoctorMainController extends GetxController {
             const ErrorDialog(question: "Insert new Doctor", title1: "Failed"),
       );
     } else {
-      String imageUrl = await convertUti8ListToUrl(image, emailController.text);
+      String? imageUrl =
+          await convertUti8ListToUrl(image, emailController.text);
       // ignore: use_build_context_synchronously
       DataService.instance.insertNewDoctor(
         context,
@@ -172,7 +171,7 @@ class DoctorMainController extends GetxController {
         name: nameController.text,
         address: addressController.text,
         phoneNumber: phoneController.text,
-        av: imageUrl,
+        av: imageUrl ?? "",
         departMent: DataService
             .instance.listDepartMent.value[selectDepartMent.value].id!,
         description: descriptionController.text,

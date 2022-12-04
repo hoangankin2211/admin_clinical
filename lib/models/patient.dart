@@ -7,6 +7,7 @@ class Patient {
   String address;
   String dob;
   String phoneNumber;
+  String? email;
   String status;
   String? avt;
   String? symptom;
@@ -21,6 +22,7 @@ class Patient {
     required this.phoneNumber,
     required this.status,
     this.avt,
+    this.email,
   });
 
   static Patient fromJson(Map<String, dynamic> json) {
@@ -30,6 +32,7 @@ class Patient {
         gender: json['gender'] ?? '',
         address: json['address'] ?? '',
         dob: json['dob'] ?? '',
+        email: json['email'] ?? '',
         status: json['status'] ?? '',
         phoneNumber: json['phoneNumber'] ?? '',
         avt: json['avt'] ?? '',
@@ -44,6 +47,7 @@ class Patient {
     data['gender'] = gender;
     data['dob'] = dob;
     data['phoneNumber'] = phoneNumber;
+    data['email'] = email;
     data['avt'] = avt;
     data['status'] = status;
     data['symptom'] = symptom;
