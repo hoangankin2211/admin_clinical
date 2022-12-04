@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:admin_clinical/services/data_service/medicine_service.dart';
 import 'package:admin_clinical/services/data_service/patient_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -14,18 +15,30 @@ import '../../models/doctor.dart';
 class DataService extends GetxController {
   DataService._privateConstructor();
   static final DataService instance = DataService._privateConstructor();
+
+  RxList<int> checkFetchData = <int>[].obs;
+
   RxList<Doctor1> listDoctor = <Doctor1>[].obs;
   RxList<Department> listDepartMent = <Department>[].obs;
 
   fetchAllData() async {
     if (listDoctor.value.isEmpty) {
-      fetchAllDoctor((value) => listDoctor.value = value);
+      fetchAllDoctor((value) {
+        checkFetchData.value.add(1);
+        listDoctor.value = value;
+      });
     }
     if (listDepartMent.value.isEmpty) {
-      fetchAllDeparMent((value) => listDepartMent.value = value);
+      fetchAllDeparMent((value) {
+        checkFetchData.value.add(1);
+        listDepartMent.value = value;
+      });
     }
     if (PatientService.listPatients.isEmpty) {
       PatientService.fetchAllPatientData();
+    }
+    if (MedicineService.instance.listMedicine.isEmpty) {
+      MedicineService.instance.fetchAllMedicineData();
     }
   }
 

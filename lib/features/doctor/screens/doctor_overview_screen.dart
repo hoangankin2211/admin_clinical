@@ -213,7 +213,7 @@ class DoctorOverView extends StatelessWidget {
                                   Expanded(
                                     child: Text(
                                       '29 %',
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         color: AppColors.headline1TextColor,
                                         fontWeight: FontWeight.bold,
                                       ),

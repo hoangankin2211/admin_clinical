@@ -1,19 +1,30 @@
+import 'dart:typed_data';
+
 import 'package:admin_clinical/constants/fake_data.dart';
 import 'package:admin_clinical/constants/global_widgets/list_item.dart';
 import 'package:admin_clinical/features/auth/widgets/custom_button.dart';
-import 'package:admin_clinical/features/form/widgets/patient_information_form.dart';
-import 'package:admin_clinical/features/patient/widgets/custom_text_form_field.dart';
+import 'package:admin_clinical/features/medicine/controller/medicine_controller.dart';
+import 'package:admin_clinical/features/medicine/widgets/change_no_data_field.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
+import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../../constants/app_colors.dart';
 import '../../../constants/global_widgets/chart/column_2_chart.dart';
 import '../../../constants/global_widgets/chart/line_chart_design.dart';
+import '../../../constants/utils.dart';
+import '../../../models/medicine.dart';
+import '../widgets/dialog_add_medicine.dart';
+import '../widgets/dialog_update_amount_medicine.dart';
+import '../widgets/header_list_medicine.dart';
+import '../widgets/input_with_header_text.dart';
+import '../widgets/list_medicine_item.dart';
 
 class MedicineScreen extends StatelessWidget {
   MedicineScreen({super.key});
-
+  final controller = Get.put(MedicineController());
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -283,217 +294,90 @@ class MedicineScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "Medicines",
-            style: TextStyle(
-              color: AppColors.primarySecondColor,
-              fontWeight: FontWeight.bold,
-              fontSize: 20.0,
-            ),
+          Row(
+            children: [
+              const Text(
+                "Medicines",
+                style: TextStyle(
+                  color: AppColors.primarySecondColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20.0,
+                ),
+              ),
+              const Spacer(),
+              SizedBox(
+                height: 40,
+                child: CustomButton(
+                  title: "Add new Medicine",
+                  onPressed: () async {
+                    controller.fetchAllListType();
+                    await Get.dialog(
+                      DialogAddNewMedicine(),
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 20),
-          _headerListMedcine(),
+          HeaderListMedicine(),
           const SizedBox(height: 10),
           Expanded(
-              child: ListView(
-            children: [
-              ...FakeData.fakeDataMedicine.map(
-                (e) => ListItem(
-                  checkShadow: true,
-                  widgets: [
-                    Row(children: [
-                      Container(
-                        width: 40.0,
-                        height: 40.0,
-                        decoration: BoxDecoration(
-                          color: AppColors.backgroundColor,
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color:
-                                  AppColors.headline1TextColor.withOpacity(0.3),
-                              blurRadius: 5.0,
-                            )
-                          ],
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: AssetImage(
-                              e["image"],
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Text(
-                          " ${e["name"]}",
-                          style: const TextStyle(
-                            color: AppColors.primarySecondColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18.0,
-                          ),
-                        ),
-                      )
-                    ]),
-                    Text(
-                      e["type"],
-                      style: const TextStyle(
-                        color: AppColors.primarySecondColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18.0,
-                      ),
-                    ),
-                    Text(
-                      e["rm"].toString(),
-                      style: const TextStyle(
-                        color: Colors.green,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18.0,
-                      ),
-                    ),
-                    Text(
-                      e["s"].toString(),
-                      style: const TextStyle(
-                        color: Colors.red,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18.0,
-                      ),
-                    ),
-                    Text(
-                      '\$${e["price"]}',
-                      style: const TextStyle(
-                        color: AppColors.primarySecondColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18.0,
-                      ),
-                    ),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          InkWell(
-                            onTap: () {},
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10.0, vertical: 5.0),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: Colors.red.withOpacity(0.6),
-                              ),
-                              child: Row(
-                                children: const [
-                                  Icon(Icons.delete, color: Colors.white),
-                                  Text(
-                                    " Delete",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18.0,
-                                    ),
+            child: Obx(
+              () => ListView(
+                children: [
+                  for (int i = 0; i < controller.listMedicine.value.length; i++)
+                    InkWell(
+                      onTap: () => controller.selectMedcine.value = i,
+                      child: ListMedicineItem(
+                        delete: () {
+                          bool isDelete = false;
+                          showDialog(
+                            context: Get.context!,
+                            builder: (context) {
+                              return AlertDialog(
+                                alignment: Alignment.center,
+                                title: const Text('Are you sure ?'),
+                                content: const Text(
+                                    'Do you want to remove the doctor from the list ? '),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      isDelete = true;
+                                      controller.deleteMedicine(context,
+                                          controller.listMedicine.value[i].id);
+                                    },
+                                    child: const Text('YES'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      isDelete = false;
+                                      Get.back();
+                                    },
+                                    child: const Text('NO'),
                                   ),
                                 ],
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 5.0),
-                          InkWell(
-                            onTap: () {},
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10.0, vertical: 5.0),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: Colors.blue.withOpacity(0.6),
-                              ),
-                              child: Row(
-                                children: const [
-                                  Icon(Icons.edit, color: Colors.white),
-                                  Text(
-                                    " Edit",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18.0,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          )
-                        ],
+                              );
+                            },
+                          ).then((value) {
+                            return isDelete;
+                          });
+                        },
+                        e: controller.listMedicine.value[i],
+                        select: () async {
+                          await Get.dialog(
+                            DialogUpdateAmountMedicine(
+                                controller: controller, i: i),
+                          );
+                        },
                       ),
                     ),
-                  ],
-                ),
-              )
-            ],
-          ))
+                ],
+              ),
+            ),
+          ),
         ],
       ),
-    );
-  }
-
-  ListItem1 _headerListMedcine() {
-    return ListItem1(
-      widgets: [
-        Row(
-          children: const [
-            Text(
-              "Name ",
-              style: TextStyle(
-                color: AppColors.primarySecondColor,
-                fontWeight: FontWeight.bold,
-                fontSize: 18.0,
-              ),
-            ),
-            Icon(Icons.arrow_drop_down, color: AppColors.primaryColor),
-          ],
-        ),
-        Row(
-          children: const [
-            Text(
-              "Type Medicine ",
-              style: TextStyle(
-                color: AppColors.primarySecondColor,
-                fontWeight: FontWeight.bold,
-                fontSize: 18.0,
-              ),
-            ),
-            Icon(Icons.arrow_drop_down, color: AppColors.primaryColor),
-          ],
-        ),
-        const Text(
-          "Remaining ",
-          style: TextStyle(
-            color: AppColors.primarySecondColor,
-            fontWeight: FontWeight.bold,
-            fontSize: 18.0,
-          ),
-        ),
-        const Text(
-          "Sold ",
-          style: TextStyle(
-            color: AppColors.primarySecondColor,
-            fontWeight: FontWeight.bold,
-            fontSize: 18.0,
-          ),
-        ),
-        const Text(
-          "Price ",
-          style: TextStyle(
-            color: AppColors.primarySecondColor,
-            fontWeight: FontWeight.bold,
-            fontSize: 18.0,
-          ),
-        ),
-        const Text(
-          "",
-          style: TextStyle(
-            color: AppColors.primarySecondColor,
-            fontWeight: FontWeight.bold,
-            fontSize: 18.0,
-          ),
-        ),
-      ],
     );
   }
 
@@ -768,45 +652,11 @@ class MedicineScreen extends StatelessWidget {
   }
 }
 
-class InputWithHeaderText extends StatelessWidget {
-  final String header;
-  final String hint;
-  final int? maxLines;
-  const InputWithHeaderText({
-    Key? key,
-    required this.header,
-    required this.hint,
-    this.maxLines,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          header,
-          style: const TextStyle(
-            color: AppColors.headline1TextColor,
-            fontWeight: FontWeight.bold,
-            fontSize: 20.0,
-          ),
-        ),
-        const SizedBox(height: 5.0),
-        CustomTextFormField(
-          hint: hint,
-          maxLine: maxLines ?? 1,
-        ),
-      ],
-    );
-  }
-}
-
 BarChartGroupData makeGroupData(int x, double y1, double y2) {
   return BarChartGroupData(barsSpace: 4, x: x, barRods: [
     BarChartRodData(
       toY: y1,
-      color: Colors.green,
+      color: AppColors.primaryColor.withOpacity(0.7),
       width: 7,
     ),
     BarChartRodData(

@@ -254,7 +254,7 @@ class _DialogEditDoctorState extends State<DialogEditDoctor> {
                     const SizedBox(width: 10.0),
                     Expanded(
                       child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
                             "Department ",

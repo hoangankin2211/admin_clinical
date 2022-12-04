@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:admin_clinical/constants/error_handing.dart';
+import 'package:admin_clinical/services/data_service/data_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
@@ -31,6 +32,7 @@ class PatientService {
           Map<String, dynamic> map = extractedData[i];
           listPatients.addAll({map['_id']: Patient.fromJson(map)});
         }
+        DataService.instance.checkFetchData.value.add(1);
       }
     } catch (e) {
       print('fetchAllPatientData:$e');

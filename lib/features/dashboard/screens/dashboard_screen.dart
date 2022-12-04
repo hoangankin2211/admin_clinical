@@ -1,6 +1,7 @@
 import 'package:admin_clinical/constants/app_colors.dart';
 import 'package:admin_clinical/features/dashboard/controller/dashboard_controller.dart';
 import 'package:admin_clinical/features/dashboard/widgets/dashboard_header.dart';
+import 'package:admin_clinical/services/data_service/data_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -79,7 +80,9 @@ class DashboardScreen extends StatelessWidget {
                   children: [
                     DashboardHeader(width: constraints.maxWidth * 0.13),
                     Obx(
-                      () => dashboardController.user.name == ""
+                      () => dashboardController.user.name == "" ||
+                              DataService.instance.checkFetchData.value.length <
+                                  4
                           ? const Center(
                               child:
                                   CircularProgressIndicator(color: Colors.blue),
