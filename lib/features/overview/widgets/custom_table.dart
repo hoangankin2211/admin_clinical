@@ -121,6 +121,7 @@ class PatientListRow extends StatelessWidget {
     this.avt,
     required this.payment,
     this.removeEntries,
+    this.onClick,
   });
   final String? avt;
   final String name;
@@ -131,11 +132,15 @@ class PatientListRow extends StatelessWidget {
   final String status;
   final String payment;
   final Color color;
+  final Function()? onClick;
   final Function(String)? removeEntries;
+
+  // void _handlePopupButton(String value){
+  //   if ()
+  // }
 
   @override
   Widget build(BuildContext context) {
-    print(avt);
     final Map<String, String> data = {
       'Patient Name': name,
       'Id': id,
@@ -153,9 +158,7 @@ class PatientListRow extends StatelessWidget {
       id: id,
       remove: removeEntries ?? (_) {},
       child: InkWell(
-        onTap: color == Colors.white
-            ? () => Get.toNamed(PageName.patientDetailScreen)
-            : null,
+        onTap: color == Colors.white ? onClick : null,
         borderRadius: AppDecoration.primaryRadiusBorder,
         child: Container(
           margin: const EdgeInsets.symmetric(vertical: 5),
@@ -203,8 +206,21 @@ class PatientListRow extends StatelessWidget {
                   )
                   .toList(),
               (color == Colors.white)
-                  ? InkWell(
-                      onTap: () {},
+                  ? PopupMenuButton<String>(
+                      itemBuilder: (context) => [
+                        const PopupMenuItem<String>(
+                          value: 'Detail',
+                          child: Text('Detail'),
+                        ),
+                        const PopupMenuItem<String>(
+                          value: 'Edit',
+                          child: Text('Edit'),
+                        ),
+                        const PopupMenuItem<String>(
+                          value: 'Delete',
+                          child: Text('Delete'),
+                        ),
+                      ],
                       child: const Icon(
                         Icons.more_vert_outlined,
                       ),

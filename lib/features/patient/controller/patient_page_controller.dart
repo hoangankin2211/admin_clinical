@@ -14,9 +14,11 @@ class PatientPageController extends GetxController {
 
   @override
   void onReady() {
-    // // TODO: implement onReady
     PatientService.listPatients.listen((newData) {
       data.value = (newData);
+      if (numberOfEntries.value == data.value.length - 1) {
+        numberOfEntries.value++;
+      }
       update(['list_patients_screen']);
     });
     super.onReady();

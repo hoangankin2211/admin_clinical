@@ -2,14 +2,9 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:admin_clinical/constants/utils.dart';
-import 'package:admin_clinical/features/doctor/screens/doctor_main_screen.dart';
-import 'package:admin_clinical/features/form/widgets/form_card.dart';
 import 'package:admin_clinical/features/patient/controller/patient_page_controller.dart';
 import 'package:admin_clinical/models/patient.dart';
-import 'package:admin_clinical/services/data_service/patient_service.dart';
-import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
