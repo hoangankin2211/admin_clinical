@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 class PatientPageController extends GetxController {
+  final Rx<String?> selectedPatient = Rx(null);
+
   late final Rx<Map<String, Patient>> data;
 
   @override

@@ -1,37 +1,41 @@
 import 'package:admin_clinical/constants/app_decoration.dart';
 import 'package:flutter/material.dart';
 
-class PatientInformationForm extends StatelessWidget {
-  PatientInformationForm({super.key});
+import '../../../models/patient.dart';
 
-  final List<Map<String, String>> fakeData = [
+class PatientInformationForm extends StatelessWidget {
+  PatientInformationForm({super.key, required this.patient});
+
+  final Patient patient;
+
+  late final List<Map<String, dynamic>> fakeData = [
     {
       'title': 'Examination',
       'content': 'Check and Advisory',
     },
     {
       'title': 'Patient Name',
-      'content': 'Hoang Ankin',
+      'content': patient.name,
     },
     {
       'title': 'Phone Number',
-      'content': '0123456789',
+      'content': patient.phoneNumber,
     },
     {
       'title': 'Gender',
-      'content': 'Male',
+      'content': patient.gender,
     },
     {
       'title': 'Date of birth',
-      'content': '22/11/2002',
+      'content': patient.dob,
     },
     {
       'title': 'Age',
-      'content': '21',
+      'content': 22,
     },
     {
       'title': 'Address',
-      'content': '164 Le Thanh Ton, TP.Pleiku, Gia Lai province',
+      'content': patient.address,
     },
   ];
 
@@ -55,8 +59,8 @@ class PatientInformationForm extends StatelessWidget {
               for (int i = 0; i < 3; i++) ...[
                 Expanded(
                   child: DisplayInformationWidget(
-                    content: fakeData.elementAt(i)['content'] as String,
-                    label: fakeData.elementAt(i)['title'] as String,
+                    content: fakeData.elementAt(i)['content'].toString(),
+                    label: fakeData.elementAt(i)['title'].toString(),
                   ),
                 ),
                 const SizedBox(width: 5),
@@ -72,8 +76,8 @@ class PatientInformationForm extends StatelessWidget {
                 Flexible(
                   flex: i - 2,
                   child: DisplayInformationWidget(
-                    content: fakeData.elementAt(i)['content'] as String,
-                    label: fakeData.elementAt(i)['title'] as String,
+                    content: fakeData.elementAt(i)['content'].toString(),
+                    label: fakeData.elementAt(i)['title'].toString(),
                   ),
                 ),
                 const SizedBox(width: 5),
@@ -89,8 +93,8 @@ class PatientInformationForm extends StatelessWidget {
                 Flexible(
                   flex: i - 4,
                   child: DisplayInformationWidget(
-                    content: fakeData.elementAt(i)['content'] as String,
-                    label: fakeData.elementAt(i)['title'] as String,
+                    content: fakeData.elementAt(i)['content'].toString(),
+                    label: fakeData.elementAt(i)['title'].toString(),
                   ),
                 ),
                 const SizedBox(width: 5),

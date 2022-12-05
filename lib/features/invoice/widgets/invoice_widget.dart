@@ -17,9 +17,9 @@ class InvoiceWidget extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Flexible(
-              child: FormCard(child: PatientInformationForm()),
-            ),
+            // Flexible(
+            //   child: FormCard(child: PatientInformationForm()),
+            // ),
             Flexible(
               child: FormCard(child: InvoiceForm()),
             ),

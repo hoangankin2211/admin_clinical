@@ -26,11 +26,9 @@ const Map<String, String> patientListField = {
 };
 
 class ListPatientScreen extends StatelessWidget {
-  ListPatientScreen({super.key});
-
-  final patientPageController = Get.put(PatientPageController());
-
-  final Rx<String?> _selectedPatient = Rx(null);
+  ListPatientScreen({super.key, required this.examinationActionHandle});
+  final Function(Patient) examinationActionHandle;
+  final patientPageController = Get.find<PatientPageController>();
 
   @override
   Widget build(BuildContext context) {
@@ -171,8 +169,15 @@ class ListPatientScreen extends StatelessWidget {
                                 .data.value.values
                                 .elementAt(index);
                             return PatientListRow(
-                              onClick: () =>
-                                  _selectedPatient.value = tempPatient.id,
+                              onClick: () => patientPageController
+                                  .selectedPatient.value = tempPatient.id,
+                              onSelectedAction: (value) {
+                                if (value == 'Examination') {
+                                  examinationActionHandle(patientPageController
+                                      .data.value.values
+                                      .elementAt(index));
+                                }
+                              },
                               removeEntries:
                                   patientPageController.removeEntries,
                               name: tempPatient.name,
@@ -198,8 +203,9 @@ class ListPatientScreen extends StatelessWidget {
             flex: 3,
             child: Obx(
               () => PatientProfileCard(
-                  patient: _selectedPatient.value != null
-                      ? patientPageController.data.value[_selectedPatient.value]
+                  patient: patientPageController.selectedPatient.value != null
+                      ? patientPageController.data
+                          .value[patientPageController.selectedPatient.value]
                       : null),
             ),
           ),
