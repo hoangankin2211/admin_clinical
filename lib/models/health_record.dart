@@ -4,11 +4,12 @@ import 'package:admin_clinical/constants/utils.dart';
 
 class HealthRecord {
   String? id;
+  String? patientId;
+  String doctorId;
+  String departmentId;
   DateTime dateCreate;
   double totalMoney;
-  String departmentId;
   String? note;
-  String doctorId;
   String? clinicalExamination;
   String? symptom;
   String? diagnostic;

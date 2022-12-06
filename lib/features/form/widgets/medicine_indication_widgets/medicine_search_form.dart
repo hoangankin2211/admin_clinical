@@ -43,6 +43,7 @@ class MedicineSearchForm extends StatelessWidget {
                       ),
                     ),
                   ),
+                  const SizedBox(width: 15),
                   DropdownButton<String>(
                     items: [
                       DropdownMenuItem(
@@ -80,67 +81,19 @@ class MedicineSearchForm extends StatelessWidget {
                 ],
               ),
             ), ////////////////),////////////////),////////////////),////////////////
-            Container(
-              margin: const EdgeInsets.symmetric(vertical: 5),
-              padding: const EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                  color: Colors.blueGrey[200],
-                  borderRadius: AppDecoration.primaryRadiusBorder,
-                  boxShadow: [
-                    BoxShadow(
-                        offset: const Offset(0, 0.5),
-                        color: Colors.grey[200]!,
-                        blurRadius: 2)
-                  ]),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: const [
-                  SizedBox(width: 5),
-                  Expanded(
-                    child: Text(
-                      'Select',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Colors.blueGrey,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  SizedBox(width: 5),
-                  Expanded(
-                    child: Text(
-                      'ID',
-                      style: TextStyle(
-                          color: Colors.blueGrey,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Expanded(
-                    child: Text(
-                      'Name',
-                      style: TextStyle(
-                          color: Colors.blueGrey,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Expanded(
-                    child: Text(
-                      'Provider',
-                      style: TextStyle(
-                          color: Colors.blueGrey,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  SizedBox(width: 5),
-                ],
-              ),
+            const MedicineSearchFormRow(
+              customRow: [
+                {'flex': 1, 'text': 'Select'},
+                {'flex': 2, 'text': 'ID'},
+                {'flex': 1, 'text': 'Name'},
+                {'flex': 1, 'text': 'Type'},
+                {'flex': 1, 'text': 'Unit'},
+                {'flex': 1, 'text': 'Remaining'},
+              ],
             ),
             ////////////////),////////////////),////////////////),////////////////
             SizedBox(
-              height: 300,
+              height: 350,
               child: ListView.builder(
                 itemBuilder: (context, index) {
                   return MedicineTableRow(
@@ -157,6 +110,52 @@ class MedicineSearchForm extends StatelessWidget {
           ],
         );
       },
+    );
+  }
+}
+
+class MedicineSearchFormRow extends StatelessWidget {
+  const MedicineSearchFormRow({
+    super.key,
+    required this.customRow,
+    this.width,
+  });
+  final double? width;
+  final List<Map<String, dynamic>> customRow;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 5),
+      padding: const EdgeInsets.all(6),
+      decoration: BoxDecoration(
+          color: Colors.blueGrey[200],
+          borderRadius: AppDecoration.primaryRadiusBorder,
+          boxShadow: [
+            BoxShadow(
+                offset: const Offset(0, 0.5),
+                color: Colors.grey[200]!,
+                blurRadius: 2)
+          ]),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          const SizedBox(width: 5),
+          ...customRow.map(
+            (element) => Expanded(
+              flex: element['flex'],
+              child: Text(
+                element['text'],
+                style: const TextStyle(
+                    color: Colors.blueGrey,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+          SizedBox(width: width ?? 0),
+        ],
+      ),
     );
   }
 }

@@ -1,16 +1,20 @@
 import 'package:admin_clinical/constants/app_decoration.dart';
+import 'package:admin_clinical/features/form/controller/medical_form_controller.dart';
 import 'package:admin_clinical/features/form/widgets/examination_information_form.dart';
 import 'package:admin_clinical/features/form/widgets/record_information_form.dart';
 import 'package:admin_clinical/features/form/widgets/patient_information_form.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../models/patient.dart';
+import '../../../services/auth_service/auth_service.dart';
 
 // ignore: must_be_immutable
 class MedicalExaminationTab extends StatelessWidget {
-  const MedicalExaminationTab({super.key, required this.patient});
+  MedicalExaminationTab({super.key, required this.patient});
 
   final Patient patient;
+  final medicalFormController = Get.find<MedicalFormController>();
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +39,23 @@ class MedicalExaminationTab extends StatelessWidget {
                       thickness: 0.3,
                     ),
                     Expanded(
-                      child: RecordInformationForm(),
+                      child: medicalFormController.currentHealthRecord.value !=
+                              null
+                          ? RecordInformationForm(
+                              dateCreate: medicalFormController
+                                  .currentHealthRecord.value!.dateCreate
+                                  .toString(),
+                              department: "Dit me loz",
+                              doctorInCharge: AuthService.instance.user.name,
+                              id: medicalFormController
+                                  .currentHealthRecord.value!.id,
+                              note: medicalFormController
+                                  .currentHealthRecord.value!.note,
+                              status: "Not good",
+                              totalMoney:
+                                  medicalFormController.totalMoney.value,
+                            )
+                          : const RecordInformationForm(),
                     ),
                   ],
                 ),

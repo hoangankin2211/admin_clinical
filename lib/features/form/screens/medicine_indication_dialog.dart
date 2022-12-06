@@ -1,16 +1,20 @@
+import 'package:admin_clinical/features/form/controller/medical_form_controller.dart';
 import 'package:admin_clinical/features/form/widgets/form_card.dart';
 import 'package:admin_clinical/features/form/widgets/medicine_indication_widgets/medicine_information_form.dart';
 import 'package:admin_clinical/features/form/widgets/medicine_indication_widgets/medicine_search_form.dart';
 import 'package:admin_clinical/features/form/widgets/medicine_indication_widgets/result_medicine_indication.dart';
 import 'package:admin_clinical/features/form/widgets/patient_information_form.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../constants/app_decoration.dart';
 import '../../../models/patient.dart';
 
 class MedicineIndicationDialog extends StatelessWidget {
-  const MedicineIndicationDialog({super.key, required this.patient});
+  MedicineIndicationDialog({super.key, required this.patient});
   final Patient patient;
+  final medicalFormController = Get.find<MedicalFormController>();
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -30,7 +34,7 @@ class MedicineIndicationDialog extends StatelessWidget {
                     child: Row(
                       children: [
                         Flexible(
-                          flex: 2,
+                          flex: 4,
                           child: FormCard(
                             child: Column(
                               children: [
@@ -41,13 +45,25 @@ class MedicineIndicationDialog extends StatelessWidget {
                                 const SizedBox(height: 5),
                                 AppWidget.primaryDivider,
                                 const SizedBox(height: 5),
-                                Flexible(child: MedicineInformationForm()),
+                                Flexible(
+                                    child: Obx(
+                                  () => MedicineInformationForm(
+                                    id: medicalFormController
+                                                .currentHealthRecord.value !=
+                                            null
+                                        ? medicalFormController
+                                            .currentHealthRecord.value!.id
+                                        : null,
+                                    amount: medicalFormController
+                                        .amountMedicine.value,
+                                  ),
+                                )),
                               ],
                             ),
                           ),
                         ),
                         Flexible(
-                          flex: 3,
+                          flex: 10,
                           child: FormCard(child: MedicineSearchForm()),
                         )
                       ],

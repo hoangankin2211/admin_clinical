@@ -427,7 +427,7 @@ class ResultServiceTableRow extends StatelessWidget {
 }
 
 class MedicineTableRow extends StatelessWidget {
-  MedicineTableRow({
+  const MedicineTableRow({
     super.key,
     required this.color,
     this.onCheckButtonChange,
@@ -458,35 +458,28 @@ class MedicineTableRow extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             const SizedBox(width: 5),
-            color == Colors.white
-                ? Expanded(
-                    child: ValueBuilder<bool?>(
-                        initialValue: false,
-                        onUpdate: (value) => print("Value updated: $value"),
-                        builder: (value, update) {
-                          return Checkbox(
-                            value: value,
-                            onChanged: (value) {
-                              update(value);
-                              if (value != null) {
-                                onCheckButtonChange!(value, medicine.id);
-                              }
-                            },
-                          );
-                        }),
-                  )
-                : const Expanded(
-                    child: Text(
-                      'Select',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Colors.blueGrey,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-            const SizedBox(width: 5),
             Expanded(
+              flex: 1,
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: ValueBuilder<bool?>(
+                    initialValue: false,
+                    onUpdate: (value) => print("Value updated: $value"),
+                    builder: (value, update) {
+                      return Checkbox(
+                        value: value,
+                        onChanged: (value) {
+                          update(value);
+                          if (value != null) {
+                            onCheckButtonChange!(value, medicine.id);
+                          }
+                        },
+                      );
+                    }),
+              ),
+            ),
+            Expanded(
+              flex: 2,
               child: Text(
                 medicine.id,
                 style: const TextStyle(
@@ -496,6 +489,7 @@ class MedicineTableRow extends StatelessWidget {
               ),
             ),
             Expanded(
+              flex: 1,
               child: Text(
                 medicine.name,
                 style: const TextStyle(
@@ -505,8 +499,29 @@ class MedicineTableRow extends StatelessWidget {
               ),
             ),
             Expanded(
+              flex: 1,
               child: Text(
-                medicine.name,
+                medicine.type,
+                style: const TextStyle(
+                    color: Colors.blueGrey,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Text(
+                medicine.unit,
+                style: const TextStyle(
+                    color: Colors.blueGrey,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Text(
+                medicine.amount.toString(),
                 style: const TextStyle(
                     color: Colors.blueGrey,
                     fontSize: 14,
@@ -553,35 +568,58 @@ class ResultMedicineTableRow extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             const SizedBox(width: 5),
-            ...medicine
-                .toJson()
-                .entries
-                .map(
-                  (e) => Expanded(
-                    child: Text(
-                      e.value.toString(),
-                      style: const TextStyle(
-                          color: Colors.blueGrey,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                )
-                .toList(),
+            ...medicine.toJson().entries.map(
+              (e) {
+                int flex = 1;
+                if (e.key.toString() == 'thumbnails') {
+                  return const SizedBox();
+                }
+                if (e.key.toString() == '_id') {
+                  flex = 2;
+                }
+                return Expanded(
+                  flex: flex,
+                  child: e.key.toString() != 'name'
+                      ? Text(
+                          e.value.toString(),
+                          style: const TextStyle(
+                              color: Colors.blueGrey,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold),
+                        )
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            CircleAvatar(
+                              backgroundImage:
+                                  NetworkImage(medicine.thumbnails),
+                              radius: 15,
+                            ),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              e.value.toString(),
+                              style: const TextStyle(
+                                  color: Colors.blueGrey,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold),
+                            )
+                          ],
+                        ),
+                );
+              },
+            ).toList(),
             const SizedBox(width: 5),
-            color == Colors.white
-                ? ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primarySecondColor),
-                    onPressed: () {},
-                    child: const Icon(
-                      Icons.close_outlined,
-                      color: Colors.white,
-                    ),
-                  )
-                : const SizedBox(
-                    width: 52,
-                  ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primarySecondColor),
+              onPressed: () {},
+              child: const Icon(
+                Icons.close_outlined,
+                color: Colors.white,
+              ),
+            ),
             const SizedBox(width: 5),
           ],
         ),

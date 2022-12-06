@@ -12,8 +12,9 @@ class MedicalFormController extends GetxController {
   final formKey = GlobalKey<FormState>();
   var isLoading = false.obs;
 
+  Rx<HealthRecord?> currentHealthRecord = Rx(null);
+  var totalMoney = 0.0.obs;
 //////////////////////////////////////////////////////////////////////
-  final List<Medicine> medicines = [];
 
   final List<Map<String, dynamic>> resultIndicationRowData = [
     {
@@ -173,8 +174,13 @@ class MedicalFormController extends GetxController {
       isLoading.value = true;
       final response = await createNewHealthRecord(context);
       isLoading.value = false;
+
+      if (response['isSuccess']) {
+        currentHealthRecord.value =
+            HealthRecordService.listHealthRecord[response['id'] ?? ""];
+      }
       Utils.notifyHandle(
-        response: response,
+        response: response['isSuccess'],
         successTitle: 'Success',
         successQuestion: 'Create new Health Record Success',
         errorTitle: 'ERROR',
@@ -218,7 +224,8 @@ class MedicalFormController extends GetxController {
   }
 
 //////////////////////////////////////////////////////////////////////
-  Future<bool> createNewHealthRecord(BuildContext context) async {
+  Future<Map<String, dynamic>> createNewHealthRecord(
+      BuildContext context) async {
     try {
       HealthRecord newRecord = HealthRecord(
         dateCreate: DateTime.now(),
@@ -258,12 +265,12 @@ class MedicalFormController extends GetxController {
         print(response);
         newRecord.id = response;
         HealthRecordService.listHealthRecord.addAll({response: newRecord});
-        return true;
+        return {"isSuccess": true, 'id': response};
       }
     } catch (e) {
       print('createNewHealthRecord: $e');
     }
-    return false;
+    return {"isSuccess": false};
   }
 
   Future<bool> editHealthRecordData(
@@ -302,6 +309,12 @@ class MedicalFormController extends GetxController {
   }
 
   //////////////////////////////////////////////////////////////////////
+  var amountMedicine = 0.0.obs;
+  void updateAmount(double newValue) {
+    amountMedicine.value += newValue;
+  }
+
+  //////////////////////////////////////////////////////////////////////
   void onChoiceServiceChange(bool value, int index) {
     if (value) {
       (rowServiceIndicationData.elementAt(index)['isSelected'] as RxBool)
@@ -325,8 +338,9 @@ class MedicalFormController extends GetxController {
     update(['resultService']);
   }
 
-  final Rx<List<Medicine>> listMedicineIndicator =
-      Rx<List<Medicine>>(MedicineService.instance.listMedicine);
+  final Rx<List<Medicine>> listMedicineIndicator = Rx<List<Medicine>>([]);
+
+  final List<Medicine> medicines = MedicineService.instance.listMedicine;
 
   void onChoiceMedicineChange(bool value, String id) {
     int? index;
@@ -339,22 +353,13 @@ class MedicalFormController extends GetxController {
     if (index == null) return;
     Medicine temp = medicines.elementAt(index);
     if (value) {
-      // listMedicineIndicator.value.add(
-      //   Medicine(
-      //     type: temp.type,
-      //     id: temp.id,
-      //     name: temp.name,
-      //     price: temp.price,
-      //     provider: temp.provider,
-      //     unit: temp.unit,
-      //   ),
-      // );
-      print("added");
+      listMedicineIndicator.value.add(temp);
+      updateAmount(temp.cost);
     } else {
       listMedicineIndicator.value
           .removeWhere((element) => element.id.compareTo(temp.id) == 0);
+      updateAmount(-temp.cost);
     }
-    print(medicines.length);
     update(['ResultMedicineTableRow']);
   }
 }

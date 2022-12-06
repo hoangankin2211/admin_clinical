@@ -1,35 +1,38 @@
+import 'package:admin_clinical/services/auth_service/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../patient_information_form.dart';
 
 class MedicineInformationForm extends StatelessWidget {
-  MedicineInformationForm({super.key});
-
-  final List<Map<String, String>> fakeData = [
-    {
-      'title': 'Record ID',
-      'content': '123',
-    },
-    {
-      'title': 'Doctor in Charge',
-      'content': 'Hoang Ankin',
-    },
-    {
-      'title': 'Date Create',
-      'content': '17/11/2022',
-    },
-    {
-      'title': 'Prescription Date',
-      'content': 'Admin',
-    },
-    {
-      'title': 'Provider',
-      'content': 'Medicine Department',
-    }
-  ];
+  const MedicineInformationForm({super.key, this.id, this.amount});
+  final String? id;
+  final double? amount;
 
   @override
   Widget build(BuildContext context) {
+    final List<Map<String, dynamic>> fakeData = [
+      {
+        'title': 'Record ID',
+        'content': id,
+      },
+      {
+        'title': 'Doctor in Charge',
+        'content': AuthService.instance.user.name,
+      },
+      {
+        'title': 'Date Create',
+        'content': DateFormat().add_yMMMMd().format(DateTime.now()),
+      },
+      {
+        'title': 'Amount',
+        'content': amount ?? 0.0,
+      },
+      {
+        'title': 'Provider',
+        'content': 'Medicine Department',
+      }
+    ];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -48,8 +51,8 @@ class MedicineInformationForm extends StatelessWidget {
               for (int i = 0; i < 2; i++)
                 Expanded(
                   child: DisplayInformationWidget(
-                    content: fakeData.elementAt(i)['content'] as String,
-                    label: fakeData.elementAt(i)['title'] as String,
+                    content: fakeData.elementAt(i)['content'].toString(),
+                    label: fakeData.elementAt(i)['title'].toString(),
                   ),
                 )
             ],
@@ -62,8 +65,8 @@ class MedicineInformationForm extends StatelessWidget {
               for (int i = 2; i < 4; i++)
                 Flexible(
                   child: DisplayInformationWidget(
-                    content: fakeData.elementAt(i)['content'] as String,
-                    label: fakeData.elementAt(i)['title'] as String,
+                    content: fakeData.elementAt(i)['content'].toString(),
+                    label: fakeData.elementAt(i)['title'].toString(),
                   ),
                 )
             ],
@@ -71,8 +74,8 @@ class MedicineInformationForm extends StatelessWidget {
         ),
         Flexible(
           child: DisplayInformationWidget(
-            content: fakeData.elementAt(4)['content'] as String,
-            label: fakeData.elementAt(4)['title'] as String,
+            content: fakeData.elementAt(4)['content'].toString(),
+            label: fakeData.elementAt(4)['title'].toString(),
           ),
         )
       ],

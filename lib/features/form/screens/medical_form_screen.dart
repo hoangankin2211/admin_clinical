@@ -1,10 +1,7 @@
-import 'package:admin_clinical/constants/app_colors.dart';
-import 'package:admin_clinical/constants/app_decoration.dart';
 import 'package:admin_clinical/features/auth/widgets/custom_button.dart';
 import 'package:admin_clinical/features/form/controller/medical_form_controller.dart';
 import 'package:admin_clinical/features/form/screens/service_indication_dialog.dart';
 import 'package:admin_clinical/services/data_service/health_record_service.dart';
-import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -34,28 +31,20 @@ class MedicalFormScreen extends StatelessWidget {
 
   late final List<Widget> listServiceChoice = listIconAndLabel
       .map(
-        (element) => InkWell(
-          onTap: () => Get.dialog(element['dialog']),
-          child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 10.0),
-            padding:
-                const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5.0),
-              color: AppColors.primaryColor,
-            ),
-            child: Row(
-              children: [
-                Icon(element['icon'], color: Colors.white),
-                Text(
-                  ' ${element['title']}',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
+        (element) => TextButton.icon(
+          style: ElevatedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+          ),
+          onPressed: () {
+            Get.dialog(element['dialog']);
+          },
+          icon: Icon(element['icon']),
+          label: Text(
+            element['title'],
+            style: TextStyle(
+              color: Colors.blueGrey[700],
+              fontSize: 17,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ),
