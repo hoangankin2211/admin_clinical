@@ -7,11 +7,13 @@ class InputWithHeaderText extends StatelessWidget {
   final String header;
   final String hint;
   final int? maxLines;
+  final TextEditingController? controller;
   const InputWithHeaderText({
     Key? key,
     required this.header,
     required this.hint,
     this.maxLines,
+    this.controller,
   }) : super(key: key);
 
   @override
@@ -29,6 +31,7 @@ class InputWithHeaderText extends StatelessWidget {
         ),
         const SizedBox(height: 5.0),
         CustomTextFormField(
+          controller: controller,
           hint: hint,
           maxLine: maxLines ?? 1,
         ),

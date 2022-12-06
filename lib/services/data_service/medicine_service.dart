@@ -93,6 +93,44 @@ class MedicineService {
     return result;
   }
 
+  Future<Medicine1?> editMedcine(
+    BuildContext context, {
+    required String id,
+    required String thumbnails,
+    required double price,
+    required String type,
+    required String description,
+    required String name,
+  }) async {
+    Medicine1? result;
+    try {
+      final res = await http.post(
+        Uri.parse('${ApiLink.uri}/api/medicine/edit_medicine'),
+        body: jsonEncode({
+          "name": name,
+          "thumbnails": thumbnails,
+          "price": price,
+          "type": type,
+          "description": description,
+          "id": id,
+        }),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+      httpErrorHandle(
+        response: res,
+        context: context,
+        onSuccess: () {
+          result = Medicine1.fromMap(jsonDecode(res.body));
+        },
+      );
+    } catch (e) {
+      result = null;
+    }
+    return result;
+  }
+
   Future<Medicine1?> insertNewMedcine(
     BuildContext context, {
     required String name,

@@ -12,6 +12,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../constants/app_colors.dart';
+import '../../../constants/app_decoration.dart';
 import '../../../constants/global_widgets/chart/column_2_chart.dart';
 import '../../../constants/global_widgets/chart/line_chart_design.dart';
 import '../../../constants/utils.dart';
@@ -22,9 +23,24 @@ import '../widgets/header_list_medicine.dart';
 import '../widgets/input_with_header_text.dart';
 import '../widgets/list_medicine_item.dart';
 
-class MedicineScreen extends StatelessWidget {
+class MedicineScreen extends StatefulWidget {
   MedicineScreen({super.key});
+  @override
+  State<MedicineScreen> createState() => _MedicineScreenState();
+}
+
+class _MedicineScreenState extends State<MedicineScreen> {
   final controller = Get.put(MedicineController());
+  Uint8List? _image;
+  Rx<DateTime> date = DateTime.now().obs;
+  void selectedImage() async {
+    Uint8List image = await pickImage(ImageSource.gallery);
+    setState(() {
+      _image = image;
+      //convertoBytes();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -56,236 +72,291 @@ class MedicineScreen extends StatelessWidget {
     );
   }
 
-  Expanded _rightField() {
-    return Expanded(
-      flex: 3,
-      child: ListView(
-        // crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(15.0),
-            margin: const EdgeInsets.only(bottom: 20.0),
-            decoration: BoxDecoration(
-              color: AppColors.backgroundColor,
-              borderRadius: BorderRadius.circular(15.0),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.headline1TextColor.withOpacity(0.2),
-                  blurRadius: 10.0,
-                )
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      "Medicine View",
-                      style: TextStyle(
-                        color: AppColors.primarySecondColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20.0,
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {},
-                      child: Row(children: const [
-                        Text("Last Week ",
-                            style: TextStyle(
-                                color: AppColors.primarySecondColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18.0)),
-                        Icon(Icons.arrow_drop_down,
-                            color: AppColors.primarySecondColor),
-                      ]),
-                    ),
+  Widget _rightField() {
+    return Obx(() => Expanded(
+          flex: 3,
+          child: ListView(
+            // crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(15.0),
+                margin: const EdgeInsets.only(bottom: 20.0),
+                decoration: BoxDecoration(
+                  color: AppColors.backgroundColor,
+                  borderRadius: BorderRadius.circular(15.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.headline1TextColor.withOpacity(0.2),
+                      blurRadius: 10.0,
+                    )
                   ],
                 ),
-                const SizedBox(height: 20.0),
-                Container(
-                  height: 210,
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(15.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
-                    color: AppColors.backgroundColor,
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.headline1TextColor.withOpacity(0.2),
-                        blurRadius: 4.0,
+                child: (controller.listMedicine.isEmpty)
+                    ? const Center(
+                        child: Text(
+                          "NULL",
+                          style: TextStyle(
+                            color: AppColors.primaryColor,
+                            fontSize: 22.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       )
-                    ],
-                  ),
-                  child: const LineChartDesign(listData: [
-                    FlSpot(0, 3.44),
-                    FlSpot(1, 2.44),
-                    FlSpot(2, 4.44),
-                    FlSpot(3, 1.44),
-                    FlSpot(4, 5),
-                    FlSpot(5, 4.44),
-                    FlSpot(6, 2.44),
-                  ]),
-                ),
-                const SizedBox(height: 10.0),
-                const Divider(thickness: 1),
-                const SizedBox(height: 10.0),
-                Row(
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: Container(
-                        height: 120,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8.0),
-                          boxShadow: [
-                            BoxShadow(
-                                color: AppColors.headline1TextColor
-                                    .withOpacity(0.2),
-                                blurRadius: 10.0),
-                          ],
-                          image: const DecorationImage(
-                            fit: BoxFit.cover,
-                            image: AssetImage(
-                              "assets/images/doctor2.png",
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 10.0),
-                    Expanded(
-                      flex: 3,
-                      child: Column(
+                    : Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text(
-                            "Shakira lala",
-                            style: TextStyle(
-                              color: AppColors.primarySecondColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18.0,
-                            ),
-                          ),
-                          SizedBox(height: 5.0),
-                          Text(
-                            "Thuoc Dau Bung",
-                            style: TextStyle(
-                              color: AppColors.primarySecondColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18.0,
-                            ),
-                          ),
-                          SizedBox(height: 5.0),
-                          Text(
-                            "Price: \$500.0",
-                            style: TextStyle(
-                              color: AppColors.primarySecondColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18.0,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {},
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 5.0),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          color: Colors.blue.withOpacity(0.7),
-                        ),
-                        child: Row(children: const [
-                          Icon(Icons.camera, color: Colors.white),
-                          Text(
-                            " Edit Thumbnails",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ]),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10.0),
-                const Divider(thickness: 1),
-                const SizedBox(height: 10.0),
-                const InputWithHeaderText(
-                  header: "Medicine Name",
-                  hint: "Enter Medicine Name",
-                ),
-                const SizedBox(height: 10.0),
-                const InputWithHeaderText(
-                  header: "Medicine Price",
-                  hint: "Enter Medicine Price",
-                ),
-                const SizedBox(height: 10.0),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "Select type of Medecine",
-                      style: const TextStyle(
-                        color: AppColors.headline1TextColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20.0,
-                      ),
-                    ),
-                    const SizedBox(height: 5.0),
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(width: 1, color: Colors.grey),
-                      ),
-                      child: Row(
                         children: [
-                          Expanded(
-                            child: Text(
-                              "Thuoc Dau bung",
-                              style: const TextStyle(
-                                color: AppColors.primarySecondColor,
-                                fontSize: 16.0,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                "Medicine View",
+                                style: TextStyle(
+                                  color: AppColors.primarySecondColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20.0,
+                                ),
                               ),
-                            ),
+                              InkWell(
+                                onTap: () {},
+                                child: Row(children: const [
+                                  Text("Last Week ",
+                                      style: TextStyle(
+                                          color: AppColors.primarySecondColor,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18.0)),
+                                  Icon(Icons.arrow_drop_down,
+                                      color: AppColors.primarySecondColor),
+                                ]),
+                              ),
+                            ],
                           ),
-                          IconButton(
-                            onPressed: () {},
-                            icon: const Icon(Icons.arrow_drop_down,
-                                color: AppColors.primarySecondColor),
+                          const SizedBox(height: 20.0),
+                          Container(
+                            height: 210,
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(15.0),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.0),
+                              color: AppColors.backgroundColor,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: AppColors.headline1TextColor
+                                      .withOpacity(0.2),
+                                  blurRadius: 4.0,
+                                )
+                              ],
+                            ),
+                            child: const LineChartDesign(listData: [
+                              FlSpot(0, 3.44),
+                              FlSpot(1, 2.44),
+                              FlSpot(2, 4.44),
+                              FlSpot(3, 1.44),
+                              FlSpot(4, 5),
+                              FlSpot(5, 4.44),
+                              FlSpot(6, 2.44),
+                            ]),
+                          ),
+                          const SizedBox(height: 10.0),
+                          const Divider(thickness: 1),
+                          const SizedBox(height: 10.0),
+                          Row(
+                            children: [
+                              Expanded(
+                                flex: 1,
+                                child: _image == null
+                                    ? Container(
+                                        height: 120,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                          boxShadow: [
+                                            BoxShadow(
+                                                color: AppColors
+                                                    .headline1TextColor
+                                                    .withOpacity(0.2),
+                                                blurRadius: 10.0),
+                                          ],
+                                          image: DecorationImage(
+                                            fit: BoxFit.cover,
+                                            image: NetworkImage(
+                                              controller
+                                                  .listMedicine[controller
+                                                      .selectMedcine.value]
+                                                  .thumbnails,
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    : Container(
+                                        height: 120,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                          boxShadow: [
+                                            BoxShadow(
+                                                color: AppColors
+                                                    .headline1TextColor
+                                                    .withOpacity(0.2),
+                                                blurRadius: 10.0),
+                                          ],
+                                          image: DecorationImage(
+                                            fit: BoxFit.cover,
+                                            image: MemoryImage(_image!),
+                                          ),
+                                        ),
+                                      ),
+                              ),
+                              const SizedBox(width: 10.0),
+                              Expanded(
+                                flex: 3,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      controller
+                                          .listMedicine[
+                                              controller.selectMedcine.value]
+                                          .name,
+                                      style: const TextStyle(
+                                        color: AppColors.primarySecondColor,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18.0,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 5.0),
+                                    Text(
+                                      controller
+                                          .listMedicine[
+                                              controller.selectMedcine.value]
+                                          .type,
+                                      style: const TextStyle(
+                                        color: AppColors.primarySecondColor,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18.0,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 5.0),
+                                    Text(
+                                      "Price: \$${controller.listMedicine[controller.selectMedcine.value].price}",
+                                      style: const TextStyle(
+                                        color: AppColors.primarySecondColor,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18.0,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              InkWell(
+                                onTap: () => selectedImage(),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 5.0),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: Colors.blue.withOpacity(0.7),
+                                  ),
+                                  child: Row(children: const [
+                                    Icon(Icons.camera, color: Colors.white),
+                                    Text(
+                                      " Edit Thumbnails",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ]),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 10.0),
+                          const Divider(thickness: 1),
+                          const SizedBox(height: 10.0),
+                          InputWithHeaderText(
+                            header: "Medicine Name",
+                            hint: "Enter Medicine Name",
+                            controller: controller.rxnameController.value,
+                          ),
+                          const SizedBox(height: 10.0),
+                          InputWithHeaderText(
+                            header: "Medicine Price",
+                            hint: "Enter Medicine Price",
+                            controller: controller.rxpriceController.value,
+                          ),
+                          const SizedBox(height: 10.0),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "Select type of Medecine",
+                                style: TextStyle(
+                                  color: AppColors.headline1TextColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20.0,
+                                ),
+                              ),
+                              const SizedBox(height: 5.0),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 1.0),
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  border: AppDecoration.primaryBorder,
+                                  borderRadius:
+                                      AppDecoration.primaryRadiusBorder,
+                                ),
+                                child: Obx(
+                                  () => DropdownButton<int>(
+                                    underline: const SizedBox(),
+                                    items: controller.listType
+                                        .asMap()
+                                        .entries
+                                        .map((e) => DropdownMenuItem<int>(
+                                              value: e.key,
+                                              child: Text(
+                                                e.value,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline4,
+                                              ),
+                                            ))
+                                        .toList(),
+                                    value: controller.selectTypeEdit.value,
+                                    onChanged: (value) {
+                                      controller.selectTypeEdit.value = value!;
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 10.0),
+                          InputWithHeaderText(
+                            header: "Description",
+                            hint: "Enter description",
+                            maxLines: 4,
+                            controller:
+                                controller.rxdescriptionController.value,
+                          ),
+                          const SizedBox(height: 20.0),
+                          SizedBox(
+                            width: double.infinity,
+                            height: 50,
+                            child: CustomButton(
+                              check: controller.isLoadingEdit.value,
+                              title: "Edit Medicine",
+                              onPressed: () =>
+                                  controller.editMedicine(context, _image),
+                            ),
                           ),
                         ],
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10.0),
-                const InputWithHeaderText(
-                  header: "Description",
-                  hint: "Enter description",
-                  maxLines: 4,
-                ),
-                const SizedBox(height: 20.0),
-                SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: CustomButton(
-                    title: "Edit Medicine",
-                    onPressed: () {},
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
-    );
+        ));
   }
 
   Expanded _listMedicineView() {
@@ -328,7 +399,10 @@ class MedicineScreen extends StatelessWidget {
                 children: [
                   for (int i = 0; i < controller.listMedicine.value.length; i++)
                     InkWell(
-                      onTap: () => controller.selectMedcine.value = i,
+                      onTap: () {
+                        _image = null;
+                        controller.funcselectMedincine(i);
+                      },
                       child: ListMedicineItem(
                         delete: () {
                           bool isDelete = false;

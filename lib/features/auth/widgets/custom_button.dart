@@ -10,10 +10,12 @@ class CustomButton extends StatelessWidget {
     required this.title,
     required this.onPressed,
     this.color,
+    this.check = false,
   });
   final String title;
   final Color? color;
   final Function() onPressed;
+  final bool? check;
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
@@ -25,14 +27,18 @@ class CustomButton extends StatelessWidget {
           borderRadius: AppDecoration.primaryRadiusBorder,
         ),
       ),
-      child: Text(
-        title,
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
+      child: (check == false)
+          ? Text(
+              title,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
+            )
+          : const Center(
+              child: CircularProgressIndicator(color: Colors.white),
+            ),
     );
   }
 }

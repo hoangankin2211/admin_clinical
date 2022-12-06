@@ -334,14 +334,17 @@ class _DialogAddNewMedicineState extends State<DialogAddNewMedicine> {
                         child: SizedBox(),
                       ),
                       const SizedBox(width: 20.0),
-                      Expanded(
-                        child: SizedBox(
-                          height: 50.0,
-                          child: CustomButton(
-                            title: 'Insert Medicine',
-                            onPressed: () => controller.insertNewMedicine(
-                              context,
-                              _image,
+                      Obx(
+                        () => Expanded(
+                          child: SizedBox(
+                            height: 50.0,
+                            child: CustomButton(
+                              check: controller.isLoadingInsert.value,
+                              title: 'Insert Medicine',
+                              onPressed: () => controller.insertNewMedicine(
+                                context,
+                                _image,
+                              ),
                             ),
                           ),
                         ),

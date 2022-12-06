@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 
 class MedicineController extends GetxController {
   RxList<Medicine1> listMedicine = <Medicine1>[].obs;
-  List<String> listType = [];
+  RxList<String> listType = <String>[].obs;
   List<String> listUnit = [
     'Pill',
     'Pack',
@@ -17,6 +17,7 @@ class MedicineController extends GetxController {
     'potion',
   ];
   // TextEdittingController
+  RxBool isLoadingInsert = false.obs;
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController typeController = TextEditingController();
@@ -31,10 +32,32 @@ class MedicineController extends GetxController {
 
   void fetchAllListType() {
     nullAllField();
-    listType.clear();
+    listType.value.clear();
     for (var item in listMedicine) {
-      if (!(listType.contains(item.type))) {
-        listType.add(item.type);
+      if (!(listType.value.contains(item.type))) {
+        listType.value.add(item.type);
+      }
+    }
+  }
+
+  // TextEditintCOntroller for edit medcine
+  Rx<TextEditingController> rxnameController = TextEditingController().obs;
+  Rx<TextEditingController> rxdescriptionController =
+      TextEditingController().obs;
+  RxInt selectTypeEdit = 0.obs;
+  RxBool isLoadingEdit = false.obs;
+  Rx<TextEditingController> rxpriceController = TextEditingController().obs;
+  funcselectMedincine(int index) {
+    selectMedcine.value = index;
+    rxnameController.value.text = listMedicine[selectMedcine.value].name;
+    rxdescriptionController.value.text =
+        listMedicine[selectMedcine.value].description;
+    rxpriceController.value.text =
+        listMedicine[selectMedcine.value].price.toString();
+    for (int i = 0; i < listType.value.length; i++) {
+      if (listType.value[i] == listMedicine[selectMedcine.value].type) {
+        selectTypeEdit.value = i;
+        break;
       }
     }
   }
@@ -81,6 +104,7 @@ class MedicineController extends GetxController {
       Get.dialog(const ErrorDialog(
           question: 'Insert new Medicine', title1: "Field is Null"));
     } else {
+      isLoadingInsert.value = true;
       String? imageUrl =
           'https://media.istockphoto.com/id/1300036753/photo/falling-antibiotics-healthcare-background.jpg?s=612x612&w=0&k=20&c=oquxJiLqE33ePw2qML9UtKJgyYUqjkLFwxT84Pr-WPk=';
       if (image != null) {
@@ -91,7 +115,7 @@ class MedicineController extends GetxController {
       Medicine1? temp = await MedicineService.instance.insertNewMedcine(
         context,
         name: nameController.text,
-        thumbnails: imageUrl!,
+        thumbnails: imageUrl,
         price: price.value.toDouble(),
         cost: cost.value.toDouble(),
         type: typeController.text,
@@ -101,6 +125,7 @@ class MedicineController extends GetxController {
       );
       if (temp != null) {
         MedicineService.instance.listMedicine.add(temp);
+        isLoadingInsert.value = false;
         Get.back();
         Get.dialog(
           const SuccessDialog(
@@ -113,6 +138,7 @@ class MedicineController extends GetxController {
   deleteMedicine(BuildContext context, String id) async {
     bool check = await MedicineService.instance.deleteMedicine(context, id: id);
     if (check) {
+      selectMedcine.value = 0;
       MedicineService.instance.listMedicine
           .removeWhere((element) => element.id == id);
       Get.back();
@@ -122,9 +148,52 @@ class MedicineController extends GetxController {
     }
   }
 
+  editMedicine(BuildContext context, Uint8List? image) async {
+    if (rxnameController.value.text == "" ||
+        rxdescriptionController.value.text == "" ||
+        rxpriceController.value.text == "") {
+      Get.dialog(const ErrorDialog(
+          question: 'Edit Medicine', title1: "Field is Null"));
+    } else {
+      String imageUrl = listMedicine[selectMedcine.value].thumbnails;
+      isLoadingEdit.value = true;
+      if (image != null) {
+        imageUrl = (await convertUti8ListToUrl(image, nameController.text)) ??
+            listMedicine[selectMedcine.value].thumbnails;
+      }
+      // ignore: use_build_context_synchronously
+      Medicine1? temp = await MedicineService.instance.editMedcine(
+        context,
+        id: listMedicine[selectMedcine.value].id,
+        thumbnails: imageUrl,
+        price: double.parse(rxpriceController.value.text),
+        type: listType.value[selectTypeEdit.value],
+        description: rxdescriptionController.value.text,
+        name: rxnameController.value.text,
+      );
+      if (temp != null) {
+        // MedicineService.instance.listMedicine.add(temp);
+        MedicineService.instance.listMedicine[selectMedcine.value] = temp;
+        isLoadingEdit.value = false;
+        Get.dialog(
+          const SuccessDialog(question: "Edit Medicine", title1: "Success"),
+        );
+      }
+    }
+  }
+
   @override
   void onInit() {
     super.onInit();
     listMedicine.value = MedicineService.instance.listMedicine;
+    listType.value.clear();
+    for (var item in listMedicine) {
+      if (!(listType.value.contains(item.type))) {
+        listType.value.add(item.type);
+      }
+    }
+    if (listMedicine.isNotEmpty) {
+      funcselectMedincine(0);
+    }
   }
 }
