@@ -1,40 +1,9 @@
 import 'dart:convert';
 
 class Medicine {
-  final String id;
-  final String name;
-  final double price;
-  final String provider;
-  final String unit;
-  final String type;
+  Medicine userFromJson(String str) => Medicine.fromJson(json.decode(str));
 
-  Medicine({
-    required this.type,
-    required this.id,
-    required this.name,
-    required this.price,
-    required this.provider,
-    required this.unit,
-  });
-
-  Map<String, dynamic> toMap() {
-    Map<String, dynamic> result = {
-      'type': type,
-      'id': id,
-      'name': name,
-      'price': price,
-      'provider': provider,
-      'unit': unit,
-    };
-
-    return result;
-  }
-}
-
-class Medicine1 {
-  Medicine1 userFromJson(String str) => Medicine1.fromJson(json.decode(str));
-
-  static String userToJson(Medicine1 data) => json.encode(data.toJson());
+  static String userToJson(Medicine data) => json.encode(data.toJson());
 
   String id;
   String name;
@@ -45,7 +14,7 @@ class Medicine1 {
   String description;
   String unit;
   int amount;
-  Medicine1({
+  Medicine({
     required this.id,
     required this.name,
     required this.thumbnails,
@@ -56,7 +25,7 @@ class Medicine1 {
     required this.unit,
     required this.amount,
   });
-  factory Medicine1.fromMap(Map<String, dynamic> json) => Medicine1(
+  factory Medicine.fromMap(Map<String, dynamic> json) => Medicine(
         id: json['_id'],
         name: json['name'],
         thumbnails: json['thumbnails'],
@@ -79,10 +48,10 @@ class Medicine1 {
         'amount': amount,
       };
 
-  factory Medicine1.fromJson(String source) =>
-      Medicine1.fromMap(json.decode(source));
+  factory Medicine.fromJson(String source) =>
+      Medicine.fromMap(json.decode(source));
 
-  Medicine1 copyWith({
+  Medicine copyWith({
     String? id,
     String? name,
     String? thumbnails,
@@ -93,7 +62,7 @@ class Medicine1 {
     String? unit,
     int? amount,
   }) {
-    return Medicine1(
+    return Medicine(
       id: id ?? this.id,
       name: name ?? this.name,
       thumbnails: thumbnails ?? this.thumbnails,

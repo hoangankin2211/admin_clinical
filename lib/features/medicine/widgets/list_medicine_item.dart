@@ -5,7 +5,7 @@ import '../../../constants/global_widgets/list_item.dart';
 import '../../../models/medicine.dart';
 
 class ListMedicineItem extends StatelessWidget {
-  final Medicine1 e;
+  final Medicine e;
   final VoidCallback select;
   final VoidCallback delete;
   const ListMedicineItem({

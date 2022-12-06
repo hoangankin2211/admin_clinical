@@ -8,7 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 class MedicineController extends GetxController {
-  RxList<Medicine1> listMedicine = <Medicine1>[].obs;
+  RxList<Medicine> listMedicine = <Medicine>[].obs;
   RxList<String> listType = <String>[].obs;
   List<String> listUnit = [
     'Pill',
@@ -78,7 +78,7 @@ class MedicineController extends GetxController {
     int index,
   ) async {
     if (amount.value > 0) {
-      Medicine1? temp = await MedicineService.instance.updateAMountMedicine(
+      Medicine? temp = await MedicineService.instance.updateAMountMedicine(
           context,
           id: listMedicine.value[index].id,
           amount: amount.value);
@@ -112,7 +112,7 @@ class MedicineController extends GetxController {
             'https://media.istockphoto.com/id/1300036753/photo/falling-antibiotics-healthcare-background.jpg?s=612x612&w=0&k=20&c=oquxJiLqE33ePw2qML9UtKJgyYUqjkLFwxT84Pr-WPk=';
       }
       // ignore: use_build_context_synchronously
-      Medicine1? temp = await MedicineService.instance.insertNewMedcine(
+      Medicine? temp = await MedicineService.instance.insertNewMedcine(
         context,
         name: nameController.text,
         thumbnails: imageUrl,
@@ -162,7 +162,7 @@ class MedicineController extends GetxController {
             listMedicine[selectMedcine.value].thumbnails;
       }
       // ignore: use_build_context_synchronously
-      Medicine1? temp = await MedicineService.instance.editMedcine(
+      Medicine? temp = await MedicineService.instance.editMedcine(
         context,
         id: listMedicine[selectMedcine.value].id,
         thumbnails: imageUrl,

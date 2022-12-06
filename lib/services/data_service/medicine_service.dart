@@ -12,7 +12,7 @@ import '../../constants/error_handing.dart';
 class MedicineService {
   MedicineService._privateConstructor();
   static final MedicineService instance = MedicineService._privateConstructor();
-  RxList<Medicine1> listMedicine = <Medicine1>[].obs;
+  RxList<Medicine> listMedicine = <Medicine>[].obs;
 
   Future<void> fetchAllMedicineData() async {
     print('fetch all medicine data is called');
@@ -28,7 +28,7 @@ class MedicineService {
         listMedicine.clear();
         for (int i = 0; i < jsonDecode(res.body).length; i++) {
           Map<String, dynamic> map = jsonDecode(res.body)[i];
-          listMedicine.add(Medicine1.fromMap(map));
+          listMedicine.add(Medicine.fromMap(map));
         }
         DataService.instance.checkFetchData.add(1);
       }
@@ -38,9 +38,9 @@ class MedicineService {
     } finally {}
   }
 
-  Future<Medicine1?> updateAMountMedicine(BuildContext context,
+  Future<Medicine?> updateAMountMedicine(BuildContext context,
       {required String id, required int amount}) async {
-    Medicine1? result;
+    Medicine? result;
     print("Update amount medicine is called");
     try {
       http.Response res = await http.post(
@@ -58,7 +58,7 @@ class MedicineService {
         response: res,
         context: context,
         onSuccess: () async {
-          result = Medicine1.fromMap(jsonDecode(res.body));
+          result = Medicine.fromMap(jsonDecode(res.body));
         },
       );
     } catch (e) {
@@ -93,7 +93,7 @@ class MedicineService {
     return result;
   }
 
-  Future<Medicine1?> editMedcine(
+  Future<Medicine?> editMedcine(
     BuildContext context, {
     required String id,
     required String thumbnails,
@@ -102,7 +102,7 @@ class MedicineService {
     required String description,
     required String name,
   }) async {
-    Medicine1? result;
+    Medicine? result;
     try {
       final res = await http.post(
         Uri.parse('${ApiLink.uri}/api/medicine/edit_medicine'),
@@ -122,7 +122,7 @@ class MedicineService {
         response: res,
         context: context,
         onSuccess: () {
-          result = Medicine1.fromMap(jsonDecode(res.body));
+          result = Medicine.fromMap(jsonDecode(res.body));
         },
       );
     } catch (e) {
@@ -131,7 +131,7 @@ class MedicineService {
     return result;
   }
 
-  Future<Medicine1?> insertNewMedcine(
+  Future<Medicine?> insertNewMedcine(
     BuildContext context, {
     required String name,
     required String thumbnails,
@@ -143,7 +143,7 @@ class MedicineService {
     required int amount,
   }) async {
     print("insert new medicines is called");
-    Medicine1? result;
+    Medicine? result;
     try {
       final res = await http.post(
         Uri.parse('${ApiLink.uri}/api/medicine/insert_medicine'),
@@ -167,7 +167,7 @@ class MedicineService {
         response: res,
         context: context,
         onSuccess: () async {
-          result = Medicine1.fromMap(jsonDecode(res.body));
+          result = Medicine.fromMap(jsonDecode(res.body));
         },
       );
     } catch (e) {
