@@ -4,11 +4,12 @@ import 'package:admin_clinical/features/form/widgets/patient_information_form.da
 import 'package:admin_clinical/features/form/widgets/record_information_form.dart';
 import 'package:admin_clinical/features/form/widgets/service_indication_widgets/service_indication_form.dart';
 import 'package:flutter/material.dart';
+import '../../../models/patient.dart';
 import '../widgets/service_indication_widgets/result_indication.dart';
 
 class ServiceIndicationDialog extends StatelessWidget {
-  const ServiceIndicationDialog({super.key});
-
+  const ServiceIndicationDialog({super.key, required this.patient});
+  final Patient patient;
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -32,7 +33,10 @@ class ServiceIndicationDialog extends StatelessWidget {
                           child: FormCard(
                             child: Column(
                               children: [
-                                Flexible(child: PatientInformationForm()),
+                                Flexible(
+                                    child: PatientInformationForm(
+                                  patient: patient,
+                                )),
                                 AppWidget.primaryDivider,
                                 const SizedBox(height: 10),
                                 Flexible(child: RecordInformationForm()),

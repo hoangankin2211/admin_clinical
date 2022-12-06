@@ -122,6 +122,7 @@ class PatientListRow extends StatelessWidget {
     required this.payment,
     this.removeEntries,
     this.onClick,
+    this.onSelectedAction,
   });
   final String? avt;
   final String name;
@@ -132,12 +133,9 @@ class PatientListRow extends StatelessWidget {
   final String status;
   final String payment;
   final Color color;
+  final Function(String)? onSelectedAction;
   final Function()? onClick;
   final Function(String)? removeEntries;
-
-  // void _handlePopupButton(String value){
-  //   if ()
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -207,18 +205,33 @@ class PatientListRow extends StatelessWidget {
                   .toList(),
               (color == Colors.white)
                   ? PopupMenuButton<String>(
+                      onSelected: (value) {
+                        onSelectedAction!(value);
+                      },
                       itemBuilder: (context) => [
                         const PopupMenuItem<String>(
                           value: 'Detail',
                           child: Text('Detail'),
                         ),
                         const PopupMenuItem<String>(
-                          value: 'Edit',
+                          value: 'Edit Profile',
                           child: Text('Edit'),
                         ),
                         const PopupMenuItem<String>(
                           value: 'Delete',
                           child: Text('Delete'),
+                        ),
+                        const PopupMenuItem<String>(
+                          value: 'Delete',
+                          child: Text('Delete'),
+                        ),
+                        const PopupMenuItem<String>(
+                          value: 'Generate Invoice',
+                          child: Text('Generate Invoice'),
+                        ),
+                        const PopupMenuItem<String>(
+                          value: 'Examination',
+                          child: Text('Examination'),
                         ),
                       ],
                       child: const Icon(

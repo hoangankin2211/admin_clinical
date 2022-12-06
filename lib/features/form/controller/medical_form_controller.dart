@@ -1,13 +1,167 @@
-import 'package:admin_clinical/features/form/screens/medicine_indication_dialog.dart';
+import 'package:admin_clinical/services/data_service/health_record_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
+import '../../../models/health_record.dart';
 import '../../../models/medicine.dart';
-import '../screens/service_indication_dialog.dart';
 
 class MedicalFormController extends GetxController {
-  void _showServiceDialog(Widget widget) {
-    Get.dialog(widget);
+  final formKey = GlobalKey<FormState>();
+  var isLoading = false.obs;
+  void onPressedCreateButton(BuildContext context) async {
+    final isValidated = formKey.currentState!.validate();
+    if (isValidated) {
+      formKey.currentState!.save();
+      isLoading.value = true;
+      final response = await createNewHealthRecord(context);
+      if (response) {
+      } else {}
+    }
+  }
+
+  final List<Map<String, dynamic>> examField = [
+    {
+      'title': 'Clinical Examination',
+      'maxLine': 4,
+      'icon': Icons.checklist_rounded,
+      'textController': TextEditingController(),
+    },
+    {
+      'title': 'Symptom',
+      'maxLine': 4,
+      'icon': Icons.playlist_add_check_circle_rounded,
+      'textController': TextEditingController(),
+    },
+    {
+      'title': 'Diagnostic',
+      'maxLine': 4,
+      'icon': Icons.file_copy_rounded,
+      'textController': TextEditingController(),
+    },
+    {
+      'title': 'Conclusion and Treatment',
+      'maxLine': 4,
+      'icon': Icons.confirmation_number_rounded,
+      'textController': TextEditingController(),
+    },
+  ];
+
+  final List<Map<String, dynamic>> measureField = [
+    {
+      'title': 'Weight',
+      'maxLine': 1,
+      'icon': Icons.scale_outlined,
+      'inputFormatters': [
+        FilteringTextInputFormatter.allow(RegExp(r'[0-9]+[,.]{0,1}[0-9]*'))
+      ],
+      'textController': TextEditingController(),
+    },
+    {
+      'title': 'Height',
+      'maxLine': 1,
+      'icon': Icons.height_rounded,
+      'inputFormatter': [
+        FilteringTextInputFormatter.allow(RegExp(r'[0-9]+[,.]{0,1}[0-9]*'))
+      ],
+      'textController': TextEditingController(),
+    },
+    {
+      'title': 'Heartbeat',
+      'maxLine': 1,
+      'icon': Icons.monitor_heart_rounded,
+      'inputFormatters': [
+        FilteringTextInputFormatter.allow(RegExp(r'[0-9]+[,.]{0,1}[0-9]*'))
+      ],
+      'textController': TextEditingController(),
+    },
+    {
+      'title': 'Temperature',
+      'maxLine': 1,
+      'icon': Icons.ac_unit_rounded,
+      'inputFormatters': [
+        FilteringTextInputFormatter.allow(RegExp(r'[0-9]+[,.]{0,1}[0-9]*'))
+      ],
+      'textController': TextEditingController(),
+    },
+    {
+      'title': 'Blood Pressure',
+      'maxLine': 1,
+      'icon': Icons.bloodtype_rounded,
+      'inputFormatters': [
+        FilteringTextInputFormatter.allow(RegExp(r'[0-9]+[,.]{0,1}[0-9]*'))
+      ],
+      'textController': TextEditingController(),
+    },
+    {
+      'title': 'Allergy',
+      'maxLine': 2,
+      'icon': Icons.sick_rounded,
+      'textController': TextEditingController(),
+    },
+  ];
+
+  Future<bool> createNewHealthRecord(BuildContext context) async {
+    try {
+      HealthRecord newRecord = HealthRecord(
+        dateCreate: DateTime.now(),
+        departmentId: 'departmentId',
+        doctorId: 'doctorId',
+        totalMoney: 0,
+        allergy:
+            (measureField[5]['textController'] as TextEditingController).text,
+        bloodPressure: double.parse(
+            (measureField[4]['textController'] as TextEditingController).text),
+        clinicalExamination:
+            (examField[0]['textController'] as TextEditingController).text,
+        conclusionAndTreatment:
+            (examField[3]['textController'] as TextEditingController).text,
+        diagnostic:
+            (examField[2]['textController'] as TextEditingController).text,
+        heartBeat: double.parse(
+            (measureField[2]['textController'] as TextEditingController).text),
+        height: double.parse(
+            (measureField[5]['textController'] as TextEditingController).text),
+        id: (measureField[5]['textController'] as TextEditingController).text,
+        medicines: null,
+        note: (measureField[5]['textController'] as TextEditingController).text,
+        services: null,
+        symptom:
+            (measureField[5]['textController'] as TextEditingController).text,
+        temperature: double.parse(
+            (measureField[5]['textController'] as TextEditingController).text),
+        weight: double.parse(
+            (measureField[5]['textController'] as TextEditingController).text),
+      );
+      Map<String, dynamic> newRecordMap = newRecord.toMap();
+
+      final response =
+          await HealthRecordService.insertHealthRecord(newRecordMap, context);
+      if (response != null) {
+        newRecord.id = response;
+        HealthRecordService.listHealthRecord.addAll({response: newRecord});
+      }
+    } catch (e) {
+      print('createNewHealthRecord: $e');
+    }
+    return false;
+  }
+
+  Future<bool> editPatientData(
+      HealthRecord patient, BuildContext context) async {
+    // try {
+    //   final response = await HealthRecordService.editPatient(patient, context);
+    //   if (response != null) {
+    //     if (response['isSuccess'] != null && response['isSuccess'] == true) {
+    //       PatientService.listPatients
+    //           .update(patient.id, (value) => value = patient);
+    //       return true;
+    //     }
+    //   }
+    // } catch (e) {
+    //   print('editPatientData: ${e.toString()}');
+    // }
+    return false;
   }
 
   void onChoiceServiceChange(bool value, int index) {
@@ -32,39 +186,6 @@ class MedicalFormController extends GetxController {
     }
     update(['resultService']);
   }
-
-  List<Map<String, dynamic>> listIconAndLabel = [
-    {
-      'title': 'Service Indication',
-      'icon': Icons.note_add_outlined,
-      'dialog': const ServiceIndicationDialog()
-    },
-    {
-      'title': 'Medicine Indication',
-      'icon': Icons.note_add_outlined,
-      'dialog': MedicineIndicationDialog(),
-    },
-  ];
-
-  late final List<Widget> listServiceChoice = listIconAndLabel
-      .map(
-        (element) => TextButton.icon(
-          style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-          ),
-          onPressed: () => _showServiceDialog(element['dialog']),
-          icon: Icon(element['icon']),
-          label: Text(
-            element['title'],
-            style: TextStyle(
-              color: Colors.blueGrey[700],
-              fontSize: 17,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-      )
-      .toList();
 
   final List<Medicine> medicines = [
     Medicine(

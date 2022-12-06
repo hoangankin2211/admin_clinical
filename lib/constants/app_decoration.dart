@@ -55,10 +55,10 @@ class AppWidget {
       'label': 'Payment',
       'icon': Icons.payment_outlined,
     },
-    {
-      'label': 'Medical Form',
-      'icon': Icons.note_add_outlined,
-    },
+    // {
+    //   'label': 'Medical Form',
+    //   'icon': Icons.note_add_outlined,
+    // },
     {
       'label': 'Clinical Room',
       'icon': Icons.medical_services_outlined,

@@ -43,7 +43,7 @@ Future<String?> convertUti8ListToUrl(Uint8List? image, String name) async {
   String imageUrl = "";
   final cloudinary = CloudinaryPublic('ddopvilpr', 'evzte9pr');
   CloudinaryResponse imageRes = await cloudinary.uploadFile(
-    CloudinaryFile.fromBytesData(image!, identifier: name),
+    CloudinaryFile.fromBytesData(image, identifier: name),
   );
   imageUrl = imageRes.secureUrl;
   return imageUrl;
@@ -64,6 +64,20 @@ class Utils {
       CloudinaryFile.fromBytesData(source, identifier: identifier),
     );
     result = imageConverter.secureUrl;
+
+    return result;
+  }
+
+  static List<Map<String, dynamic>> convertList2ListMap(
+      List<dynamic> source,
+      Map<String, dynamic> Function(Map<String, dynamic>)
+          handleExtractEachElement) {
+    List<Map<String, dynamic>> result = [];
+
+    for (var element in source) {
+      Map<String, dynamic> temp = element;
+      result.add(handleExtractEachElement(temp));
+    }
 
     return result;
   }

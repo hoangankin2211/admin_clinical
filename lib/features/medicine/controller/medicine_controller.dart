@@ -2,7 +2,6 @@ import 'package:admin_clinical/constants/global_widgets/custom_dialog_error/erro
 import 'package:admin_clinical/constants/global_widgets/custom_dialog_error/success_dialog.dart';
 import 'package:admin_clinical/constants/utils.dart';
 import 'package:admin_clinical/models/medicine.dart';
-import 'package:admin_clinical/services/data_service/data_service.dart';
 import 'package:admin_clinical/services/data_service/medicine_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -85,7 +84,8 @@ class MedicineController extends GetxController {
       String? imageUrl =
           'https://media.istockphoto.com/id/1300036753/photo/falling-antibiotics-healthcare-background.jpg?s=612x612&w=0&k=20&c=oquxJiLqE33ePw2qML9UtKJgyYUqjkLFwxT84Pr-WPk=';
       if (image != null) {
-        imageUrl = await convertUti8ListToUrl(image, nameController.text);
+        imageUrl = (await convertUti8ListToUrl(image, nameController.text)) ??
+            'https://media.istockphoto.com/id/1300036753/photo/falling-antibiotics-healthcare-background.jpg?s=612x612&w=0&k=20&c=oquxJiLqE33ePw2qML9UtKJgyYUqjkLFwxT84Pr-WPk=';
       }
       // ignore: use_build_context_synchronously
       Medicine1? temp = await MedicineService.instance.insertNewMedcine(
