@@ -82,7 +82,7 @@ class MedicineController extends GetxController {
       Get.dialog(const ErrorDialog(
           question: 'Insert new Medicine', title1: "Field is Null"));
     } else {
-      String imageUrl =
+      String? imageUrl =
           'https://media.istockphoto.com/id/1300036753/photo/falling-antibiotics-healthcare-background.jpg?s=612x612&w=0&k=20&c=oquxJiLqE33ePw2qML9UtKJgyYUqjkLFwxT84Pr-WPk=';
       if (image != null) {
         imageUrl = await convertUti8ListToUrl(image, nameController.text);
@@ -91,7 +91,7 @@ class MedicineController extends GetxController {
       Medicine1? temp = await MedicineService.instance.insertNewMedcine(
         context,
         name: nameController.text,
-        thumbnails: imageUrl,
+        thumbnails: imageUrl!,
         price: price.value.toDouble(),
         cost: cost.value.toDouble(),
         type: typeController.text,
