@@ -67,33 +67,6 @@ class MedicineService {
     return result;
   }
 
-  // void deleteMedicine(BuildContext context, Function(List<Medicine>) callBack,
-  //     {required String id}) async {
-  //   print("delete medicine is called");
-  //   try {
-  //     final res = await http.post(
-  //       Uri.parse('${ApiLink.uri}/api/medicine/delete_medicine'),
-  //       body: jsonEncode({'id': id}),
-  //       headers: <String, String>{
-  //         'Content-Type': 'application/json; charset=UTF-8',
-  //       },
-  //     );
-  //     httpErrorHandle(
-  //       response: res,
-  //       context: context,
-  //       onSuccess: () {
-  //         listMedicine.value.removeWhere((item) => item.id == id);
-  //         callBack(listMedicine.value);
-  //       },
-  //     );
-  //   } catch (e) {
-  //     //
-  //   } finally {
-  //     listMedicine.value.removeWhere((item) => item.id == id);
-  //     callBack(listMedicine.value);
-  //   }
-  // }
-
   Future<bool> deleteMedicine(BuildContext context,
       {required String id}) async {
     bool result = false;
