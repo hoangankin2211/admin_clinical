@@ -20,7 +20,7 @@ List<String> headerTitle = [
   "Invoice ID",
   "Category",
   "Created on",
-  "Invoice to",
+  "Invoice from",
   "Amount",
   "Status",
   "Action",
@@ -222,7 +222,7 @@ class TurnoverMainScreen extends StatelessWidget {
                   ),
                 ),
                 const Text(
-                  " Invoke",
+                  " Invoice",
                   style: TextStyle(
                     color: AppColors.primarySecondColor,
                     fontSize: 22.0,

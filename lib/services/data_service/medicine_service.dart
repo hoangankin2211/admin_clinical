@@ -38,6 +38,29 @@ class MedicineService {
     } finally {}
   }
 
+  Future<List<Medicine>> searchMedicine(String searchQuery) async {
+    print('search medicine is called');
+    List<Medicine> searchMedicine = [];
+    try {
+      final res = await http.get(
+        Uri.parse('${ApiLink.uri}/api/medicine/search/$searchQuery'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+      if (res.statusCode == 200) {
+        print(res.body);
+        for (int i = 0; i < jsonDecode(res.body).length; i++) {
+          Map<String, dynamic> map = jsonDecode(res.body)[i];
+          searchMedicine.add(Medicine.fromMap(map));
+        }
+      }
+    } catch (e) {
+      searchMedicine = [];
+    }
+    return searchMedicine;
+  }
+
   Future<Medicine?> updateAMountMedicine(BuildContext context,
       {required String id, required int amount}) async {
     Medicine? result;

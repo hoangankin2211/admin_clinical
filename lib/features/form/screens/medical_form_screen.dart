@@ -75,7 +75,12 @@ class MedicalFormScreen extends StatelessWidget {
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
-                          children: listServiceChoice,
+                          children: [
+                            IconButton(
+                                onPressed: backButton,
+                                icon: const Icon(Icons.arrow_back_ios)),
+                            ...listServiceChoice
+                          ],
                         ),
                         const SizedBox(height: 10.0),
                         Expanded(
@@ -131,7 +136,7 @@ class MedicalFormScreen extends StatelessWidget {
                                     context,
                                   ),
                                 )),
-                            const SizedBox(width: 100.0),
+                            const SizedBox(width: 50.0),
                           ],
                         ),
                       ),
