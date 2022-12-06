@@ -34,7 +34,7 @@ class MedicineIndicationDialog extends StatelessWidget {
                     child: Row(
                       children: [
                         Flexible(
-                          flex: 4,
+                          flex: 45,
                           child: FormCard(
                             child: Column(
                               children: [
@@ -63,7 +63,7 @@ class MedicineIndicationDialog extends StatelessWidget {
                           ),
                         ),
                         Flexible(
-                          flex: 10,
+                          flex: 100,
                           child: FormCard(child: MedicineSearchForm()),
                         )
                       ],

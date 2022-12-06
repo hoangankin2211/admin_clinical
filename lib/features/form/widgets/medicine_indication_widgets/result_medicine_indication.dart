@@ -29,23 +29,27 @@ class ResultMedicineIndication extends StatelessWidget {
         ),
         Expanded(
           child: GetBuilder<MedicalFormController>(
-              assignId: true,
-              id: 'ResultMedicineTableRow',
-              autoRemove: false,
-              builder: (controller) {
-                return ListView.builder(
-                  itemBuilder: (context, index) {
-                    return ResultMedicineTableRow(
-                      medicine: medicalFormController
-                          .listMedicineIndicator.value
-                          .elementAt(index),
-                      color: Colors.white,
-                    );
-                  },
-                  itemCount:
-                      medicalFormController.listMedicineIndicator.value.length,
-                );
-              }),
+            assignId: true,
+            id: 'ResultMedicineTableRow',
+            autoRemove: false,
+            builder: (controller) {
+              return ListView.builder(
+                itemBuilder: (context, index) {
+                  return ResultMedicineTableRow(
+                    deleteMedicineChoice:
+                        medicalFormController.onChoiceMedicineChange,
+                    medicine: medicalFormController
+                        .listMedicineIndicator.entries
+                        .elementAt(index)
+                        .value,
+                    color: Colors.white,
+                  );
+                },
+                itemCount:
+                    medicalFormController.listMedicineIndicator.value.length,
+              );
+            },
+          ),
         ),
       ],
     );

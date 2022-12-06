@@ -96,13 +96,22 @@ class MedicineSearchForm extends StatelessWidget {
               height: 350,
               child: ListView.builder(
                 itemBuilder: (context, index) {
-                  return MedicineTableRow(
-                    onCheckButtonChange:
-                        medicalIndicationController.onChoiceMedicineChange,
-                    medicine:
-                        medicalIndicationController.medicines.elementAt(index),
-                    color: Colors.white,
-                  );
+                  Medicine tempMedicine =
+                      medicalIndicationController.medicines.elementAt(index);
+                  return GetBuilder<MedicalFormController>(
+                      assignId: true,
+                      autoRemove: false,
+                      id: tempMedicine.id,
+                      builder: (context) {
+                        return MedicineTableRow(
+                          isSelected: medicalIndicationController
+                              .isSelected(tempMedicine.id),
+                          onCheckButtonChange: medicalIndicationController
+                              .onChoiceMedicineChange,
+                          medicine: tempMedicine,
+                          color: Colors.white,
+                        );
+                      });
                 },
                 itemCount: medicalIndicationController.medicines.length,
               ),

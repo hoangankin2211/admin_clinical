@@ -432,10 +432,12 @@ class MedicineTableRow extends StatelessWidget {
     required this.color,
     this.onCheckButtonChange,
     required this.medicine,
+    required this.isSelected,
   });
   final Medicine medicine;
   final Color color;
   final Function(bool, String)? onCheckButtonChange;
+  final bool isSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -462,20 +464,14 @@ class MedicineTableRow extends StatelessWidget {
               flex: 1,
               child: Align(
                 alignment: Alignment.topLeft,
-                child: ValueBuilder<bool?>(
-                    initialValue: false,
-                    onUpdate: (value) => print("Value updated: $value"),
-                    builder: (value, update) {
-                      return Checkbox(
-                        value: value,
-                        onChanged: (value) {
-                          update(value);
-                          if (value != null) {
-                            onCheckButtonChange!(value, medicine.id);
-                          }
-                        },
-                      );
-                    }),
+                child: Checkbox(
+                  value: isSelected,
+                  onChanged: (value) {
+                    if (value != null) {
+                      onCheckButtonChange!(value, medicine.id);
+                    }
+                  },
+                ),
               ),
             ),
             Expanded(
@@ -541,7 +537,9 @@ class ResultMedicineTableRow extends StatelessWidget {
     super.key,
     required this.color,
     required this.medicine,
+    required this.deleteMedicineChoice,
   });
+  final Function(bool, String) deleteMedicineChoice;
   final Color color;
   final Medicine medicine;
 
@@ -614,7 +612,7 @@ class ResultMedicineTableRow extends StatelessWidget {
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primarySecondColor),
-              onPressed: () {},
+              onPressed: () => deleteMedicineChoice(false, medicine.id),
               child: const Icon(
                 Icons.close_outlined,
                 color: Colors.white,

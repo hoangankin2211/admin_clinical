@@ -13,7 +13,6 @@ class MedicalFormController extends GetxController {
   var isLoading = false.obs;
 
   Rx<HealthRecord?> currentHealthRecord = Rx(null);
-  var totalMoney = 0.0.obs;
 //////////////////////////////////////////////////////////////////////
 
   final List<Map<String, dynamic>> resultIndicationRowData = [
@@ -308,10 +307,25 @@ class MedicalFormController extends GetxController {
     return false;
   }
 
-  //////////////////////////////////////////////////////////////////////
+  /////////////t/////////////////////////////////////////////////////////
   var amountMedicine = 0.0.obs;
-  void updateAmount(double newValue) {
+  void updateMedicineAmount(double newValue) {
     amountMedicine.value += newValue;
+  }
+
+  var totalMoney = 0.0.obs;
+  void updateTotalMoney(double newValue) {
+    totalMoney.value += newValue;
+  }
+
+  var serviceAmount = 0.0.obs;
+  void updateServiceAmount(double newValue) {
+    serviceAmount.value += newValue;
+  }
+
+  /////////////////////////////////////////////////////////////////////
+  bool isSelected(String id) {
+    return listMedicineIndicator.containsKey(id);
   }
 
   //////////////////////////////////////////////////////////////////////
@@ -338,7 +352,8 @@ class MedicalFormController extends GetxController {
     update(['resultService']);
   }
 
-  final Rx<List<Medicine>> listMedicineIndicator = Rx<List<Medicine>>([]);
+  final RxMap<String, Medicine> listMedicineIndicator =
+      RxMap<String, Medicine>({});
 
   final List<Medicine> medicines = MedicineService.instance.listMedicine;
 
@@ -353,13 +368,12 @@ class MedicalFormController extends GetxController {
     if (index == null) return;
     Medicine temp = medicines.elementAt(index);
     if (value) {
-      listMedicineIndicator.value.add(temp);
-      updateAmount(temp.cost);
+      listMedicineIndicator.addAll({id: temp});
+      updateMedicineAmount(temp.cost);
     } else {
-      listMedicineIndicator.value
-          .removeWhere((element) => element.id.compareTo(temp.id) == 0);
-      updateAmount(-temp.cost);
+      listMedicineIndicator.remove(id);
+      updateMedicineAmount(-temp.cost);
     }
-    update(['ResultMedicineTableRow']);
+    update(['ResultMedicineTableRow', id]);
   }
 }

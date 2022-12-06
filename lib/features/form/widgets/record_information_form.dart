@@ -38,20 +38,20 @@ class RecordInformationForm extends StatelessWidget {
             children: [
               Expanded(
                 child: DisplayInformationWidget(
-                  content: 'Record ID',
-                  label: id ?? "",
+                  label: 'Record ID',
+                  content: id ?? "Null",
                 ),
               ),
               Expanded(
                 child: DisplayInformationWidget(
-                  content: 'Date Create',
-                  label: dateCreate ?? "",
+                  label: 'Date Create',
+                  content: dateCreate ?? "Null",
                 ),
               ),
               Expanded(
                 child: DisplayInformationWidget(
-                  content: 'Status',
-                  label: status ?? "",
+                  label: 'Status',
+                  content: status ?? "Null",
                 ),
               ),
             ],
@@ -63,31 +63,29 @@ class RecordInformationForm extends StatelessWidget {
             children: [
               Expanded(
                 child: DisplayInformationWidget(
-                  content: 'Department',
-                  label: id ?? "",
+                  label: 'Department',
+                  content: department ?? "Null",
                 ),
               ),
               Expanded(
                 child: DisplayInformationWidget(
-                  content: 'Doctor in Charge',
-                  label: dateCreate ?? "",
+                  label: 'Doctor in Charge',
+                  content: doctorInCharge ?? "Null",
                 ),
               ),
               Expanded(
                 child: DisplayInformationWidget(
-                  content: 'Total Money',
-                  label: status ?? "",
+                  label: 'Total Money',
+                  content: totalMoney.toString(),
                 ),
               ),
             ],
           ),
         ),
         Flexible(
-          child: Expanded(
-            child: DisplayInformationWidget(
-              content: 'Note',
-              label: note ?? "",
-            ),
+          child: DisplayInformationWidget(
+            label: 'Note',
+            content: note ?? "Null",
           ),
         ),
       ],
