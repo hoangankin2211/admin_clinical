@@ -1,6 +1,7 @@
 import 'package:admin_clinical/features/auth/widgets/custom_button.dart';
 import 'package:admin_clinical/features/form/controller/medical_form_controller.dart';
 import 'package:admin_clinical/features/form/screens/service_indication_dialog.dart';
+import 'package:admin_clinical/models/department.dart';
 import 'package:admin_clinical/services/data_service/health_record_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -35,8 +36,14 @@ class MedicalFormScreen extends StatelessWidget {
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.symmetric(vertical: 20),
           ),
-          onPressed: () {
+          onPressed: () async {
             Get.dialog(element['dialog']);
+            // medicalFormController.createNewService({
+            //   'name': 'asdfsadf',
+            //   'price': 531,
+            //   'departmentId': 'sadf',
+            //   'description': 'asdfasdf',
+            // });
           },
           icon: Icon(element['icon']),
           label: Text(

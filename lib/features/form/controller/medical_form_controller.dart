@@ -1,6 +1,7 @@
 import 'package:admin_clinical/constants/utils.dart';
 import 'package:admin_clinical/services/data_service/health_record_service.dart';
 import 'package:admin_clinical/services/data_service/medicine_service.dart';
+import 'package:admin_clinical/services/data_service/service_data_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -305,6 +306,16 @@ class MedicalFormController extends GetxController {
       print('editHealthRecordData: ${e.toString()}');
     }
     return false;
+  }
+
+  /////////////////////////////////////////////////////////////////////
+  void createNewService(Map<String, dynamic> map) async {
+    try {
+      final response = await ServiceDataService.instance.addNewService(map);
+    } catch (e) {
+      print(e.toString());
+      rethrow;
+    }
   }
 
   /////////////t/////////////////////////////////////////////////////////
