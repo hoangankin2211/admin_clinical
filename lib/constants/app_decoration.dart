@@ -28,7 +28,20 @@ class AppDecoration {
     ),
     borderRadius: AppDecoration.primaryRadiusBorder,
   );
-
+  static final primaryDecorationContainer1 = BoxDecoration(
+    color: Colors.white,
+    border: Border.all(
+      color: Colors.grey,
+      width: 0.2,
+    ),
+    boxShadow: const [
+      BoxShadow(
+        color: Colors.black26,
+        blurRadius: 7.0,
+      )
+    ],
+    borderRadius: AppDecoration.primaryRadiusBorder,
+  );
   static const primaryPadding = EdgeInsets.all(15);
 }
 

@@ -16,7 +16,8 @@ class MedicalExaminationTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: AppDecoration.primaryPadding,
-      decoration: AppDecoration.primaryDecorationContainer,
+      margin: const EdgeInsets.all(6.0),
+      decoration: AppDecoration.primaryDecorationContainer1,
       child: LayoutBuilder(
         builder: (context, constraints) {
           return Column(
