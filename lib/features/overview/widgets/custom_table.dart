@@ -437,16 +437,6 @@ class MedicineTableRow extends StatelessWidget {
   final Color color;
   final Function(bool, String)? onCheckButtonChange;
 
-//   ValueBuilder<bool>(
-//    initialValue: false,
-//    builder: (value, update) => Switch(
-//    value: value,
-//    onChanged: (flag) {
-//       update( flag );
-//    },),
-//    onUpdate: (value) => print("Value updated: $value"),
-//  ),
-
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -516,7 +506,7 @@ class MedicineTableRow extends StatelessWidget {
             ),
             Expanded(
               child: Text(
-                medicine.provider,
+                medicine.name,
                 style: const TextStyle(
                     color: Colors.blueGrey,
                     fontSize: 14,
@@ -564,7 +554,7 @@ class ResultMedicineTableRow extends StatelessWidget {
           children: [
             const SizedBox(width: 5),
             ...medicine
-                .toMap()
+                .toJson()
                 .entries
                 .map(
                   (e) => Expanded(

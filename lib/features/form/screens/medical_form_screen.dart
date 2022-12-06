@@ -1,6 +1,7 @@
 import 'package:admin_clinical/constants/app_decoration.dart';
 import 'package:admin_clinical/features/form/controller/medical_form_controller.dart';
 import 'package:admin_clinical/features/form/screens/service_indication_dialog.dart';
+import 'package:admin_clinical/services/data_service/health_record_service.dart';
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,8 +16,6 @@ class MedicalFormScreen extends StatelessWidget {
   final Function() backButton;
   final Patient patient;
   final medicalFormController = Get.find<MedicalFormController>();
-
-  final _isLoading = false.obs;
 
   late final List<Map<String, dynamic>> listIconAndLabel = [
     {
@@ -56,7 +55,7 @@ class MedicalFormScreen extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         return Obx(
-          () => _isLoading.value
+          () => medicalFormController.isLoading.value
               ? const Center(child: CircularProgressIndicator())
               : Badge(
                   position:
@@ -106,10 +105,28 @@ class MedicalFormScreen extends StatelessWidget {
                               ),
                             ),
                             TextButton(
-                              onPressed: () => medicalFormController
-                                  .onPressedCreateButton(context),
+                              onPressed: () =>
+                                  medicalFormController.editHealthRecordData(
+                                HealthRecordService.listHealthRecord.entries
+                                    .elementAt(0)
+                                    .value,
+                                context,
+                              ),
                               child: const Text(
                                 "Change",
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () =>
+                                  medicalFormController.deleteHealthRecordData(
+                                HealthRecordService.listHealthRecord.entries
+                                    .elementAt(0)
+                                    .key,
+                                context,
+                              ),
+                              child: const Text(
+                                "Delete",
                                 style: TextStyle(color: Colors.black),
                               ),
                             ),

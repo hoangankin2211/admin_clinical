@@ -79,18 +79,66 @@ class MedicineSearchForm extends StatelessWidget {
                   Checkbox(value: false, onChanged: (value) {}),
                 ],
               ),
-            ),
-            MedicineTableRow(
-              color: Colors.blueGrey[100]!,
-              medicine: Medicine(
-                id: "ID",
-                name: "Name",
-                price: 100,
-                provider: 'Provider',
-                type: 'Type',
-                unit: 'Unit',
+            ), ////////////////),////////////////),////////////////),////////////////
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 5),
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                  color: Colors.blueGrey[200],
+                  borderRadius: AppDecoration.primaryRadiusBorder,
+                  boxShadow: [
+                    BoxShadow(
+                        offset: const Offset(0, 0.5),
+                        color: Colors.grey[200]!,
+                        blurRadius: 2)
+                  ]),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: const [
+                  SizedBox(width: 5),
+                  Expanded(
+                    child: Text(
+                      'Select',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Colors.blueGrey,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  SizedBox(width: 5),
+                  Expanded(
+                    child: Text(
+                      'ID',
+                      style: TextStyle(
+                          color: Colors.blueGrey,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      'Name',
+                      style: TextStyle(
+                          color: Colors.blueGrey,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      'Provider',
+                      style: TextStyle(
+                          color: Colors.blueGrey,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  SizedBox(width: 5),
+                ],
               ),
             ),
+            ////////////////),////////////////),////////////////),////////////////
             SizedBox(
               height: 300,
               child: ListView.builder(

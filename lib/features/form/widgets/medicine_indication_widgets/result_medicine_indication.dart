@@ -1,9 +1,7 @@
-import 'package:admin_clinical/features/form/widgets/form_card.dart';
 import 'package:admin_clinical/features/overview/widgets/custom_table.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../../models/medicine.dart';
 import '../../controller/medical_form_controller.dart';
 
 class ResultMedicineIndication extends StatelessWidget {
@@ -15,17 +13,18 @@ class ResultMedicineIndication extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        ResultMedicineTableRow(
-          color: Colors.blueGrey[100]!,
-          medicine: Medicine(
-            id: "ID",
-            name: "Name",
-            price: 100,
-            provider: 'Provider',
-            type: 'Type',
-            unit: 'Unit',
-          ),
-        ),
+        // ResultMedicineTableRow(
+        //   color: Colors.blueGrey[100]!,
+        //   medicine: Medicine(
+        //     id: "ID",
+        //     name: "Name",
+        //     price: 100,
+        //     provider: 'Provider',
+        //     type: 'Type',
+        //     unit: 'Unit',
+
+        //   ),
+        // ),
         Expanded(
           child: GetBuilder<MedicalFormController>(
               assignId: true,

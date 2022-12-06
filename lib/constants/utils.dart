@@ -5,9 +5,12 @@ import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'app_colors.dart';
+import 'global_widgets/custom_dialog_error/error_dialog.dart';
+import 'global_widgets/custom_dialog_error/success_dialog.dart';
 
 void showSnackBar(BuildContext context, String text) {
   ScaffoldMessenger.of(context).showSnackBar(
@@ -80,5 +83,31 @@ class Utils {
     }
 
     return result;
+  }
+
+  static Future<void> notifyHandle({
+    required bool response,
+    required String successTitle,
+    required String successQuestion,
+    required String errorTitle,
+    required String errorQuestion,
+  }) async {
+    if (response) {
+      await Get.dialog(
+        SuccessDialog(
+          question: successQuestion,
+          title1: successTitle,
+        ),
+      );
+      Get.back();
+    } else {
+      await Get.dialog(
+        ErrorDialog(
+          question: errorQuestion,
+          title1: errorTitle,
+        ),
+      );
+      Get.back();
+    }
   }
 }
