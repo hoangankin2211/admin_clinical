@@ -2,10 +2,13 @@ import 'dart:typed_data';
 
 import 'package:admin_clinical/constants/utils.dart';
 import 'package:admin_clinical/features/patient/controller/patient_page_controller.dart';
+import 'package:admin_clinical/main.dart';
 import 'package:admin_clinical/models/patient.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_decoration.dart';
@@ -33,6 +36,8 @@ class AddPatientDialog extends StatelessWidget {
   TextEditingController emailController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController symptomController = TextEditingController();
+  TextEditingController dobController = TextEditingController();
+  DateTime currentDateTime = DateTime.now();
 
   final formKey = GlobalKey<FormState>();
 
@@ -49,7 +54,7 @@ class AddPatientDialog extends StatelessWidget {
         gender: genderCode.value,
         email: emailController.text,
         address: locationController.text,
-        dob: '22-11-2002',
+        dob: dobController.text,
         phoneNumber: "${phoneCode.value} ${phoneNumberController.text}",
         status: statusCode.value,
         avt: result,
@@ -263,13 +268,91 @@ class AddPatientDialog extends StatelessWidget {
                               flex: 2,
                               fit: FlexFit.tight,
                               child: CustomTextFormField(
+                                readOnly: true,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
                                     return "This Field can not be emptied";
                                   }
                                   return null;
                                 },
-                                controller: null,
+                                controller: dobController,
+                                onTap: () {
+                                  DateTime tempDateTime = DateTime.now();
+                                  Get.dialog(
+                                    Dialog(
+                                      child: ConstrainedBox(
+                                        constraints: BoxConstraints(
+                                            maxHeight: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.35,
+                                            maxWidth: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.3),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            ConstrainedBox(
+                                              constraints: BoxConstraints(
+                                                  maxHeight:
+                                                      MediaQuery.of(context)
+                                                              .size
+                                                              .height *
+                                                          0.25),
+                                              child: CupertinoDatePicker(
+                                                onDateTimeChanged: (value) {
+                                                  tempDateTime = value;
+                                                },
+                                                initialDateTime: DateTime.now(),
+                                                maximumDate: DateTime.now(),
+                                                minimumDate:
+                                                    DateTime(1950, 1, 1),
+                                                mode: CupertinoDatePickerMode
+                                                    .date,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 8),
+                                            TextButton(
+                                              style: TextButton.styleFrom(
+                                                backgroundColor:
+                                                    AppColors.primaryColor,
+                                                minimumSize: Size(
+                                                  MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.2,
+                                                  50,
+                                                ),
+                                              ),
+                                              onPressed: () {
+                                                Get.back(result: tempDateTime);
+                                              },
+                                              child: const Text(
+                                                'Select',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 18,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ).then((value) {
+                                    if (value != null) {
+                                      currentDateTime = value;
+                                      dobController.text = DateFormat()
+                                          .add_yMMMMd()
+                                          .format(currentDateTime);
+                                    }
+                                  });
+                                },
                                 title: 'Date Of Birth',
                                 hint: 'Enter your your date of birth',
                               ),

@@ -40,13 +40,14 @@ class PatientMainScreen extends StatelessWidget {
             () => MedicalFormScreen(
               patient: selectedPatient.value ??
                   Patient(
-                      address: '',
-                      dob: '',
-                      gender: '',
-                      id: '',
-                      name: '',
-                      phoneNumber: '',
-                      status: ''),
+                    address: '',
+                    dob: '',
+                    gender: '',
+                    id: '',
+                    name: '',
+                    phoneNumber: '',
+                    status: '',
+                  ),
               backButton: backButton,
             ),
           ),

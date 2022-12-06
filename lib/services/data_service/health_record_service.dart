@@ -75,16 +75,16 @@ class HealthRecordService {
   }
 
   static Future<Map<String, dynamic>?> editHealthRecord(
-      Patient patient, BuildContext context) async {
+      HealthRecord healthRecord, BuildContext context) async {
     Map<String, dynamic>? result;
 
     try {
       final response = await http.post(
-        Uri.parse('${ApiLink.uri}/api/editPatient/'),
+        Uri.parse('${ApiLink.uri}/api/editHealthRecord/'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: patient.toJson(),
+        body: healthRecord.toJson(),
       );
 
       httpErrorHandle(
@@ -99,22 +99,24 @@ class HealthRecordService {
       );
     } catch (e) {
       result = null;
-      print('editPatient:$e');
+      print('editHealthRecord:$e');
     }
     return result;
   }
 
   static Future<bool> deleteHealthRecord(
-      String id, BuildContext context) async {
+    String id,
+    BuildContext context,
+  ) async {
     bool result = false;
 
     try {
       final response = await http.post(
-        Uri.parse('${ApiLink.uri}/api/deletePatient/'),
+        Uri.parse('${ApiLink.uri}/api/deleteHealthRecord/'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: jsonEncode({"patientId": id}),
+        body: jsonEncode({"healthRecordId": id}),
       );
 
       httpErrorHandle(
@@ -126,13 +128,13 @@ class HealthRecordService {
           print(decodeResponse);
           result = decodeResponse['isSuccess'] ?? false;
           if (result) {
-            print(decodeResponse['patient']);
+            print(decodeResponse['healthRecord']);
           }
         },
       );
     } catch (e) {
       result = false;
-      print('deletePatient:$e');
+      print('deleteHealthRecord:$e');
     }
     return result;
   }

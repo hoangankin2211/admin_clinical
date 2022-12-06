@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../constants/app_decoration.dart';
 
@@ -16,6 +17,8 @@ class CustomTextFormField extends StatefulWidget {
     this.isPasswordField,
     this.controller,
     this.validator,
+    this.onTap,
+    this.readOnly,
   });
   final String? title;
   final double? width;
@@ -26,8 +29,10 @@ class CustomTextFormField extends StatefulWidget {
   final Widget? prefixWidget;
   final TextStyle? hintStyle;
   final bool? isPasswordField;
+  final Function()? onTap;
   final TextEditingController? controller;
   final String? Function(String?)? validator;
+  final bool? readOnly;
   @override
   State<CustomTextFormField> createState() => _CustomTextFormFieldState();
 }
@@ -39,6 +44,8 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
     return SizedBox(
       width: widget.width ?? double.infinity,
       child: TextFormField(
+        readOnly: widget.readOnly ?? false,
+        onTap: widget.onTap,
         validator: widget.validator,
         controller: widget.controller,
         obscureText: isObscure,

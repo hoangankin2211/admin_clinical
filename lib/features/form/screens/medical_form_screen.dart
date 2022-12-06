@@ -55,63 +55,71 @@ class MedicalFormScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        return _isLoading.value
-            ? const Center(child: CircularProgressIndicator())
-            : Badge(
-                position:
-                    BadgePosition.topStart(top: constraints.maxHeight * 0.5),
-                badgeContent: IconButton(
-                  icon: const Icon(
-                    Icons.arrow_back_ios_new_outlined,
-                    color: Colors.black,
-                    size: 20,
+        return Obx(
+          () => _isLoading.value
+              ? const Center(child: CircularProgressIndicator())
+              : Badge(
+                  position:
+                      BadgePosition.topStart(top: constraints.maxHeight * 0.5),
+                  badgeContent: IconButton(
+                    icon: const Icon(
+                      Icons.arrow_back_ios_new_outlined,
+                      color: Colors.black,
+                      size: 20,
+                    ),
+                    onPressed: backButton,
                   ),
-                  onPressed: backButton,
-                ),
-                animationDuration: const Duration(milliseconds: 300),
-                badgeColor: Colors.grey[300]!,
-                shape: BadgeShape.circle,
-                elevation: 5,
-                child: Container(
-                  padding: AppDecoration.primaryPadding,
-                  decoration: AppDecoration.primaryDecorationContainer,
-                  child: Row(
-                    children: [
-                      Flexible(
-                        flex: 2,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: listServiceChoice,
-                        ),
-                      ),
-                      VerticalDivider(
-                        color: Colors.blueGrey[400],
-                        width: 10,
-                        thickness: 0.3,
-                      ),
-                      const SizedBox(width: 10),
-                      Flexible(
-                        flex: 11,
-                        child: MedicalExaminationTab(patient: patient),
-                      ),
-                      Column(
-                        children: [
-                          TextButton(
-                            onPressed: () async {
-                              await medicalFormController
-                                  .createNewHealthRecord(context);
-                            },
-                            child: const Text(
-                              "Add",
-                              style: TextStyle(color: Colors.black),
-                            ),
+                  animationDuration: const Duration(milliseconds: 300),
+                  badgeColor: Colors.grey[300]!,
+                  shape: BadgeShape.circle,
+                  elevation: 5,
+                  child: Container(
+                    padding: AppDecoration.primaryPadding,
+                    decoration: AppDecoration.primaryDecorationContainer,
+                    child: Row(
+                      children: [
+                        Flexible(
+                          flex: 2,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: listServiceChoice,
                           ),
-                        ],
-                      ),
-                    ],
+                        ),
+                        VerticalDivider(
+                          color: Colors.blueGrey[400],
+                          width: 10,
+                          thickness: 0.3,
+                        ),
+                        const SizedBox(width: 10),
+                        Flexible(
+                          flex: 11,
+                          child: MedicalExaminationTab(patient: patient),
+                        ),
+                        Column(
+                          children: [
+                            TextButton(
+                              onPressed: () => medicalFormController
+                                  .onPressedCreateButton(context),
+                              child: const Text(
+                                "Add",
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () => medicalFormController
+                                  .onPressedCreateButton(context),
+                              child: const Text(
+                                "Change",
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              );
+        );
       },
     );
   }
