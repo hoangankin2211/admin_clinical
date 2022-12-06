@@ -1,4 +1,6 @@
+import 'package:admin_clinical/constants/utils.dart';
 import 'package:admin_clinical/services/data_service/health_record_service.dart';
+import 'package:admin_clinical/services/data_service/medicine_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -9,17 +11,80 @@ import '../../../models/medicine.dart';
 class MedicalFormController extends GetxController {
   final formKey = GlobalKey<FormState>();
   var isLoading = false.obs;
-  void onPressedCreateButton(BuildContext context) async {
-    final isValidated = formKey.currentState!.validate();
-    if (isValidated) {
-      formKey.currentState!.save();
-      isLoading.value = true;
-      final response = await createNewHealthRecord(context);
-      if (response) {
-      } else {}
-    }
-  }
 
+//////////////////////////////////////////////////////////////////////
+  final List<Medicine> medicines = [];
+
+  final List<Map<String, dynamic>> resultIndicationRowData = [
+    {
+      'id': "ID",
+      'name': 'Name',
+      'departmentID': 'Department ID',
+      'amount': 'Amount',
+      'departmentCharge': 'Department Charge',
+      'pricePerUnit': 'Price Per Unit',
+      'amountPrice': 'Amount Money'
+    },
+  ];
+
+  final List<Map<String, dynamic>> rowServiceIndicationData = [
+    {
+      'isSelected': false.obs,
+      'id': "ID",
+      'name': 'Name',
+      'departmentID': 'Department ID'
+    },
+    {
+      'isSelected': false.obs,
+      'id': "123",
+      'name': 'Sieu am am dao',
+      'departmentID': '63456'
+    },
+    {
+      'isSelected': false.obs,
+      'id': "123",
+      'name': 'Sieu am am dao',
+      'departmentID': '63456'
+    },
+    {
+      'isSelected': false.obs,
+      'id': "123",
+      'name': 'Sieu am am dao',
+      'departmentID': '63456'
+    },
+    {
+      'isSelected': false.obs,
+      'id': "123",
+      'name': 'Sieu am am dao',
+      'departmentID': '63456'
+    },
+    {
+      'isSelected': false.obs,
+      'id': "123",
+      'name': 'Sieu am am dao',
+      'departmentID': '63456'
+    },
+    {
+      'isSelected': false.obs,
+      'id': "123",
+      'name': 'Sieu am am dao',
+      'departmentID': '63456'
+    },
+    {
+      'isSelected': false.obs,
+      'id': "123",
+      'name': 'Sieu am am dao',
+      'departmentID': '63456'
+    },
+    {
+      'isSelected': false.obs,
+      'id': "123",
+      'name': 'Sieu am am dao',
+      'departmentID': '63456'
+    },
+  ];
+
+//////////////////////////////////////////////////////////////////////
   final List<Map<String, dynamic>> examField = [
     {
       'title': 'Clinical Examination',
@@ -100,7 +165,59 @@ class MedicalFormController extends GetxController {
       'textController': TextEditingController(),
     },
   ];
+  //////////////////////////////////////////////////////////////////////
+  void onPressedCreateButton(BuildContext context) async {
+    final isValidated = formKey.currentState!.validate();
+    if (isValidated) {
+      formKey.currentState!.save();
+      isLoading.value = true;
+      final response = await createNewHealthRecord(context);
+      isLoading.value = false;
+      Utils.notifyHandle(
+        response: response,
+        successTitle: 'Success',
+        successQuestion: 'Create new Health Record Success',
+        errorTitle: 'ERROR',
+        errorQuestion:
+            'Something occurred !!! Please check your internet connection',
+      );
+    }
+  }
 
+  void onPressedDeleteButton(String id, BuildContext context) async {
+    isLoading.value = true;
+    final response = await deleteHealthRecordData(id, context);
+    isLoading.value = false;
+    Utils.notifyHandle(
+      response: response,
+      successTitle: 'Success',
+      successQuestion: 'Delete Health Record Success',
+      errorTitle: 'ERROR',
+      errorQuestion:
+          'Something occurred !!! Please check your internet connection',
+    );
+  }
+
+  void onPressedUpdateButton(
+      HealthRecord newHealthRecord, BuildContext context) async {
+    final isValidated = formKey.currentState!.validate();
+    if (isValidated) {
+      formKey.currentState!.save();
+      isLoading.value = true;
+      final response = await editHealthRecordData(newHealthRecord, context);
+      isLoading.value = false;
+      Utils.notifyHandle(
+        response: response,
+        successTitle: 'Success',
+        successQuestion: 'Updated new Health Record Success',
+        errorTitle: 'ERROR',
+        errorQuestion:
+            'Something occurred !!! Please check your internet connection',
+      );
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////
   Future<bool> createNewHealthRecord(BuildContext context) async {
     try {
       HealthRecord newRecord = HealthRecord(
@@ -138,8 +255,10 @@ class MedicalFormController extends GetxController {
       final response =
           await HealthRecordService.insertHealthRecord(newRecordMap, context);
       if (response != null) {
+        print(response);
         newRecord.id = response;
         HealthRecordService.listHealthRecord.addAll({response: newRecord});
+        return true;
       }
     } catch (e) {
       print('createNewHealthRecord: $e');
@@ -147,23 +266,42 @@ class MedicalFormController extends GetxController {
     return false;
   }
 
-  Future<bool> editPatientData(
-      HealthRecord patient, BuildContext context) async {
-    // try {
-    //   final response = await HealthRecordService.editPatient(patient, context);
-    //   if (response != null) {
-    //     if (response['isSuccess'] != null && response['isSuccess'] == true) {
-    //       PatientService.listPatients
-    //           .update(patient.id, (value) => value = patient);
-    //       return true;
-    //     }
-    //   }
-    // } catch (e) {
-    //   print('editPatientData: ${e.toString()}');
-    // }
+  Future<bool> editHealthRecordData(
+      HealthRecord healthRecord, BuildContext context) async {
+    try {
+      final response =
+          await HealthRecordService.editHealthRecord(healthRecord, context);
+      if (response != null) {
+        if (response['isSuccess'] != null &&
+            response['isSuccess'] == true &&
+            response['id'] != null) {
+          HealthRecordService.listHealthRecord
+              .update(response['id'], (value) => value = healthRecord);
+          return true;
+        }
+      }
+    } catch (e) {
+      print('editHealthRecordData: ${e.toString()}');
+    }
     return false;
   }
 
+  Future<bool> deleteHealthRecordData(String id, BuildContext context) async {
+    try {
+      final response =
+          await HealthRecordService.deleteHealthRecord(id, context);
+      if (response) {
+        HealthRecordService.listHealthRecord.remove(id);
+        return true;
+      }
+      return false;
+    } catch (e) {
+      print('editHealthRecordData: ${e.toString()}');
+    }
+    return false;
+  }
+
+  //////////////////////////////////////////////////////////////////////
   void onChoiceServiceChange(bool value, int index) {
     if (value) {
       (rowServiceIndicationData.elementAt(index)['isSelected'] as RxBool)
@@ -187,50 +325,8 @@ class MedicalFormController extends GetxController {
     update(['resultService']);
   }
 
-  final List<Medicine> medicines = [
-    Medicine(
-      id: UniqueKey().toString(),
-      name: 'nacl 0.9 500ml',
-      price: 10000,
-      provider: 'United State',
-      unit: '1 box',
-      type: 'Headache',
-    ),
-    Medicine(
-      id: UniqueKey().toString(),
-      name: 'nacl 0.9 500ml',
-      price: 10000,
-      provider: 'United State',
-      unit: '1 box',
-      type: 'Headache',
-    ),
-    Medicine(
-      id: UniqueKey().toString(),
-      name: 'nacl 0.9 500ml',
-      price: 10000,
-      provider: 'United State',
-      unit: '1 box',
-      type: 'Headache',
-    ),
-    Medicine(
-      id: UniqueKey().toString(),
-      name: 'nacl 0.9 500ml',
-      price: 10000,
-      provider: 'United State',
-      unit: '1 box',
-      type: 'Headache',
-    ),
-    Medicine(
-      id: UniqueKey().toString(),
-      name: 'nacl 0.9 500ml',
-      price: 10000,
-      provider: 'United State',
-      unit: '1 box',
-      type: 'Headache',
-    ),
-  ];
-
-  final Rx<List<Medicine>> listMedicineIndicator = Rx<List<Medicine>>([]);
+  final Rx<List<Medicine>> listMedicineIndicator =
+      Rx<List<Medicine>>(MedicineService.instance.listMedicine);
 
   void onChoiceMedicineChange(bool value, String id) {
     int? index;
@@ -243,14 +339,16 @@ class MedicalFormController extends GetxController {
     if (index == null) return;
     Medicine temp = medicines.elementAt(index);
     if (value) {
-      listMedicineIndicator.value.add(Medicine(
-        type: temp.type,
-        id: temp.id,
-        name: temp.name,
-        price: temp.price,
-        provider: temp.provider,
-        unit: temp.unit,
-      ));
+      // listMedicineIndicator.value.add(
+      //   Medicine(
+      //     type: temp.type,
+      //     id: temp.id,
+      //     name: temp.name,
+      //     price: temp.price,
+      //     provider: temp.provider,
+      //     unit: temp.unit,
+      //   ),
+      // );
       print("added");
     } else {
       listMedicineIndicator.value
@@ -259,73 +357,4 @@ class MedicalFormController extends GetxController {
     print(medicines.length);
     update(['ResultMedicineTableRow']);
   }
-
-  final List<Map<String, dynamic>> resultIndicationRowData = [
-    {
-      'id': "ID",
-      'name': 'Name',
-      'departmentID': 'Department ID',
-      'amount': 'Amount',
-      'departmentCharge': 'Department Charge',
-      'pricePerUnit': 'Price Per Unit',
-      'amountPrice': 'Amount Money'
-    },
-  ];
-
-  final List<Map<String, dynamic>> rowServiceIndicationData = [
-    {
-      'isSelected': false.obs,
-      'id': "ID",
-      'name': 'Name',
-      'departmentID': 'Department ID'
-    },
-    {
-      'isSelected': false.obs,
-      'id': "123",
-      'name': 'Sieu am am dao',
-      'departmentID': '63456'
-    },
-    {
-      'isSelected': false.obs,
-      'id': "123",
-      'name': 'Sieu am am dao',
-      'departmentID': '63456'
-    },
-    {
-      'isSelected': false.obs,
-      'id': "123",
-      'name': 'Sieu am am dao',
-      'departmentID': '63456'
-    },
-    {
-      'isSelected': false.obs,
-      'id': "123",
-      'name': 'Sieu am am dao',
-      'departmentID': '63456'
-    },
-    {
-      'isSelected': false.obs,
-      'id': "123",
-      'name': 'Sieu am am dao',
-      'departmentID': '63456'
-    },
-    {
-      'isSelected': false.obs,
-      'id': "123",
-      'name': 'Sieu am am dao',
-      'departmentID': '63456'
-    },
-    {
-      'isSelected': false.obs,
-      'id': "123",
-      'name': 'Sieu am am dao',
-      'departmentID': '63456'
-    },
-    {
-      'isSelected': false.obs,
-      'id': "123",
-      'name': 'Sieu am am dao',
-      'departmentID': '63456'
-    },
-  ];
 }
