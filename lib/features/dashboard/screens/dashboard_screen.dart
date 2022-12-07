@@ -81,8 +81,7 @@ class DashboardScreen extends StatelessWidget {
                     DashboardHeader(width: constraints.maxWidth * 0.13),
                     Obx(
                       () => dashboardController.user.name == "" ||
-                              DataService.instance.checkFetchData.value.length <
-                                  5
+                              DataService.instance.checkFetchData.length < 6
                           ? const Center(
                               child:
                                   CircularProgressIndicator(color: Colors.blue),

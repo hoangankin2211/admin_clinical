@@ -3,15 +3,17 @@ import 'package:admin_clinical/constants/app_decoration.dart';
 import 'package:admin_clinical/features/form/controller/medical_form_controller.dart';
 import 'package:admin_clinical/features/form/widgets/form_card.dart';
 import 'package:admin_clinical/features/overview/widgets/custom_table.dart';
+import 'package:admin_clinical/models/service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../medicine_indication_widgets/medicine_search_form.dart';
 
 class ServiceIndicationForm extends StatelessWidget {
   ServiceIndicationForm({super.key});
 
   final medicalIndicationController = Get.find<MedicalFormController>();
-  late final List<Map<String, dynamic>> rowData =
-      medicalIndicationController.rowServiceIndicationData;
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -82,36 +84,40 @@ class ServiceIndicationForm extends StatelessWidget {
                 ],
               ),
             ),
-            ServiceTableRow(
-              name: rowData[0]['name'],
-              id: rowData[0]['id'],
-              color: Colors.blueGrey[100]!,
-              departmentID: rowData[0]['departmentID'],
-              isSelected: (rowData[0]['isSelected'] as RxBool).value,
+            const MedicineSearchFormRow(
+              customRow: [
+                {'flex': 1, 'text': 'Select'},
+                {'flex': 2, 'text': 'ID'},
+                {'flex': 1, 'text': 'Name'},
+                {'flex': 1, 'text': 'Department ID'},
+                {'flex': 1, 'text': 'Description'},
+              ],
             ),
+            ////////////////),////////////////),////////////////),////////////////
             SizedBox(
-              height: 300,
+              height: 320,
               child: ListView.builder(
                 itemBuilder: (context, index) {
-                  if (index == 0) {
-                    return const SizedBox();
-                  } else {
-                    return Obx(
-                      () => ServiceTableRow(
-                        onCheckButtonChange: (value) =>
-                            medicalIndicationController.onChoiceServiceChange(
-                                value, index),
-                        name: rowData[index]['name'],
-                        id: rowData[index]['id'],
-                        color: Colors.white,
-                        departmentID: rowData[index]['departmentID'],
-                        isSelected:
-                            (rowData[index]['isSelected'] as Rx<bool>).value,
-                      ),
-                    );
-                  }
+                  Service tempService = medicalIndicationController
+                      .services.entries
+                      .elementAt(index)
+                      .value;
+                  return GetBuilder<MedicalFormController>(
+                      assignId: true,
+                      autoRemove: false,
+                      id: tempService.id,
+                      builder: (controller) {
+                        return ServiceTableRow(
+                          isSelected: medicalIndicationController
+                              .isSelectedService(tempService.id ?? " "),
+                          onCheckButtonChange:
+                              medicalIndicationController.onChoiceServiceChange,
+                          service: tempService,
+                          color: Colors.white,
+                        );
+                      });
                 },
-                itemCount: rowData.length,
+                itemCount: medicalIndicationController.services.length,
               ),
             )
           ],

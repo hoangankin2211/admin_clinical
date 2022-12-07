@@ -15,7 +15,7 @@ class Service {
       required this.id});
 
   Service.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+    id = json['_id'];
     name = json['name'];
     departmentId = json['departmentId'];
     price = json['price'];
@@ -24,7 +24,7 @@ class Service {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = {};
-
+    data['_id'] = id;
     data['name'] = name;
     data['departmentId'] = departmentId;
     data['price'] = price;

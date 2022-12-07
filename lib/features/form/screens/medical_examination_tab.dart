@@ -5,6 +5,7 @@ import 'package:admin_clinical/features/form/widgets/record_information_form.dar
 import 'package:admin_clinical/features/form/widgets/patient_information_form.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 import '../../../models/patient.dart';
 import '../../../services/auth_service/auth_service.dart';
@@ -39,13 +40,14 @@ class MedicalExaminationTab extends StatelessWidget {
                       thickness: 0.3,
                     ),
                     Expanded(
-                      child: medicalFormController.currentHealthRecord.value !=
+                      child: Obx(() => (medicalFormController
+                                  .currentHealthRecord.value !=
                               null
                           ? RecordInformationForm(
-                              dateCreate: medicalFormController
-                                  .currentHealthRecord.value!.dateCreate
-                                  .toString(),
-                              department: "Dit me loz",
+                              dateCreate: DateFormat().add_yMMMd().format(
+                                  medicalFormController
+                                      .currentHealthRecord.value!.dateCreate),
+                              department: "Neurology",
                               doctorInCharge: AuthService.instance.user.name,
                               id: medicalFormController
                                   .currentHealthRecord.value!.id,
@@ -55,7 +57,7 @@ class MedicalExaminationTab extends StatelessWidget {
                               totalMoney:
                                   medicalFormController.totalMoney.value,
                             )
-                          : const RecordInformationForm(),
+                          : const RecordInformationForm())),
                     ),
                   ],
                 ),

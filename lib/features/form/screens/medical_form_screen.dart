@@ -3,6 +3,7 @@ import 'package:admin_clinical/features/form/controller/medical_form_controller.
 import 'package:admin_clinical/features/form/screens/service_indication_dialog.dart';
 import 'package:admin_clinical/models/department.dart';
 import 'package:admin_clinical/services/data_service/health_record_service.dart';
+import 'package:admin_clinical/services/data_service/service_data_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -38,11 +39,11 @@ class MedicalFormScreen extends StatelessWidget {
           ),
           onPressed: () async {
             Get.dialog(element['dialog']);
-            // medicalFormController.createNewService({
-            //   'name': 'asdfsadf',
-            //   'price': 531,
-            //   'departmentId': 'sadf',
-            //   'description': 'asdfasdf',
+            // await ServiceDataService.instance.addNewService({
+            //   'name': 'name',
+            //   'price': 10.0,
+            //   'departmentId': 'departmentId',
+            //   'description': 'description',
             // });
           },
           icon: Icon(element['icon']),

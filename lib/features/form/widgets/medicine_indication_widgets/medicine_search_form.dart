@@ -93,7 +93,7 @@ class MedicineSearchForm extends StatelessWidget {
             ),
             ////////////////),////////////////),////////////////),////////////////
             SizedBox(
-              height: 350,
+              height: 320,
               child: ListView.builder(
                 itemBuilder: (context, index) {
                   Medicine tempMedicine =

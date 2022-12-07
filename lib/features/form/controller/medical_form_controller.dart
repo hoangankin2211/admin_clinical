@@ -8,83 +8,17 @@ import 'package:get/get.dart';
 
 import '../../../models/health_record.dart';
 import '../../../models/medicine.dart';
+import '../../../models/service.dart';
 
 class MedicalFormController extends GetxController {
   final formKey = GlobalKey<FormState>();
   var isLoading = false.obs;
 
+  void updateGetBuilder(List<String> id) {
+    update(id);
+  }
+
   Rx<HealthRecord?> currentHealthRecord = Rx(null);
-//////////////////////////////////////////////////////////////////////
-
-  final List<Map<String, dynamic>> resultIndicationRowData = [
-    {
-      'id': "ID",
-      'name': 'Name',
-      'departmentID': 'Department ID',
-      'amount': 'Amount',
-      'departmentCharge': 'Department Charge',
-      'pricePerUnit': 'Price Per Unit',
-      'amountPrice': 'Amount Money'
-    },
-  ];
-
-  final List<Map<String, dynamic>> rowServiceIndicationData = [
-    {
-      'isSelected': false.obs,
-      'id': "ID",
-      'name': 'Name',
-      'departmentID': 'Department ID'
-    },
-    {
-      'isSelected': false.obs,
-      'id': "123",
-      'name': 'Sieu am am dao',
-      'departmentID': '63456'
-    },
-    {
-      'isSelected': false.obs,
-      'id': "123",
-      'name': 'Sieu am am dao',
-      'departmentID': '63456'
-    },
-    {
-      'isSelected': false.obs,
-      'id': "123",
-      'name': 'Sieu am am dao',
-      'departmentID': '63456'
-    },
-    {
-      'isSelected': false.obs,
-      'id': "123",
-      'name': 'Sieu am am dao',
-      'departmentID': '63456'
-    },
-    {
-      'isSelected': false.obs,
-      'id': "123",
-      'name': 'Sieu am am dao',
-      'departmentID': '63456'
-    },
-    {
-      'isSelected': false.obs,
-      'id': "123",
-      'name': 'Sieu am am dao',
-      'departmentID': '63456'
-    },
-    {
-      'isSelected': false.obs,
-      'id': "123",
-      'name': 'Sieu am am dao',
-      'departmentID': '63456'
-    },
-    {
-      'isSelected': false.obs,
-      'id': "123",
-      'name': 'Sieu am am dao',
-      'departmentID': '63456'
-    },
-  ];
-
 //////////////////////////////////////////////////////////////////////
   final List<Map<String, dynamic>> examField = [
     {
@@ -227,11 +161,35 @@ class MedicalFormController extends GetxController {
   Future<Map<String, dynamic>> createNewHealthRecord(
       BuildContext context) async {
     try {
+      List<Map<String, dynamic>> serviceFinal = [];
+      List<Map<String, dynamic>> medicineFinal = [];
+
+      await Future(
+        () {
+          listMedicineIndicator.forEach((key, value) {
+            Map<String, dynamic> temp = {};
+            temp['medicine'] = value.id;
+            temp['provider'] = 'USA';
+            temp['quantity'] = 1;
+            temp['amount'] = amountMedicine.value;
+            medicineFinal.add(temp);
+          });
+          listMedicineIndicator.forEach((key, value) {
+            Map<String, dynamic> temp = {};
+            temp['service'] = value.id;
+            temp['provider'] = 'Nero';
+            temp['quantity'] = 1;
+            temp['amount'] = serviceAmount.value;
+            serviceFinal.add(temp);
+          });
+        },
+      );
+
       HealthRecord newRecord = HealthRecord(
         dateCreate: DateTime.now(),
         departmentId: 'departmentId',
         doctorId: 'doctorId',
-        totalMoney: 0,
+        totalMoney: totalMoney.value,
         allergy:
             (measureField[5]['textController'] as TextEditingController).text,
         bloodPressure: double.parse(
@@ -247,20 +205,22 @@ class MedicalFormController extends GetxController {
         height: double.parse(
             (measureField[5]['textController'] as TextEditingController).text),
         id: (measureField[5]['textController'] as TextEditingController).text,
-        medicines: null,
         note: (measureField[5]['textController'] as TextEditingController).text,
-        services: null,
         symptom:
             (measureField[5]['textController'] as TextEditingController).text,
         temperature: double.parse(
             (measureField[5]['textController'] as TextEditingController).text),
         weight: double.parse(
             (measureField[5]['textController'] as TextEditingController).text),
+        medicines: medicineFinal,
+        services: serviceFinal,
       );
       Map<String, dynamic> newRecordMap = newRecord.toMap();
 
-      final response =
-          await HealthRecordService.insertHealthRecord(newRecordMap, context);
+      final response = await HealthRecordService.insertHealthRecord(
+        newRecordMap,
+        Get.context ?? context,
+      );
       if (response != null) {
         print(response);
         newRecord.id = response;
@@ -339,28 +299,33 @@ class MedicalFormController extends GetxController {
     return listMedicineIndicator.containsKey(id);
   }
 
+  bool isSelectedService(String id) {
+    return listServiceIndicator.containsKey(id);
+  }
+
   //////////////////////////////////////////////////////////////////////
-  void onChoiceServiceChange(bool value, int index) {
-    if (value) {
-      (rowServiceIndicationData.elementAt(index)['isSelected'] as RxBool)
-          .value = value;
-      resultIndicationRowData.add(
-        {
-          'id': "123",
-          'name': 'Sieu am am dao',
-          'departmentID': '63456',
-          'amount': '2',
-          'departmentCharge': 'Clinical Department',
-          'pricePerUnit': '1.000.000',
-          'amountPrice': '2.000.000'
-        },
-      );
-    } else {
-      (rowServiceIndicationData.elementAt(index)['isSelected'] as RxBool)
-          .value = value;
-      resultIndicationRowData.removeAt(0);
+  final RxMap<String, Service> listServiceIndicator =
+      RxMap<String, Service>({});
+
+  final Map<String, Service> services = ServiceDataService.instance.service;
+  void onChoiceServiceChange(bool value, String id) {
+    int? index;
+    for (int i = 0; i < services.length; i++) {
+      if (services.entries.elementAt(i).value.id?.compareTo(id) == 0) {
+        index = i;
+        break;
+      }
     }
-    update(['resultService']);
+    if (index == null) return;
+    Service temp = services.entries.elementAt(index).value;
+    if (value) {
+      listServiceIndicator.addAll({id: temp});
+      updateServiceAmount(temp.price ?? 0.0);
+    } else {
+      listServiceIndicator.remove(id);
+      updateServiceAmount(-(temp.price ?? 0.0));
+    }
+    update(['resultService', id]);
   }
 
   final RxMap<String, Medicine> listMedicineIndicator =
