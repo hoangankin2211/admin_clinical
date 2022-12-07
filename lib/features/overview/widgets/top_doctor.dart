@@ -37,7 +37,7 @@ class TopDoctor2 extends StatelessWidget {
                     shape: BoxShape.circle,
                     image: DecorationImage(
                       fit: BoxFit.cover,
-                      image: AssetImage(
+                      image: NetworkImage(
                         image,
                       ),
                     ),
@@ -119,7 +119,7 @@ class TopDoctor1 extends StatelessWidget {
                     shape: BoxShape.circle,
                     image: DecorationImage(
                       fit: BoxFit.cover,
-                      image: AssetImage(
+                      image: NetworkImage(
                         image,
                       ),
                     ),

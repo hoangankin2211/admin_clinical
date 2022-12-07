@@ -5,9 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import '../../../constants/global_widgets/chart/column_2_chart.dart';
 import '../../../constants/global_widgets/chart/line_chart_design.dart';
 import '../../../constants/global_widgets/color_title.dart';
+import '../../../constants/global_widgets/rangeDate_picker_dialog.dart';
+import '../../../services/data_service/medicine_service.dart';
 import '../widgets/medical_today.dart';
 import '../widgets/top_doctor.dart';
 
@@ -73,55 +76,6 @@ List<Data> data = [
     imagePath: 'assets/images/doctor3.png',
   ),
 ];
-List<Data> data1 = [
-  Data(
-      name: 'Thuoc 1',
-      percents: (10 / 80 * 100).round().toDouble(),
-      color: Colors.green,
-      imagePath: 'assets/images/doctor1.png'),
-  Data(
-    name: 'Thuoc 2',
-    percents: (10 / 80 * 100).round().toDouble(),
-    color: AppColors.primaryColor,
-    imagePath: 'assets/images/doctor2.png',
-  ),
-  Data(
-    name: 'Thuoc 3',
-    percents: (2 / 80 * 100).round().toDouble(),
-    color: Colors.yellow,
-    imagePath: 'assets/images/doctor3.png',
-  ),
-  Data(
-    name: 'Thuoc 4',
-    percents: (18 / 80 * 100).round().toDouble(),
-    color: Colors.red,
-    imagePath: 'assets/images/doctor3.png',
-  ),
-  Data(
-    name: 'Thuoc 5',
-    percents: (17 / 80 * 100).round().toDouble(),
-    color: Colors.purple,
-    imagePath: 'assets/images/doctor3.png',
-  ),
-  Data(
-    name: 'Thuoc 6',
-    percents: (3 / 80 * 100).round().toDouble(),
-    color: Colors.pink,
-    imagePath: 'assets/images/doctor3.png',
-  ),
-  Data(
-    name: 'Thuoc 7',
-    percents: (5 / 80 * 100).round().toDouble(),
-    color: Colors.grey,
-    imagePath: 'assets/images/doctor3.png',
-  ),
-  Data(
-    name: 'Thuoc 7',
-    percents: (15 / 80 * 100).round().toDouble(),
-    color: Colors.grey,
-    imagePath: 'assets/images/doctor3.png',
-  ),
-];
 
 List<Map<String, dynamic>> listFakeSurvey = [
   {
@@ -160,6 +114,7 @@ List<Map<String, dynamic>> listFakeSurvey = [
 class OverviewScreen extends StatelessWidget {
   OverviewScreen({super.key});
   RxInt touchedIndex = (-1).obs;
+  RxInt touchedIndex1 = (-1).obs;
 
   final overviewController = Get.put(OverviewController());
 
@@ -287,18 +242,18 @@ class OverviewScreen extends StatelessWidget {
                               blurRadius: 10.0,
                             ),
                           ],
-                          image: const DecorationImage(
+                          image: DecorationImage(
                             fit: BoxFit.cover,
-                            image: AssetImage(
-                              'assets/images/doctor2.png',
+                            image: NetworkImage(
+                              overviewController.getUser().avt,
                             ),
                           ),
                         ),
                       ),
                       const SizedBox(height: 10.0),
-                      const Text(
-                        "Nguyen Minh Hung",
-                        style: TextStyle(
+                      Text(
+                        overviewController.getUser().name,
+                        style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18.0,
                             color: AppColors.primarySecondColor),
@@ -420,7 +375,9 @@ class OverviewScreen extends StatelessWidget {
                           fontSize: 18.0),
                     ),
                     InkWell(
-                      onTap: () {},
+                      onTap: () async {
+                        await _showDatePicker(context: Get.context!);
+                      },
                       child: Row(
                         children: const [
                           Text(
@@ -454,10 +411,10 @@ class OverviewScreen extends StatelessWidget {
                                 if (!event.isInterestedForInteractions ||
                                     pieTouchResponse == null ||
                                     pieTouchResponse.touchedSection == null) {
-                                  touchedIndex.value = -1;
+                                  touchedIndex1.value = -1;
                                   return;
                                 }
-                                touchedIndex.value = pieTouchResponse
+                                touchedIndex1.value = pieTouchResponse
                                     .touchedSection!.touchedSectionIndex;
                               },
                             ),
@@ -467,10 +424,28 @@ class OverviewScreen extends StatelessWidget {
                             ),
                             sectionsSpace: 1,
                             centerSpaceRadius: 30,
-                            sections: data1
+                            sections: [
+                              for (int i = 0;
+                                  i <
+                                      MedicineService
+                                          .instance.listMedicine.length;
+                                  i++)
+                                Data(
+                                    imagePath: 'assets/images/doctor2.png',
+                                    name: MedicineService
+                                        .instance.listMedicine[i].name,
+                                    percents: (MedicineService.instance
+                                                .listMedicine[i].amount /
+                                            overviewController.sum.value *
+                                            100)
+                                        .round()
+                                        .toDouble(),
+                                    color: overviewController.listColor[i % 7]),
+                            ]
                                 .asMap()
                                 .map<int, PieChartSectionData>((index, data) {
-                                  final isTouched = index == touchedIndex.value;
+                                  final isTouched =
+                                      index == touchedIndex1.value;
                                   return MapEntry(
                                     index,
                                     PieChartSectionData(
@@ -495,17 +470,20 @@ class OverviewScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 10),
-                    SizedBox(
-                      height: 210,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ...data1.map(
-                              (e) => ColorTitle(title: e.name, color: e.color))
-                        ],
+                    Obx(
+                      () => SizedBox(
+                        height: 210,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ...overviewController.getDataPieChartMedicine().map(
+                                (e) =>
+                                    ColorTitle(title: e.name, color: e.color))
+                          ],
+                        ),
                       ),
-                    ),
+                    )
                   ],
                 ),
               ],
@@ -614,51 +592,63 @@ class OverviewScreen extends StatelessWidget {
                         ],
                       ),
                       const Divider(thickness: 1),
-                      ...listMedicine.map((e) => ListItem1(
-                            checkHeader: true,
-                            widgets: [
-                              Text(
-                                e["id"].toString(),
-                                style: const TextStyle(
-                                  color: AppColors.primarySecondColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 17.0,
-                                ),
-                              ),
-                              Text(
-                                e["name"],
-                                style: const TextStyle(
-                                  color: AppColors.primarySecondColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 17.0,
-                                ),
-                              ),
-                              Text(
-                                e["1"].toString(),
-                                style: const TextStyle(
-                                  color: AppColors.primarySecondColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 17.0,
-                                ),
-                              ),
-                              Text(
-                                e["2"].toString(),
-                                style: const TextStyle(
-                                  color: AppColors.primarySecondColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 17.0,
-                                ),
-                              ),
-                              Text(
-                                "\$${e["amount"]}",
-                                style: const TextStyle(
-                                  color: Colors.green,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 17.0,
-                                ),
-                              ),
-                            ],
-                          ))
+                      Expanded(
+                        child: Obx(() => ListView(
+                              children: [
+                                ...overviewController.listMedicine.map((e) =>
+                                    ListItem1(
+                                      checkHeader: true,
+                                      widgets: [
+                                        Text(
+                                          e.id,
+                                          style: const TextStyle(
+                                            overflow: TextOverflow.ellipsis,
+                                            color: AppColors.primarySecondColor,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 17.0,
+                                          ),
+                                        ),
+                                        Text(
+                                          e.name,
+                                          style: const TextStyle(
+                                            overflow: TextOverflow.ellipsis,
+                                            color: AppColors.primarySecondColor,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 17.0,
+                                          ),
+                                        ),
+                                        Text(
+                                          e.amount.toString(),
+                                          style: const TextStyle(
+                                            overflow: TextOverflow.ellipsis,
+                                            color: AppColors.primarySecondColor,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 17.0,
+                                          ),
+                                        ),
+                                        Text(
+                                          e.amount.toString(),
+                                          style: const TextStyle(
+                                            overflow: TextOverflow.ellipsis,
+                                            color: AppColors.primarySecondColor,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 17.0,
+                                          ),
+                                        ),
+                                        Text(
+                                          "\$${e.price}",
+                                          style: const TextStyle(
+                                            overflow: TextOverflow.ellipsis,
+                                            color: Colors.green,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 17.0,
+                                          ),
+                                        ),
+                                      ],
+                                    ))
+                              ],
+                            )),
+                      )
                     ],
                   ),
                 )
@@ -782,24 +772,26 @@ class OverviewScreen extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 10.0),
-                  SizedBox(
-                    height: 210,
-                    width: double.infinity,
-                    child: ListView(
-                      children: const [
-                        TopDoctor2(
-                            image: "assets/images/doctor1.png",
-                            name: "Nguyen Minh Hung",
-                            price: 100.0),
-                        TopDoctor1(
-                            image: "assets/images/doctor2.png",
-                            name: "Truong Huynh Duc Honag",
-                            price: 90.0),
-                        TopDoctor1(
-                            image: "assets/images/doctor3.png",
-                            name: "Nguyen Trung Hieu",
-                            price: 80.0),
-                      ],
+                  Obx(
+                    () => SizedBox(
+                      height: 210,
+                      width: double.infinity,
+                      child: ListView(
+                        children: [
+                          TopDoctor2(
+                              image: overviewController.listDoctor[0].avt!,
+                              name: overviewController.listDoctor[0].name!,
+                              price: 100.0),
+                          TopDoctor1(
+                              image: overviewController.listDoctor[1].avt!,
+                              name: overviewController.listDoctor[1].name!,
+                              price: 90.0),
+                          TopDoctor1(
+                              image: overviewController.listDoctor[2].avt!,
+                              name: overviewController.listDoctor[2].name!,
+                              price: 80.0),
+                        ],
+                      ),
                     ),
                   )
                 ],
@@ -1029,6 +1021,15 @@ class OverviewScreen extends StatelessWidget {
           ),
         )
       ],
+    );
+  }
+
+  _showDatePicker({required BuildContext context}) async {
+    await showDialog(
+      useRootNavigator: false,
+      barrierColor: Colors.black54,
+      context: context,
+      builder: (context) => DialogPickRangeDate(),
     );
   }
 }

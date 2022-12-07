@@ -8,5 +8,6 @@ class AppColors {
   static const unselectedNavBarColor = Colors.black87;
   static const headline1TextColor = Color.fromARGB(255, 30, 30, 30);
   static const primaryColor = Colors.lightBlue;
+  static Color primaryColor1 = Colors.lightBlue.withOpacity(0.2);
   static const primarySecondColor = Colors.blueGrey;
 }

@@ -57,6 +57,7 @@ dependencies:
   cloudinary_public: ^0.20.0
   # flutter_socket_io: ^0.6.0
   socket_io_client: ^1.0.2
+  syncfusion_flutter_datepicker: ^20.3.60
 
 dev_dependencies:
   flutter_test:

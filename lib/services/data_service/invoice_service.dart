@@ -63,6 +63,43 @@ class InvoiceService {
     return result;
   }
 
+  Future<Invoice?> addInvoiceHealthRecord(BuildContext context,
+      {required String thumb,
+      required double amount,
+      required int status,
+      required String title,
+      required String hrId,
+      required String category}) async {
+    print('add invoice heath record is called');
+    Invoice? result;
+    try {
+      http.Response res = await http.post(
+        Uri.parse('${ApiLink.uri}/api/invoice/add_invoice_health_record'),
+        body: jsonEncode(
+          {
+            'thumb': thumb,
+            'amount': amount,
+            'status': status,
+            'createTime': DateTime.now().millisecondsSinceEpoch,
+            'title': title,
+            'hrId': hrId,
+            'category': category,
+          },
+        ),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+      print(res.body);
+      if (res.statusCode == 200) {
+        result = Invoice.fromMap(jsonDecode(res.body));
+      }
+    } catch (e) {
+      result = null;
+    }
+    return result;
+  }
+
   Future<Invoice?> addInvoiceMedicine(BuildContext context,
       {required String thumb,
       required double amount,
