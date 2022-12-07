@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../../constants/app_colors.dart';
+import '../../../models/invoice.dart';
 
 class GridInvoiceItem extends StatelessWidget {
-  final Map<String, dynamic> e;
+  final Invoice e;
   GridInvoiceItem({
     Key? key,
     required this.e,
@@ -44,7 +45,7 @@ class GridInvoiceItem extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    e["id"],
+                    e.id,
                     style: const TextStyle(
                       color: AppColors.headline1TextColor,
                       fontWeight: FontWeight.bold,
@@ -81,12 +82,12 @@ class GridInvoiceItem extends StatelessWidget {
                           blurRadius: 3.0)
                     ],
                     image: DecorationImage(
-                        fit: BoxFit.cover, image: AssetImage(e["image"])),
+                        fit: BoxFit.cover, image: NetworkImage(e.thumb)),
                   ),
                 ),
                 Expanded(
                   child: Text(
-                    ' ${e["name"]}',
+                    ' ${e.title}',
                     style: const TextStyle(
                       color: AppColors.headline1TextColor,
                       fontSize: 18.0,
@@ -114,7 +115,7 @@ class GridInvoiceItem extends StatelessWidget {
                           fontSize: 16.0),
                     ),
                     Text(
-                      "\$ ${e["amount"]}",
+                      "\$ ${e.amount}",
                       style: const TextStyle(
                           color: AppColors.primarySecondColor,
                           fontWeight: FontWeight.bold,
@@ -134,7 +135,7 @@ class GridInvoiceItem extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      DateFormat().add_yMMMEd().format(e["date"]),
+                      DateFormat().add_yMMMEd().format(e.createTime),
                       style: const TextStyle(
                         color: AppColors.primarySecondColor,
                         fontWeight: FontWeight.bold,
@@ -156,11 +157,11 @@ class GridInvoiceItem extends StatelessWidget {
                     const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5.0),
-                    color: lColor1[e["status"]]),
+                    color: lColor1[e.status]),
                 child: Text(
-                  listStatus[e["status"]],
+                  listStatus[e.status],
                   style: TextStyle(
-                      color: lColor2[e["status"]],
+                      color: lColor2[e.status],
                       fontWeight: FontWeight.bold,
                       fontSize: 16.0),
                 ),

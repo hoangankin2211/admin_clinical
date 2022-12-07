@@ -1,7 +1,9 @@
 import 'package:admin_clinical/constants/global_widgets/custom_dialog_error/error_dialog.dart';
 import 'package:admin_clinical/constants/global_widgets/custom_dialog_error/success_dialog.dart';
 import 'package:admin_clinical/constants/utils.dart';
+import 'package:admin_clinical/models/invoice.dart';
 import 'package:admin_clinical/models/medicine.dart';
+import 'package:admin_clinical/services/data_service/invoice_service.dart';
 import 'package:admin_clinical/services/data_service/medicine_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -84,6 +86,18 @@ class MedicineController extends GetxController {
           amount: amount.value);
       if (temp != null) {
         MedicineService.instance.listMedicine.value[index] = temp;
+        // ignore: use_build_context_synchronously
+        Invoice? temp1 = await InvoiceService.instance.addInvoiceMedicine(
+            context,
+            thumb: temp.thumbnails,
+            amount: amount.value * temp.cost,
+            status: 0,
+            title: "Imported Medicines",
+            medicineId: temp.id,
+            category: "Medicine");
+        if (temp1 != null) {
+          InvoiceService.instance.listInvoice.add(temp1!);
+        }
         listMedicine.value[index] = temp;
         Get.back();
         Get.dialog(

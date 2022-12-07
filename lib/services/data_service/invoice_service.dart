@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:admin_clinical/constants/error_handing.dart';
 import 'package:admin_clinical/models/invoice.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -35,6 +36,33 @@ class InvoiceService {
     } finally {}
   }
 
+  Future<Invoice?> changeStatusinvoice(BuildContext context,
+      {required String id, required int status}) async {
+    print('change invoice status is called');
+    Invoice? result;
+    try {
+      http.Response res = await http.post(
+        Uri.parse('${ApiLink.uri}/api/invoice/change_status_invoice'),
+        body: jsonEncode({
+          'id': id,
+          'status': status,
+        }),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+      httpErrorHandle(
+          response: res,
+          context: context,
+          onSuccess: () {
+            result = Invoice.fromMap(jsonDecode(res.body));
+          });
+    } catch (e) {
+      result = null;
+    }
+    return result;
+  }
+
   Future<Invoice?> addInvoiceMedicine(BuildContext context,
       {required String thumb,
       required double amount,
@@ -62,8 +90,13 @@ class InvoiceService {
           'Content-Type': 'application/json; charset=UTF-8',
         },
       );
+      print(res.body);
+      if (res.statusCode == 200) {
+        result = Invoice.fromMap(jsonDecode(res.body));
+      }
     } catch (e) {
       result = null;
+      print(e.toString());
     }
     return result;
   }

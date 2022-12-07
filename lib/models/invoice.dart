@@ -9,10 +9,10 @@ class Invoice {
   DateTime createTime;
   int status;
   String category;
-  String medicineId;
   double amount;
   String thumb;
   String title;
+  String medicineId;
   String hrId;
   Invoice({
     required this.id,
@@ -40,10 +40,10 @@ class Invoice {
         'createTime': createTime,
         'status': status,
         'category': category,
-        'medicineId': medicineId,
         'amount': amount,
         'title': title,
         'thumb': thumb,
+        'medicineId': medicineId,
         'hrId': hrId
       };
 
@@ -73,9 +73,3 @@ class Invoice {
         hrId: hrId ?? this.hrId);
   }
 }
-
-
-
-// class Invoice1 {
-//   String InvoiceId;
-// }

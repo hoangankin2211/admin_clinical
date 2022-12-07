@@ -4,6 +4,7 @@ import 'dart:ui';
 
 import 'package:admin_clinical/models/health_record.dart';
 import 'package:admin_clinical/services/data_service/health_record_service.dart';
+import 'package:admin_clinical/services/data_service/invoice_service.dart';
 import 'package:admin_clinical/services/data_service/medicine_service.dart';
 import 'package:admin_clinical/services/data_service/patient_service.dart';
 import 'package:flutter/cupertino.dart';
@@ -44,6 +45,9 @@ class DataService extends GetxController {
     }
     if (HealthRecordService.listHealthRecord.isEmpty) {
       HealthRecordService.fetchAllHealthRecordData();
+    }
+    if (InvoiceService.instance.listInvoice.isEmpty) {
+      InvoiceService.instance.fetchAllDataInvoice();
     }
   }
 

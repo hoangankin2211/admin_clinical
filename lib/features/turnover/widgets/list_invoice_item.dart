@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-
 import '../../../constants/app_colors.dart';
 
 class ListInvoiceItem extends StatelessWidget {
@@ -12,6 +11,7 @@ class ListInvoiceItem extends StatelessWidget {
   final String name;
   final double amount;
   final int status;
+  final Function(String)? onSelectedAction;
 
   ListInvoiceItem(
       {super.key,
@@ -21,7 +21,8 @@ class ListInvoiceItem extends StatelessWidget {
       required this.image,
       required this.name,
       required this.amount,
-      required this.status});
+      required this.status,
+      this.onSelectedAction});
   RxBool checkBox = false.obs;
   List<Color> lColor1 = [
     Colors.blue.withOpacity(0.2),
@@ -97,7 +98,7 @@ class ListInvoiceItem extends StatelessWidget {
                         blurRadius: 3.0)
                   ],
                   image: DecorationImage(
-                      fit: BoxFit.cover, image: AssetImage(image)),
+                      fit: BoxFit.cover, image: NetworkImage(image)),
                 ),
               ),
               Expanded(
@@ -149,13 +150,24 @@ class ListInvoiceItem extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              InkWell(
-                onTap: () {},
+              PopupMenuButton<String>(
+                onSelected: (value) {
+                  onSelectedAction!(value);
+                },
+                itemBuilder: (context) => [
+                  const PopupMenuItem<String>(
+                    value: 'View Invoice',
+                    child: Text('View Invoice'),
+                  ),
+                  const PopupMenuItem<String>(
+                    value: 'Change Status',
+                    child: Text('change Status'),
+                  ),
+                ],
                 child: const Icon(
-                  Icons.more_vert,
-                  color: AppColors.primarySecondColor,
+                  Icons.more_vert_outlined,
                 ),
-              ),
+              )
             ],
           ),
         ),

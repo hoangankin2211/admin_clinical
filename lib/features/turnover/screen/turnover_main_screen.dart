@@ -1,15 +1,19 @@
-import 'package:admin_clinical/constants/global_widgets/custom_button.dart';
 import 'package:admin_clinical/features/invoice/controllers/invoice_controller.dart';
 import 'package:admin_clinical/features/invoice/screens/invoice_view_screen.dart';
 import 'package:admin_clinical/features/patient/widgets/custom_text_form_field.dart';
 import 'package:admin_clinical/features/patient/widgets/show_entries_widget.dart';
+import 'package:admin_clinical/models/invoice.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../../constants/app_colors.dart';
+import '../../../constants/app_decoration.dart';
 import '../../../constants/global_widgets/button_mouse_region.dart';
+import '../../auth/widgets/custom_button.dart';
+import '../../invoice/widgets/dialog_change_status.dart';
+import '../../invoice/widgets/dialog_invoice_view.dart';
 import '../../patient/controller/patient_page_controller.dart';
 import '../widgets/grid_invoice_item.dart';
 import '../widgets/list_invoice_item.dart';
@@ -74,33 +78,6 @@ class TurnoverMainScreen extends StatelessWidget {
       "icon": FontAwesome.save,
       "title": "By category",
       "onTap": SelectCategoryDialog(),
-    },
-  ];
-
-  List<Map<String, dynamic>> listInvoices = [
-    {
-      "icon": Icons.file_copy_outlined,
-      "title": "All Invoices",
-      "data": 878797,
-      "data1": 50,
-    },
-    {
-      "icon": Icons.folder_copy_outlined,
-      "title": "Paid Invoices",
-      "data": 45884,
-      "data1": 60,
-    },
-    {
-      "icon": Icons.paid_outlined,
-      "title": "All Invoices",
-      "data": 878797,
-      "data1": 70,
-    },
-    {
-      "icon": Icons.security_outlined,
-      "title": "Cancelled Invoices",
-      "data": 88797,
-      "data1": 80,
     },
   ];
 
@@ -339,28 +316,39 @@ class TurnoverMainScreen extends StatelessWidget {
                                 listFlex: const [2, 1, 1, 2, 1, 1, 1],
                               ),
                             ),
-                            Expanded(
-                              child: ListView(
-                                children: [
-                                  ...listFakeData.map(
-                                    (e) => Column(
-                                      children: [
-                                        ListInvoiceItem(
-                                          id: e["id"],
-                                          category: e["cat"],
-                                          date: DateTime.now(),
-                                          image: e["image"],
-                                          name: e["name"],
-                                          amount: e["amount"],
-                                          status: e["status"],
-                                        ),
-                                        const Divider(thickness: 0.7),
-                                      ],
-                                    ),
-                                  )
-                                ],
+                            Obx(
+                              () => Expanded(
+                                child: ListView(
+                                  children: [
+                                    ...invoiceController.listInvoice.map(
+                                      (element) => ListInvoiceItem(
+                                        id: element.id,
+                                        category: element.category,
+                                        date: element.createTime,
+                                        image: element.thumb,
+                                        name: element.title,
+                                        amount: element.amount,
+                                        status: element.status,
+                                        onSelectedAction: (value) {
+                                          if (value == 'View Invoice') {
+                                            Get.dialog(
+                                              DialogInvoiceView(
+                                                invoice: element,
+                                              ),
+                                            );
+                                          } else {
+                                            Get.dialog(
+                                              DialogChangeStatus(
+                                                  invoice: element),
+                                            );
+                                          }
+                                        },
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
-                            ),
+                            )
                           ],
                         ),
                       )
@@ -368,7 +356,7 @@ class TurnoverMainScreen extends StatelessWidget {
                         shrinkWrap: false,
                         crossAxisCount: 6,
                         children: <Widget>[
-                          ...listFakeData.map(
+                          ...invoiceController.listInvoice.map(
                             (e) => GridInvoiceItem(e: e),
                           ),
                         ],
@@ -384,7 +372,7 @@ class TurnoverMainScreen extends StatelessWidget {
   Row _invoiceListField() {
     return Row(
       children: [
-        ...listInvoices.map(
+        ...invoiceController.listInvoices.map(
           (e) => Expanded(
             child: Container(
               padding: const EdgeInsets.all(15.0),
@@ -409,7 +397,7 @@ class TurnoverMainScreen extends StatelessWidget {
                           color: AppColors.primarySecondColor.withOpacity(0.6),
                           size: 30.0),
                       Text(
-                        "\$ ${e["data"]}",
+                        "\$ ${e["status"] == 3 ? invoiceController.cancelled_invoice_amount.value['data'] : e["status"] == 0 ? invoiceController.all_invoice_amount.value['data'] : invoiceController.paid_invoice_amount.value['data']}",
                         style: const TextStyle(
                           color: AppColors.primaryColor,
                           fontWeight: FontWeight.bold,
@@ -420,7 +408,7 @@ class TurnoverMainScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 10.0),
                   Text(
-                    "${e["title"]}  ${e["data1"]}",
+                    "${e["title"]}  ${e["status"] == 3 ? invoiceController.cancelled_invoice_amount.value['count'] : e["status"] == 0 ? invoiceController.all_invoice_amount.value['count'] : invoiceController.paid_invoice_amount.value['count']}",
                     style: const TextStyle(
                       color: AppColors.headline1TextColor,
                       fontWeight: FontWeight.bold,
@@ -656,15 +644,15 @@ class SelectUserDialog extends StatelessWidget {
             width: double.infinity,
             height: 40.0,
             child: CustomButton(
-                text: "Reset",
-                onTap: () {},
-                backgroundColor: AppColors.primaryColor.withOpacity(0.6)),
+                title: "Reset",
+                onPressed: () {},
+                color: AppColors.primaryColor.withOpacity(0.6)),
           ),
           const SizedBox(height: 10.0),
           SizedBox(
             width: double.infinity,
             height: 40.0,
-            child: CustomButton(text: "Apply", onTap: () {}),
+            child: CustomButton(title: "Apply", onPressed: () {}),
           ),
         ],
       ),
@@ -890,15 +878,15 @@ class SelectStatusDialog extends StatelessWidget {
             width: double.infinity,
             height: 40.0,
             child: CustomButton(
-                text: "Reset",
-                onTap: () {},
-                backgroundColor: AppColors.primaryColor.withOpacity(0.6)),
+                title: "Reset",
+                onPressed: () {},
+                color: AppColors.primaryColor.withOpacity(0.6)),
           ),
           const SizedBox(height: 10.0),
           SizedBox(
             width: double.infinity,
             height: 40.0,
-            child: CustomButton(text: "Apply", onTap: () {}),
+            child: CustomButton(title: "Apply", onPressed: () {}),
           ),
         ],
       ),
