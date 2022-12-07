@@ -4,14 +4,12 @@ import 'package:get/get.dart';
 import '../../../../constants/app_decoration.dart';
 import '../../../overview/widgets/custom_table.dart';
 import '../../controller/medical_form_controller.dart';
+import '../medicine_indication_widgets/medicine_search_form.dart';
 
 class ResultIndication extends StatelessWidget {
   ResultIndication({super.key});
 
   final medicalIndicationController = Get.find<MedicalFormController>();
-
-  late final List<Map<String, dynamic>> rowData =
-      medicalIndicationController.resultIndicationRowData;
 
   @override
   Widget build(BuildContext context) {
@@ -20,15 +18,15 @@ class ResultIndication extends StatelessWidget {
         return FormCard(
           child: Column(
             children: [
-              ResultServiceTableRow(
-                amountPrice: rowData[0]['amountPrice'],
-                pricePerUnit: rowData[0]['pricePerUnit'],
-                departmentCharge: rowData[0]['departmentCharge'],
-                amount: rowData[0]['amount'],
-                name: rowData[0]['name'],
-                id: rowData[0]['id'],
-                color: Colors.blueGrey[100]!,
-                departmentID: rowData[0]['departmentID'],
+              const MedicineSearchFormRow(
+                customRow: [
+                  {'flex': 2, 'text': 'ID'},
+                  {'flex': 1, 'text': 'Name'},
+                  {'flex': 1, 'text': 'Department ID'},
+                  {'flex': 1, 'text': 'Price'},
+                  {'flex': 1, 'text': 'Description'},
+                ],
+                width: 48,
               ),
               Expanded(
                 child: GetBuilder<MedicalFormController>(
@@ -38,22 +36,18 @@ class ResultIndication extends StatelessWidget {
                   builder: (controller) {
                     return ListView.builder(
                       itemBuilder: (context, index) {
-                        if (index != 0) {
-                          return ResultServiceTableRow(
-                            amountPrice: rowData[index]['amountPrice'],
-                            pricePerUnit: rowData[index]['pricePerUnit'],
-                            departmentCharge: rowData[index]
-                                ['departmentCharge'],
-                            amount: rowData[index]['amount'],
-                            name: rowData[index]['name'],
-                            id: rowData[index]['id'],
-                            color: Colors.white,
-                            departmentID: rowData[index]['departmentID'],
-                          );
-                        }
-                        return const SizedBox();
+                        return ResultServiceTableRow(
+                          deleteServiceChoice:
+                              medicalIndicationController.onChoiceServiceChange,
+                          color: Colors.white,
+                          service: medicalIndicationController
+                              .listServiceIndicator.entries
+                              .elementAt(index)
+                              .value,
+                        );
                       },
-                      itemCount: rowData.length,
+                      itemCount: medicalIndicationController
+                          .listServiceIndicator.length,
                     );
                   },
                 ),

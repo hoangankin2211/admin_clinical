@@ -5,9 +5,16 @@ import 'package:intl/intl.dart';
 import '../patient_information_form.dart';
 
 class MedicineInformationForm extends StatelessWidget {
-  const MedicineInformationForm({super.key, this.id, this.amount});
+  const MedicineInformationForm({
+    super.key,
+    this.id,
+    this.amount,
+    this.createDate,
+  });
+
   final String? id;
   final double? amount;
+  final DateTime? createDate;
 
   @override
   Widget build(BuildContext context) {

@@ -5,6 +5,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:admin_clinical/constants/error_handing.dart';
 
+import 'data_service.dart';
+
 class ServiceDataService {
   ServiceDataService._privateConstructor();
   static ServiceDataService instance = ServiceDataService._privateConstructor();
@@ -38,11 +40,13 @@ class ServiceDataService {
       print(extractedData);
 
       if (extractedData.containsKey('services')) {
-        Map<String, dynamic> temp = extractedData['services'];
-        temp.forEach((key, value) {
-          Service tempService = Service.fromJson(temp);
-          _services.putIfAbsent(tempService.id ?? " ", () => tempService);
-        });
+        List<dynamic> temp = extractedData['services'];
+        for (int i = 0; i < temp.length; i++) {
+          Map<String, dynamic> map = temp[i];
+          _services.addAll({map['_id']: Service.fromJson(map)});
+        }
+        print(_services.length);
+        DataService.instance.checkFetchData.value.add(1);
         return true;
       }
     } catch (e) {
@@ -53,12 +57,13 @@ class ServiceDataService {
 
   Future<Service?> addNewService(Map<String, dynamic> serviceMap) async {
     try {
-      final response =
-          await http.post(Uri.parse("${ApiLink.uri}/api/service/addService"),
-              headers: {
-                'Content-Type': 'application/json; charset=UTF-8',
-              },
-              body: jsonEncode(serviceMap));
+      final response = await http.post(
+        Uri.parse("${ApiLink.uri}/api/service/addService"),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(serviceMap),
+      );
 
       final Map<String, dynamic> extractedData = jsonDecode(response.body);
       print(extractedData);
