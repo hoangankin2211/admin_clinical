@@ -215,12 +215,8 @@ class PatientListRow extends StatelessWidget {
                           child: Text('Detail'),
                         ),
                         const PopupMenuItem<String>(
-                          value: 'Edit Profile',
+                          value: 'Edit',
                           child: Text('Edit'),
-                        ),
-                        const PopupMenuItem<String>(
-                          value: 'Delete',
-                          child: Text('Delete'),
                         ),
                         const PopupMenuItem<String>(
                           value: 'Delete',

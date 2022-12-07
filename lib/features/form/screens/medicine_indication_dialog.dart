@@ -105,7 +105,7 @@ class MedicineIndicationDialog extends StatelessWidget {
                           successTitle: 'Added Medicine',
                           successQuestion: 'Added Medicine to database',
                           errorTitle: 'Error',
-                          errorQuestion: 'Some errors happened',
+                          errorQuestion: 'Some erro rs happened',
                         );
                       },
                       child: Container(

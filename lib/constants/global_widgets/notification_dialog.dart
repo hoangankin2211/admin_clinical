@@ -2,15 +2,15 @@ import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class SuccessDialog extends StatelessWidget {
-  const SuccessDialog({
+class CustomNotificationDialog extends StatelessWidget {
+  const CustomNotificationDialog({
     Key? key,
-    required this.question,
-    required this.title1,
+    required this.title,
+    required this.content,
   }) : super(key: key);
 
-  final String question;
-  final String title1;
+  final String title;
+  final String content;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +46,7 @@ class SuccessDialog extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: Text(
-                  question,
+                  title,
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     fontSize: 20,
@@ -59,7 +59,7 @@ class SuccessDialog extends StatelessWidget {
                 height: 80,
                 width: Get.mediaQuery.size.width * 0.7,
                 child: Text(
-                  title1,
+                  content,
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     color: Colors.blueGrey,
@@ -78,7 +78,7 @@ class SuccessDialog extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
                       alignment: Alignment.center,
-                      fixedSize: const Size(110, 50),
+                      fixedSize: const Size(120, 40),
                       elevation: 0,
                     ),
                     child: const Text(
@@ -88,7 +88,26 @@ class SuccessDialog extends StatelessWidget {
                           fontSize: 18,
                           fontWeight: FontWeight.bold),
                     ),
-                  )
+                  ),
+                  const SizedBox(width: 15),
+                  ElevatedButton(
+                    onPressed: () => Get.back(result: false),
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      alignment: Alignment.center,
+                      fixedSize: const Size(120, 40),
+                      backgroundColor: Colors.red[300],
+                      elevation: 0,
+                    ),
+                    child: const Text(
+                      'No',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 10),

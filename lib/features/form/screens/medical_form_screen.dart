@@ -1,9 +1,8 @@
+import 'package:admin_clinical/constants/global_widgets/notification_dialog.dart';
+import 'package:admin_clinical/constants/utils.dart';
 import 'package:admin_clinical/features/auth/widgets/custom_button.dart';
 import 'package:admin_clinical/features/form/controller/medical_form_controller.dart';
 import 'package:admin_clinical/features/form/screens/service_indication_dialog.dart';
-import 'package:admin_clinical/models/department.dart';
-import 'package:admin_clinical/services/data_service/health_record_service.dart';
-import 'package:admin_clinical/services/data_service/service_data_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -35,10 +34,37 @@ class MedicalFormScreen extends StatelessWidget {
       .map(
         (element) => TextButton.icon(
           style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(vertical: 20),
+            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
           ),
           onPressed: () async {
-            Get.dialog(element['dialog']);
+            if (medicalFormController.isCreatedForm.value) {
+              final response = await Get.dialog(element['dialog']);
+              if (response == null || response == false) {
+                if (element['title'] == 'Service Indication') {
+                  medicalFormController.listServiceIndicator.value = {};
+                } else if (element['title'] == 'Medicine Indication') {
+                  medicalFormController.listMedicineIndicator.value = {};
+                }
+              } else {
+                print('here');
+                if (element['title'] == 'Service Indication') {
+                  medicalFormController.listServiceIndicatorFINAL =
+                      medicalFormController.listServiceIndicator;
+                } else if (element['title'] == 'Medicine Indication') {
+                  medicalFormController.listMedicineIndicatorFINAL =
+                      medicalFormController.listMedicineIndicator;
+                }
+              }
+            } else {
+              Utils.notifyHandle(
+                response: false,
+                successTitle: '',
+                successQuestion: '',
+                errorTitle:
+                    'Cant not add service or medicine to health record until you create a record',
+                errorQuestion: 'Error',
+              );
+            }
             // await ServiceDataService.instance.addNewService({
             //   'name': 'name',
             //   'price': 10.0,
@@ -72,11 +98,50 @@ class MedicalFormScreen extends StatelessWidget {
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             IconButton(
-                                onPressed: backButton,
-                                icon: const Icon(Icons.arrow_back_ios)),
-                            ...listServiceChoice
+                              onPressed: backButton,
+                              icon: const Icon(
+                                Icons.cancel_rounded,
+                                size: 40,
+                                color: Colors.red,
+                              ),
+                            ),
+                            const SizedBox(width: 20),
+                            ...listServiceChoice,
+                            const Spacer(),
+                            TextButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 20, horizontal: 5),
+                                  backgroundColor: Colors.green),
+                              onPressed: () async {
+                                final result = await Get.dialog(
+                                  const CustomNotificationDialog(
+                                      title: 'Payment',
+                                      content:
+                                          'Do you want to export invoice ?'),
+                                );
+
+                                if (result) {
+                                } else {
+                                  backButton();
+                                }
+                              },
+                              icon: const Icon(
+                                Icons.keyboard_double_arrow_right_outlined,
+                                color: Colors.white,
+                              ),
+                              label: const Text(
+                                'Finish Examination',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            )
                           ],
                         ),
                         const SizedBox(height: 10.0),
@@ -92,47 +157,64 @@ class MedicalFormScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             SizedBox(
+                              height: 40,
+                              child: Obx(
+                                () => CustomButton(
+                                  title:
+                                      medicalFormController.isCreatedForm.value
+                                          ? "Update "
+                                          : "Create",
+                                  onPressed: () =>
+                                      medicalFormController.isCreatedForm.value
+                                          ? medicalFormController
+                                              .onPressedUpdateButton(
+                                                  medicalFormController
+                                                      .currentHealthRecord
+                                                      .value!,
+                                                  context)
+                                          : medicalFormController
+                                              .onPressedCreateButton(context),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 10.0),
+                            SizedBox(
                                 height: 40,
                                 child: CustomButton(
-                                  title: "Add",
+                                  title: "Clear",
                                   onPressed: () => medicalFormController
-                                      .onPressedCreateButton(context),
+                                      .onPressedClearButton(),
                                 )),
                             const SizedBox(width: 10.0),
                             SizedBox(
                                 height: 40,
                                 child: CustomButton(
-                                  title: "Update",
-                                  onPressed: () => medicalFormController
-                                      .onPressedCreateButton(context),
-                                )),
-                            const SizedBox(width: 10.0),
-                            SizedBox(
-                                height: 40,
-                                child: CustomButton(
-                                  title: "Change",
-                                  onPressed: () => medicalFormController
-                                      .editHealthRecordData(
-                                    HealthRecordService.listHealthRecord.entries
-                                        .elementAt(0)
-                                        .value,
-                                    context,
-                                  ),
-                                )),
-                            const SizedBox(width: 10.0),
-                            SizedBox(
-                                height: 40,
-                                child: CustomButton(
-                                  color: Colors.red,
-                                  title: "Delete",
-                                  onPressed: () => medicalFormController
-                                      .deleteHealthRecordData(
-                                    HealthRecordService.listHealthRecord.entries
-                                        .elementAt(0)
-                                        .key,
-                                    context,
-                                  ),
-                                )),
+                                    color: Colors.red,
+                                    title: "Delete",
+                                    onPressed: () async {
+                                      bool result = true;
+                                      if (medicalFormController
+                                              .currentHealthRecord.value ==
+                                          null) {
+                                        result = false;
+                                      } else {
+                                        result = await medicalFormController
+                                            .deleteHealthRecordData(
+                                          medicalFormController
+                                              .currentHealthRecord.value!.id!,
+                                          context,
+                                        );
+                                      }
+                                      Utils.notifyHandle(
+                                        response: result,
+                                        successTitle:
+                                            'Delete Health Record Successfully',
+                                        successQuestion: 'Successful',
+                                        errorTitle:
+                                            'Something happened !!! Can not delete current record or you haven\'t create the form yet',
+                                        errorQuestion: 'Error',
+                                      );
+                                    })),
                             const SizedBox(width: 50.0),
                           ],
                         ),

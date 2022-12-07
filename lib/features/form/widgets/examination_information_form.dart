@@ -19,37 +19,47 @@ class ExaminationInformationForm extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Flexible(
-            flex: 1,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                for (int i = 0;
-                    i < medicalFormController.measureField.length;
-                    i++) ...[
-                  Expanded(
-                    child: TextFormFieldInformationWidget(
-                      inputFormatters: medicalFormController.measureField
-                          .elementAt(i)['inputFormatters'],
-                      suffixIcon: Icon(medicalFormController.measureField
-                          .elementAt(i)['icon'] as IconData),
-                      textEditingController: medicalFormController.measureField
-                          .elementAt(i)['textController'],
-                      numberOfLine: 4,
-                      keyboardType: TextInputType.number,
-                      label: medicalFormController.measureField
-                          .elementAt(i)['title'] as String,
-                      validator: (value) {
-                        if (int.tryParse(value!) == null) {
-                          return 'not a number';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                ]
-              ],
-            ),
+            flex: 2,
+            child: LayoutBuilder(builder: (context, constraints) {
+              return SizedBox(
+                height: constraints.maxHeight * 0.8,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    for (int i = 0;
+                        i < medicalFormController.measureField.length;
+                        i++) ...[
+                      Flexible(
+                        child: TextFormFieldInformationWidget(
+                          isDense: true,
+                          inputFormatters: medicalFormController.measureField
+                              .elementAt(i)['inputFormatters'],
+                          suffixIcon: Icon(medicalFormController.measureField
+                              .elementAt(i)['icon'] as IconData),
+                          textEditingController: medicalFormController
+                              .measureField
+                              .elementAt(i)['textController'],
+                          numberOfLine: 4,
+                          keyboardType: TextInputType.number,
+                          label: medicalFormController.measureField
+                              .elementAt(i)['title'] as String,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'This field can not be empty';
+                            }
+                            if (int.tryParse(value) == null) {
+                              return 'Not a number';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                    ]
+                  ],
+                ),
+              );
+            }),
           ),
           Container(
             margin: const EdgeInsets.symmetric(vertical: 10),
@@ -59,7 +69,7 @@ class ExaminationInformationForm extends StatelessWidget {
             ),
           ),
           Flexible(
-            flex: 10,
+            flex: 11,
             child: Column(
               children: [
                 for (int i = 0; i < medicalFormController.examField.length; i++)
@@ -73,6 +83,12 @@ class ExaminationInformationForm extends StatelessWidget {
                           .elementAt(i)['maxLine'] as int,
                       label: medicalFormController.examField
                           .elementAt(i)['title'] as String,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'This field can not be empty';
+                        }
+                        return null;
+                      },
                     ),
                   ),
               ],
@@ -95,6 +111,7 @@ class TextFormFieldInformationWidget extends StatelessWidget {
     this.suffixIcon,
     this.titleIcon,
     this.inputFormatters,
+    this.isDense,
   });
   final String label;
   final int? numberOfLine;
@@ -104,6 +121,7 @@ class TextFormFieldInformationWidget extends StatelessWidget {
   final Widget? suffixIcon;
   final IconData? titleIcon;
   final List<TextInputFormatter>? inputFormatters;
+  final bool? isDense;
 
   @override
   Widget build(BuildContext context) {
@@ -132,8 +150,9 @@ class TextFormFieldInformationWidget extends StatelessWidget {
             maxLines: numberOfLine,
             keyboardType: keyboardType,
             decoration: InputDecoration(
+              isDense: isDense,
               contentPadding:
-                  const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+                  const EdgeInsets.only(top: 18, left: 10, right: 10),
               border: OutlineInputBorder(
                 borderRadius: AppDecoration.primaryRadiusBorder,
                 borderSide: BorderSide(color: Colors.grey[350]!, width: 0.4),

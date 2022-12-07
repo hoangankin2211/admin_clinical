@@ -96,7 +96,7 @@ class MedicineController extends GetxController {
             medicineId: temp.id,
             category: "Medicine");
         if (temp1 != null) {
-          InvoiceService.instance.listInvoice.add(temp1!);
+          InvoiceService.instance.listInvoice.add(temp1);
         }
         listMedicine.value[index] = temp;
         Get.back();

@@ -14,16 +14,15 @@ class PatientMainScreen extends StatelessWidget {
   final patientPageController = Get.put(PatientPageController());
   final medicalFormController = Get.put(MedicalFormController());
   PageController pageController = PageController();
-  Rx<Patient?> selectedPatient = Rx(null);
-  void examinationActionHandle(Patient patient) {
-    selectedPatient.value = patient;
-    print(patient.name);
+  void examinationActionHandle(String patientId) {
+    patientPageController.selectedPatient.value = patientId;
     pageController.animateToPage(1,
         duration: const Duration(milliseconds: 200), curve: Curves.easeIn);
   }
 
   void backButton() {
-    selectedPatient.value = null;
+    medicalFormController.currentHealthRecord.value = null;
+    patientPageController.selectedPatient.value = null;
     pageController.animateToPage(0,
         duration: const Duration(milliseconds: 200), curve: Curves.easeIn);
   }
@@ -38,16 +37,27 @@ class PatientMainScreen extends StatelessWidget {
           ListPatientScreen(examinationActionHandle: examinationActionHandle),
           Obx(
             () => MedicalFormScreen(
-              patient: selectedPatient.value ??
-                  Patient(
-                    address: '',
-                    dob: '',
-                    gender: '',
-                    id: '',
-                    name: '',
-                    phoneNumber: '',
-                    status: '',
-                  ),
+              patient: patientPageController.selectedPatient.value != null
+                  ? patientPageController.data.value[
+                          patientPageController.selectedPatient.value!] ??
+                      Patient(
+                        address: '',
+                        dob: '',
+                        gender: '',
+                        id: '',
+                        name: '',
+                        phoneNumber: '',
+                        status: '',
+                      )
+                  : Patient(
+                      address: '',
+                      dob: '',
+                      gender: '',
+                      id: '',
+                      name: '',
+                      phoneNumber: '',
+                      status: '',
+                    ),
               backButton: backButton,
             ),
           ),

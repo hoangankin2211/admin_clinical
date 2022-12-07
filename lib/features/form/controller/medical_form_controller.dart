@@ -13,6 +13,7 @@ import '../../../models/service.dart';
 class MedicalFormController extends GetxController {
   final formKey = GlobalKey<FormState>();
   var isLoading = false.obs;
+  var isCreatedForm = false.obs;
 
   void updateGetBuilder(List<String> id) {
     update(id);
@@ -96,6 +97,9 @@ class MedicalFormController extends GetxController {
     {
       'title': 'Allergy',
       'maxLine': 2,
+      'inputFormatters': [
+        FilteringTextInputFormatter.allow(RegExp(r'[0-9]+[,.]{0,1}[0-9]*'))
+      ],
       'icon': Icons.sick_rounded,
       'textController': TextEditingController(),
     },
@@ -110,6 +114,8 @@ class MedicalFormController extends GetxController {
       isLoading.value = false;
 
       if (response['isSuccess']) {
+        isCreatedForm.value = true;
+
         currentHealthRecord.value =
             HealthRecordService.listHealthRecord[response['id'] ?? ""];
       }
@@ -141,6 +147,7 @@ class MedicalFormController extends GetxController {
   void onPressedUpdateButton(
       HealthRecord newHealthRecord, BuildContext context) async {
     final isValidated = formKey.currentState!.validate();
+
     if (isValidated) {
       formKey.currentState!.save();
       isLoading.value = true;
@@ -155,6 +162,20 @@ class MedicalFormController extends GetxController {
             'Something occurred !!! Please check your internet connection',
       );
     }
+  }
+
+  void onPressedClearButton() async {
+    (measureField[5]['textController'] as TextEditingController).clear();
+    (measureField[4]['textController'] as TextEditingController).clear();
+    (examField[0]['textController'] as TextEditingController).clear();
+    (examField[3]['textController'] as TextEditingController).clear();
+    (examField[2]['textController'] as TextEditingController).clear();
+    (measureField[2]['textController'] as TextEditingController).clear();
+    (measureField[1]['textController'] as TextEditingController).clear();
+    (measureField[5]['textController'] as TextEditingController).clear();
+    (examField[1]['textController'] as TextEditingController).clear();
+    (measureField[3]['textController'] as TextEditingController).clear();
+    (measureField[0]['textController'] as TextEditingController).clear();
   }
 
 //////////////////////////////////////////////////////////////////////
@@ -203,15 +224,13 @@ class MedicalFormController extends GetxController {
         heartBeat: double.parse(
             (measureField[2]['textController'] as TextEditingController).text),
         height: double.parse(
-            (measureField[5]['textController'] as TextEditingController).text),
-        id: (measureField[5]['textController'] as TextEditingController).text,
+            (measureField[1]['textController'] as TextEditingController).text),
         note: (measureField[5]['textController'] as TextEditingController).text,
-        symptom:
-            (measureField[5]['textController'] as TextEditingController).text,
+        symptom: (examField[1]['textController'] as TextEditingController).text,
         temperature: double.parse(
-            (measureField[5]['textController'] as TextEditingController).text),
+            (measureField[3]['textController'] as TextEditingController).text),
         weight: double.parse(
-            (measureField[5]['textController'] as TextEditingController).text),
+            (measureField[0]['textController'] as TextEditingController).text),
         medicines: medicineFinal,
         services: serviceFinal,
       );
@@ -236,8 +255,10 @@ class MedicalFormController extends GetxController {
   Future<bool> editHealthRecordData(
       HealthRecord healthRecord, BuildContext context) async {
     try {
+      isLoading.value = true;
       final response =
           await HealthRecordService.editHealthRecord(healthRecord, context);
+      isLoading.value = false;
       if (response != null) {
         if (response['isSuccess'] != null &&
             response['isSuccess'] == true &&
@@ -255,8 +276,10 @@ class MedicalFormController extends GetxController {
 
   Future<bool> deleteHealthRecordData(String id, BuildContext context) async {
     try {
+      isLoading.value = true;
       final response =
           await HealthRecordService.deleteHealthRecord(id, context);
+      isLoading.value = false;
       if (response) {
         HealthRecordService.listHealthRecord.remove(id);
         return true;
@@ -303,8 +326,9 @@ class MedicalFormController extends GetxController {
     return listServiceIndicator.containsKey(id);
   }
 
-  //////////////////////////////////////////////////////////////////////
-  final RxMap<String, Service> listServiceIndicator =
+  //////////////////////////////////////////////////////////////////////\
+  Map<String, Service> listServiceIndicatorFINAL = {};
+  late final RxMap<String, Service> listServiceIndicator =
       RxMap<String, Service>({});
 
   final Map<String, Service> services = ServiceDataService.instance.service;
@@ -328,7 +352,8 @@ class MedicalFormController extends GetxController {
     update(['resultService', id]);
   }
 
-  final RxMap<String, Medicine> listMedicineIndicator =
+  Map<String, Medicine> listMedicineIndicatorFINAL = {};
+  late final RxMap<String, Medicine> listMedicineIndicator =
       RxMap<String, Medicine>({});
 
   final List<Medicine> medicines = MedicineService.instance.listMedicine;

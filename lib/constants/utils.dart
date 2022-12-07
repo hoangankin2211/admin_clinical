@@ -85,7 +85,7 @@ class Utils {
     return result;
   }
 
-  static Future<void> notifyHandle({
+  static Future<bool> notifyHandle({
     required bool response,
     required String successTitle,
     required String successQuestion,
@@ -99,7 +99,8 @@ class Utils {
           title1: successTitle,
         ),
       );
-      Get.back();
+      Get.back(result: true);
+      return true;
     } else {
       await Get.dialog(
         ErrorDialog(
@@ -107,7 +108,8 @@ class Utils {
           title1: errorTitle,
         ),
       );
-      Get.back();
+      Get.back(result: false);
+      return false;
     }
   }
 }

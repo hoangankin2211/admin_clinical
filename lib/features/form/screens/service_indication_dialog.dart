@@ -120,8 +120,9 @@ class ServiceIndicationDialog extends StatelessWidget {
                       child: Container(
                         padding: const EdgeInsets.all(10),
                         decoration: const BoxDecoration(
-                            color: AppColors.primaryColor,
-                            shape: BoxShape.circle),
+                          color: AppColors.primaryColor,
+                          shape: BoxShape.circle,
+                        ),
                         child: const Icon(
                           Icons.save,
                           size: 35,

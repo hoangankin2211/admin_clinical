@@ -201,26 +201,25 @@ class DataService extends GetxController {
         response: res,
         context: context,
         onSuccess: () async {
-          callBack(listDoctor.value);
+          callBack(listDoctor);
         },
       );
     } catch (e) {
       //
     } finally {
-      final index =
-          listDoctor.value.indexWhere((element) => element.iDBS == id);
-      listDoctor.value[index] = Doctor1(
+      final index = listDoctor.indexWhere((element) => element.iDBS == id);
+      listDoctor[index] = Doctor1(
         name: name,
         address: address,
         avt: av,
         dateBorn: dateBorn,
         departMent: departMent,
         experience: experience,
-        iDBS: listDoctor.value[index].iDBS,
+        iDBS: listDoctor[index].iDBS,
         phoneNumber: phoneNumber,
         description: description,
       );
-      callBack(listDoctor.value);
+      callBack(listDoctor);
     }
   }
 

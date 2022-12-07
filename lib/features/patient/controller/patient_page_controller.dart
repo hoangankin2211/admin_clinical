@@ -8,6 +8,8 @@ class PatientPageController extends GetxController {
 
   late final Rx<Map<String, Patient>> data;
 
+  var isLoading = false.obs;
+
   @override
   void onInit() {
     data = Rx<Map<String, Patient>>(PatientService.listPatients);

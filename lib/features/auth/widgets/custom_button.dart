@@ -1,8 +1,6 @@
 import 'package:admin_clinical/constants/app_colors.dart';
 import 'package:admin_clinical/constants/app_decoration.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 class CustomButton extends StatelessWidget {
   const CustomButton({
@@ -10,8 +8,10 @@ class CustomButton extends StatelessWidget {
     required this.title,
     required this.onPressed,
     this.color,
+    this.enable,
     this.check = false,
   });
+  final bool? enable;
   final String title;
   final Color? color;
   final Function() onPressed;
@@ -19,7 +19,7 @@ class CustomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: onPressed,
+      onPressed: enable ?? true ? onPressed : () {},
       style: ElevatedButton.styleFrom(
         backgroundColor: color ?? AppColors.primaryColor,
         elevation: 5,

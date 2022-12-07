@@ -27,190 +27,217 @@ const Map<String, String> patientListField = {
 
 class ListPatientScreen extends StatelessWidget {
   ListPatientScreen({super.key, required this.examinationActionHandle});
-  final Function(Patient) examinationActionHandle;
+  final Function(String) examinationActionHandle;
   final patientPageController = Get.find<PatientPageController>();
+
+  void onSelectionAction(
+      String value, int index, BuildContext context, Patient patient) async {
+    if (value == 'Examination') {
+      examinationActionHandle(
+          patientPageController.data.value.values.elementAt(index).id);
+    } else if (value == 'Detail') {
+      Get.to(() => const PatientScreen());
+    } else if (value == 'Edit') {
+      Get.dialog(
+        EditPatientDialog(
+          height: MediaQuery.of(context).size.height * 0.8,
+          width: MediaQuery.of(context).size.width * 0.6,
+          patient: patient,
+        ),
+      );
+    } else if (value == 'Generate Invoice') {
+    } else if (value == 'Delete') {
+      patientPageController.isLoading.value = true;
+      final result = await PatientService.deletePatient(patient.id, context);
+      patientPageController.isLoading.value = false;
+      patientPageController.removeEntries(patient.id);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      return Row(
-        children: [
-          Flexible(
-            flex: 10,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Patient List',
-                        style: Theme.of(context).textTheme.headline2,
-                      ),
-                      CustomIconButton(
-                        onPressed: () => Get.dialog(
-                          AddPatientDialog(
-                            height: constraints.maxHeight * 0.8,
-                            width: constraints.maxWidth * 0.45,
-                          ),
+      return patientPageController.isLoading.value
+          ? const Center(child: CircularProgressIndicator())
+          : Row(
+              children: [
+                Flexible(
+                  flex: 10,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Patient List',
+                              style: Theme.of(context).textTheme.headline2,
+                            ),
+                            CustomIconButton(
+                              onPressed: () => Get.dialog(
+                                AddPatientDialog(
+                                  height: constraints.maxHeight * 0.8,
+                                  width: constraints.maxWidth * 0.45,
+                                ),
+                              ),
+                              label: const Text(
+                                'Add Patient',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                ),
+                              ),
+                              icon: const Icon(
+                                Icons.add_outlined,
+                                color: Colors.white,
+                                size: 12,
+                              ),
+                            ),
+                          ],
                         ),
-                        label: const Text(
-                          'Add Patient',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12,
-                          ),
-                        ),
-                        icon: const Icon(
-                          Icons.add_outlined,
-                          color: Colors.white,
-                          size: 12,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Obx(
-                        () => ShowEntriesWidget(
-                          maxEntries: patientPageController.data.value.length,
-                          applyEntries: patientPageController.applyEntries,
-                          numberOfEntries:
-                              patientPageController.numberOfEntries.value,
-                          width: constraints.maxWidth * 0.03,
-                          height: constraints.maxHeight * 0.05,
-                        ),
-                      ),
-                      CustomIconButton(
-                        onPressed: () async {
-                          await PatientService.fetchAllPatientData();
-                        },
-                        label: Text(
-                          'Filter',
-                          style: Theme.of(context).textTheme.headline4,
-                        ),
-                        icon: const Icon(
-                          Icons.filter_alt_outlined,
-                          color: Colors.blueGrey,
-                        ),
-                        style: TextButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 15, horizontal: 10),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: AppDecoration.primaryRadiusBorder,
-                            side: const BorderSide(
-                                color: Colors.grey, width: 0.3),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      const Expanded(
-                        child: FilterCategory(
-                          title: 'Patient',
-                          hint: 'Patient name, Patient id, etc',
-                          iconData: Icons.search_outlined,
-                        ),
-                      ),
-                      const SizedBox(width: 20),
-                      const Expanded(
-                        child: FilterCategory(
-                          title: 'Category',
-                          hint: 'All Category',
-                          iconData: Icons.category_outlined,
-                        ),
-                      ),
-                      const SizedBox(width: 20),
-                      Expanded(
-                        child: FilterCategory(
-                          title: 'Date of Joining',
-                          hint: DateFormat()
-                              .add_yMd()
-                              .format(DateTime.now())
-                              .toString(),
-                          iconData: Icons.calendar_month_outlined,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 30),
-                  PatientListRow(
-                    name: patientListField['name']!,
-                    id: patientListField['id']!,
-                    date: patientListField['date']!,
-                    gender: patientListField['gender']!,
-                    diseases: patientListField['diseases']!,
-                    status: patientListField['status']!,
-                    color: Colors.blueGrey[50]!,
-                    avt: 'images/fake_avatar.jpg',
-                    payment: patientListField['payment']!,
-                  ),
-                  Expanded(
-                    child: GetBuilder<PatientPageController>(
-                      id: 'list_patients_screen',
-                      assignId: true,
-                      autoRemove: false,
-                      builder: (controller) => Obx(
-                        () => ListView.builder(
-                          itemExtent: 60,
-                          itemCount:
-                              patientPageController.numberOfEntries.value,
-                          itemBuilder: (context, index) {
-                            Patient tempPatient = patientPageController
-                                .data.value.values
-                                .elementAt(index);
-                            return PatientListRow(
-                              onClick: () => patientPageController
-                                  .selectedPatient.value = tempPatient.id,
-                              onSelectedAction: (value) {
-                                if (value == 'Examination') {
-                                  examinationActionHandle(patientPageController
-                                      .data.value.values
-                                      .elementAt(index));
-                                }
+                        const SizedBox(height: 20),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Obx(
+                              () => ShowEntriesWidget(
+                                maxEntries:
+                                    patientPageController.data.value.length,
+                                applyEntries:
+                                    patientPageController.applyEntries,
+                                numberOfEntries:
+                                    patientPageController.numberOfEntries.value,
+                                width: constraints.maxWidth * 0.03,
+                                height: constraints.maxHeight * 0.05,
+                              ),
+                            ),
+                            CustomIconButton(
+                              onPressed: () async {
+                                await PatientService.fetchAllPatientData();
                               },
-                              removeEntries:
-                                  patientPageController.removeEntries,
-                              name: tempPatient.name,
-                              id: tempPatient.id,
-                              date: tempPatient.dob,
-                              gender: tempPatient.gender,
-                              diseases: tempPatient.name,
-                              status: tempPatient.status,
-                              payment: '100000',
-                              avt: tempPatient.avt,
-                              color: Colors.white,
-                            );
-                          },
+                              label: Text(
+                                'Filter',
+                                style: Theme.of(context).textTheme.headline4,
+                              ),
+                              icon: const Icon(
+                                Icons.filter_alt_outlined,
+                                color: Colors.blueGrey,
+                              ),
+                              style: TextButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 15, horizontal: 10),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      AppDecoration.primaryRadiusBorder,
+                                  side: const BorderSide(
+                                      color: Colors.grey, width: 0.3),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
+                        const SizedBox(height: 20),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            const Expanded(
+                              child: FilterCategory(
+                                title: 'Patient',
+                                hint: 'Patient name, Patient id, etc',
+                                iconData: Icons.search_outlined,
+                              ),
+                            ),
+                            const SizedBox(width: 20),
+                            const Expanded(
+                              child: FilterCategory(
+                                title: 'Category',
+                                hint: 'All Category',
+                                iconData: Icons.category_outlined,
+                              ),
+                            ),
+                            const SizedBox(width: 20),
+                            Expanded(
+                              child: FilterCategory(
+                                title: 'Date of Joining',
+                                hint: DateFormat()
+                                    .add_yMd()
+                                    .format(DateTime.now())
+                                    .toString(),
+                                iconData: Icons.calendar_month_outlined,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 30),
+                        PatientListRow(
+                          name: patientListField['name']!,
+                          id: patientListField['id']!,
+                          date: patientListField['date']!,
+                          gender: patientListField['gender']!,
+                          diseases: patientListField['diseases']!,
+                          status: patientListField['status']!,
+                          color: Colors.blueGrey[50]!,
+                          avt: 'images/fake_avatar.jpg',
+                          payment: patientListField['payment']!,
+                        ),
+                        Expanded(
+                          child: GetBuilder<PatientPageController>(
+                            id: 'list_patients_screen',
+                            assignId: true,
+                            autoRemove: false,
+                            builder: (controller) => Obx(
+                              () => ListView.builder(
+                                itemExtent: 60,
+                                itemCount:
+                                    patientPageController.numberOfEntries.value,
+                                itemBuilder: (context, index) {
+                                  Patient tempPatient = patientPageController
+                                      .data.value.values
+                                      .elementAt(index);
+                                  return PatientListRow(
+                                    onClick: () => patientPageController
+                                        .selectedPatient.value = tempPatient.id,
+                                    onSelectedAction: (value) {
+                                      onSelectionAction(
+                                          value, index, context, tempPatient);
+                                    },
+                                    removeEntries:
+                                        patientPageController.removeEntries,
+                                    name: tempPatient.name,
+                                    id: tempPatient.id,
+                                    date: tempPatient.dob,
+                                    gender: tempPatient.gender,
+                                    diseases: tempPatient.name,
+                                    status: tempPatient.status,
+                                    payment: '100000',
+                                    avt: tempPatient.avt,
+                                    color: Colors.white,
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
-            ),
-          ),
-          Flexible(
-            flex: 3,
-            child: Obx(
-              () => PatientProfileCard(
-                  patient: patientPageController.selectedPatient.value != null
-                      ? patientPageController.data
-                          .value[patientPageController.selectedPatient.value]
-                      : null),
-            ),
-          ),
-        ],
-      );
+                ),
+                Flexible(
+                  flex: 3,
+                  child: Obx(
+                    () => PatientProfileCard(
+                        patient:
+                            patientPageController.selectedPatient.value != null
+                                ? patientPageController.data.value[
+                                    patientPageController.selectedPatient.value]
+                                : null),
+                  ),
+                ),
+              ],
+            );
     });
   }
 }
