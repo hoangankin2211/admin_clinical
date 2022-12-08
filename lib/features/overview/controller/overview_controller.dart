@@ -1,7 +1,12 @@
+import 'dart:math';
+
+import 'package:admin_clinical/features/clinical_room/screens/clinical_room_screen.dart';
 import 'package:admin_clinical/features/medicine/screens/medicine_screen.dart';
 import 'package:admin_clinical/services/data_service/data_service.dart';
+import 'package:admin_clinical/services/data_service/health_record_service.dart';
 import 'package:admin_clinical/services/data_service/invoice_service.dart';
 import 'package:admin_clinical/services/data_service/medicine_service.dart';
+import 'package:admin_clinical/services/data_service/patient_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -120,13 +125,45 @@ class OverviewController extends GetxController {
     },
   ];
 
+  List<Map<String, dynamic>> listDataSurvey = [
+    {
+      "title": "Total Doctor",
+      "icon": Icons.person,
+      "color": Colors.blue,
+      "data": 0.0,
+    },
+    {
+      "title": "New Patient",
+      "icon": Icons.people,
+      "color": Colors.orange,
+      "data": 0,
+    },
+    {
+      "title": "Clinical Room",
+      "icon": Icons.medical_services_outlined,
+      "color": Colors.yellow,
+      "data": 5,
+    },
+    {
+      "title": "Turnover",
+      "icon": Icons.attach_money_outlined,
+      "color": const Color.fromARGB(255, 69, 239, 174),
+      "data": 0,
+    },
+    {
+      "title": "Pending Invoice",
+      "icon": Icons.money_off_csred_outlined,
+      "color": Colors.red[300],
+      "data": 0,
+    },
+  ];
   @override
   void onInit() {
     super.onInit();
     listDoctor = DataService.instance.listDoctor;
-    // listDoctor.sort((a, b) => a.)
     listInvoice = InvoiceService.instance.listInvoice;
     listMedicine = MedicineService.instance.listMedicine;
+
     sum.value = [
       for (var item in MedicineService.instance.listMedicine) item.amount
     ].reduce((previousValue, element) => previousValue + element);
@@ -145,6 +182,37 @@ class OverviewController extends GetxController {
                 .toDouble(),
             color: listColor[i % 7]),
     ];
+
+    for (var element in listDataSurvey) {
+      if (element['title'] == "Total Doctor") {
+        element['data'] = DataService.instance.listDoctor.length;
+      } else if (element['title'] == "New Patient") {
+        HealthRecordService.listHealthRecord.forEach((key, value) {
+          if (value.dateCreate.day == DateTime.now().day &&
+              value.dateCreate.month == DateTime.now().month &&
+              value.dateCreate.year == DateTime.now().year) {
+            element['data']++;
+          }
+        });
+      } else if (element['title'] == "Clinical Room") {
+      } else if (element['title'] == "Turnover") {
+        for (var invoice in InvoiceService.instance.listInvoice) {
+          if (invoice.createTime.day == DateTime.now().day &&
+              invoice.createTime.month == DateTime.now().month &&
+              invoice.createTime.year == DateTime.now().year) {
+            element['data'] += invoice.amount;
+          }
+        }
+      } else if (element['title'] == "Pending Invoice") {
+        element['data'] = listInvoice.length;
+
+        for (var invoice in listInvoice) {
+          if (invoice.status == 0) {
+            element['data']--;
+          }
+        }
+      }
+    }
   }
 
   List<Data> getDataPieChartMedicine() => [
@@ -159,6 +227,4 @@ class OverviewController extends GetxController {
                   .toDouble(),
               color: listColor[i % 7]),
       ];
-
-  ///chart
 }

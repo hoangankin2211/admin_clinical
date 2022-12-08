@@ -99,8 +99,6 @@ class Utils {
           title1: successTitle,
         ),
       );
-      Get.back(result: true);
-      return true;
     } else {
       await Get.dialog(
         ErrorDialog(
@@ -108,8 +106,8 @@ class Utils {
           title1: errorTitle,
         ),
       );
-      Get.back(result: false);
-      return false;
     }
+    Get.back(result: response);
+    return response;
   }
 }

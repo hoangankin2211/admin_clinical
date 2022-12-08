@@ -75,7 +75,7 @@ class HealthRecordService {
   }
 
   static Future<Map<String, dynamic>?> editHealthRecord(
-      HealthRecord healthRecord, BuildContext context) async {
+      Map<String, dynamic> healthRecord, BuildContext context) async {
     Map<String, dynamic>? result;
 
     try {
@@ -84,7 +84,7 @@ class HealthRecordService {
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: healthRecord.toJson(),
+        body: jsonEncode(healthRecord),
       );
 
       httpErrorHandle(

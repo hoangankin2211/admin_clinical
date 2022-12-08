@@ -77,39 +77,6 @@ List<Data> data = [
   ),
 ];
 
-List<Map<String, dynamic>> listFakeSurvey = [
-  {
-    "title": "Total Stuff",
-    "icon": Icons.person,
-    "color": Colors.blue,
-    "data": 200,
-  },
-  {
-    "title": "Number of bed",
-    "icon": Icons.bed,
-    "color": const Color.fromARGB(255, 69, 239, 174),
-    "data": 836,
-  },
-  {
-    "title": "New Patient",
-    "icon": Icons.people,
-    "color": Colors.orange,
-    "data": 653,
-  },
-  {
-    "title": "Daily surgery",
-    "icon": Icons.support_agent,
-    "color": Colors.yellow,
-    "data": 120,
-  },
-  {
-    "title": "Daily Realease",
-    "icon": Icons.cloud_upload,
-    "color": Colors.green,
-    "data": 120,
-  },
-];
-
 // ignore: must_be_immutable
 class OverviewScreen extends StatelessWidget {
   OverviewScreen({super.key});
@@ -161,7 +128,7 @@ class OverviewScreen extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      ...listFakeSurvey.map(
+                      ...overviewController.listDataSurvey.map(
                         (e) => Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,

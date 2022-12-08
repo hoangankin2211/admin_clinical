@@ -144,14 +144,62 @@ class MedicalFormController extends GetxController {
     );
   }
 
-  void onPressedUpdateButton(
-      HealthRecord newHealthRecord, BuildContext context) async {
+  void onPressedUpdateButton(BuildContext context) async {
     final isValidated = formKey.currentState!.validate();
 
     if (isValidated) {
+      List<Map<String, dynamic>> serviceFinal = [];
+      List<Map<String, dynamic>> medicineFinal = [];
+
+      await Future(
+        () {
+          for (var element in listServiceIndicatorFINAL) {
+            serviceFinal.add({element: services[element]});
+          }
+          for (var element in listMedicineIndicatorFINAL) {
+            medicineFinal.add({
+              element:
+                  medicines.firstWhere((medicine) => medicine.id == element)
+            });
+          }
+        },
+      );
+
+      Map<String, dynamic> newHealthRecord = {
+        'id': currentHealthRecord.value!.id,
+        'dateCreate': currentHealthRecord.value!.dateCreate.toIso8601String(),
+        'departmentId': 'departmentId',
+        'doctorId': 'doctorId',
+        'totalMoney': totalMoney.value,
+        'allergy':
+            (measureField[5]['textController'] as TextEditingController).text,
+        'bloodPressure': double.parse(
+            (measureField[4]['textController'] as TextEditingController).text),
+        'clinicalExamination':
+            (examField[0]['textController'] as TextEditingController).text,
+        'conclusionAndTreatment':
+            (examField[3]['textController'] as TextEditingController).text,
+        'diagnostic':
+            (examField[2]['textController'] as TextEditingController).text,
+        'heartBeat': double.parse(
+            (measureField[2]['textController'] as TextEditingController).text),
+        'height': double.parse(
+            (measureField[1]['textController'] as TextEditingController).text),
+        'note':
+            (measureField[5]['textController'] as TextEditingController).text,
+        'symptom':
+            (examField[1]['textController'] as TextEditingController).text,
+        'temperature': double.parse(
+            (measureField[3]['textController'] as TextEditingController).text),
+        'weight': double.parse(
+            (measureField[0]['textController'] as TextEditingController).text),
+        'medicines': medicineFinal,
+        'services': serviceFinal,
+      };
       formKey.currentState!.save();
       isLoading.value = true;
-      final response = await editHealthRecordData(newHealthRecord, context);
+      final response =
+          await editHealthRecordData(newHealthRecord, Get.context ?? context);
       isLoading.value = false;
       Utils.notifyHandle(
         response: response,
@@ -187,22 +235,15 @@ class MedicalFormController extends GetxController {
 
       await Future(
         () {
-          listMedicineIndicator.forEach((key, value) {
-            Map<String, dynamic> temp = {};
-            temp['medicine'] = value.id;
-            temp['provider'] = 'USA';
-            temp['quantity'] = 1;
-            temp['amount'] = amountMedicine.value;
-            medicineFinal.add(temp);
-          });
-          listMedicineIndicator.forEach((key, value) {
-            Map<String, dynamic> temp = {};
-            temp['service'] = value.id;
-            temp['provider'] = 'Nero';
-            temp['quantity'] = 1;
-            temp['amount'] = serviceAmount.value;
-            serviceFinal.add(temp);
-          });
+          for (var element in listServiceIndicatorFINAL) {
+            serviceFinal.add({element: services[element]});
+          }
+          for (var element in listMedicineIndicatorFINAL) {
+            medicineFinal.add({
+              element:
+                  medicines.firstWhere((medicine) => medicine.id == element)
+            });
+          }
         },
       );
 
@@ -253,7 +294,7 @@ class MedicalFormController extends GetxController {
   }
 
   Future<bool> editHealthRecordData(
-      HealthRecord healthRecord, BuildContext context) async {
+      Map<String, dynamic> healthRecord, BuildContext context) async {
     try {
       isLoading.value = true;
       final response =
@@ -263,8 +304,8 @@ class MedicalFormController extends GetxController {
         if (response['isSuccess'] != null &&
             response['isSuccess'] == true &&
             response['id'] != null) {
-          HealthRecordService.listHealthRecord
-              .update(response['id'], (value) => value = healthRecord);
+          HealthRecordService.listHealthRecord.update(response['id'],
+              (value) => value = HealthRecord.fromJson(healthRecord));
           return true;
         }
       }
@@ -327,7 +368,7 @@ class MedicalFormController extends GetxController {
   }
 
   //////////////////////////////////////////////////////////////////////\
-  Map<String, Service> listServiceIndicatorFINAL = {};
+  List<String> listServiceIndicatorFINAL = [];
   late final RxMap<String, Service> listServiceIndicator =
       RxMap<String, Service>({});
 
@@ -352,7 +393,7 @@ class MedicalFormController extends GetxController {
     update(['resultService', id]);
   }
 
-  Map<String, Medicine> listMedicineIndicatorFINAL = {};
+  List<String> listMedicineIndicatorFINAL = [];
   late final RxMap<String, Medicine> listMedicineIndicator =
       RxMap<String, Medicine>({});
 

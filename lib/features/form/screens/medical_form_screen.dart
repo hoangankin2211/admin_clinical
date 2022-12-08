@@ -22,13 +22,38 @@ class MedicalFormScreen extends StatelessWidget {
       'title': 'Service Indication',
       'icon': Icons.note_add_outlined,
       'dialog': ServiceIndicationDialog(patient: patient),
+      'cacheData': medicalFormController.listServiceIndicator,
+      'finalData': medicalFormController.listServiceIndicatorFINAL
     },
     {
       'title': 'Medicine Indication',
       'icon': Icons.note_add_outlined,
       'dialog': MedicineIndicationDialog(patient: patient),
+      'cacheData': medicalFormController.listMedicineIndicator,
+      'finalData': medicalFormController.listMedicineIndicatorFINAL
     },
   ];
+
+  Future _openDialog(Widget widget, Map<String, dynamic> cacheData,
+      List<String> finalData) async {
+    final response = await Get.dialog(widget);
+
+    if (response == null || response == false) {
+      cacheData.clear();
+      for (var element in finalData) {
+        if (medicalFormController.services[element] != null) {
+          cacheData.putIfAbsent(
+            element,
+            () => medicalFormController.services[element]!,
+          );
+        }
+      }
+    } else {
+      print('here');
+      finalData.clear();
+      finalData.addAll(cacheData.keys);
+    }
+  }
 
   late final List<Widget> listServiceChoice = listIconAndLabel
       .map(
@@ -38,39 +63,18 @@ class MedicalFormScreen extends StatelessWidget {
           ),
           onPressed: () async {
             if (medicalFormController.isCreatedForm.value) {
-              final response = await Get.dialog(element['dialog']);
-              if (response == null || response == false) {
-                if (element['title'] == 'Service Indication') {
-                  medicalFormController.listServiceIndicator.value = {};
-                } else if (element['title'] == 'Medicine Indication') {
-                  medicalFormController.listMedicineIndicator.value = {};
-                }
-              } else {
-                print('here');
-                if (element['title'] == 'Service Indication') {
-                  medicalFormController.listServiceIndicatorFINAL =
-                      medicalFormController.listServiceIndicator;
-                } else if (element['title'] == 'Medicine Indication') {
-                  medicalFormController.listMedicineIndicatorFINAL =
-                      medicalFormController.listMedicineIndicator;
-                }
-              }
+              await _openDialog(element['dialog'], element['cacheData'],
+                  element['finalData']);
             } else {
               Utils.notifyHandle(
                 response: false,
                 successTitle: '',
                 successQuestion: '',
                 errorTitle:
-                    'Cant not add service or medicine to health record until you create a record',
-                errorQuestion: 'Error',
+                    'Something happened !!! Please check your internet connection or press create before open this feature',
+                errorQuestion: 'ERROR',
               );
             }
-            // await ServiceDataService.instance.addNewService({
-            //   'name': 'name',
-            //   'price': 10.0,
-            //   'departmentId': 'departmentId',
-            //   'description': 'description',
-            // });
           },
           icon: Icon(element['icon']),
           label: Text(
@@ -124,9 +128,12 @@ class MedicalFormScreen extends StatelessWidget {
                                           'Do you want to export invoice ?'),
                                 );
 
-                                if (result) {
-                                } else {
-                                  backButton();
+                                // ignore: curly_braces_in_flow_control_structures
+                                if (result != null) {
+                                  if (result as bool) {
+                                  } else {
+                                    backButton();
+                                  }
                                 }
                               },
                               icon: const Icon(
@@ -167,11 +174,7 @@ class MedicalFormScreen extends StatelessWidget {
                                   onPressed: () =>
                                       medicalFormController.isCreatedForm.value
                                           ? medicalFormController
-                                              .onPressedUpdateButton(
-                                                  medicalFormController
-                                                      .currentHealthRecord
-                                                      .value!,
-                                                  context)
+                                              .onPressedUpdateButton(context)
                                           : medicalFormController
                                               .onPressedCreateButton(context),
                                 ),
@@ -187,34 +190,36 @@ class MedicalFormScreen extends StatelessWidget {
                                 )),
                             const SizedBox(width: 10.0),
                             SizedBox(
-                                height: 40,
-                                child: CustomButton(
-                                    color: Colors.red,
-                                    title: "Delete",
-                                    onPressed: () async {
-                                      bool result = true;
-                                      if (medicalFormController
-                                              .currentHealthRecord.value ==
-                                          null) {
-                                        result = false;
-                                      } else {
-                                        result = await medicalFormController
-                                            .deleteHealthRecordData(
-                                          medicalFormController
-                                              .currentHealthRecord.value!.id!,
-                                          context,
-                                        );
-                                      }
-                                      Utils.notifyHandle(
-                                        response: result,
-                                        successTitle:
-                                            'Delete Health Record Successfully',
-                                        successQuestion: 'Successful',
-                                        errorTitle:
-                                            'Something happened !!! Can not delete current record or you haven\'t create the form yet',
-                                        errorQuestion: 'Error',
-                                      );
-                                    })),
+                              height: 40,
+                              child: CustomButton(
+                                color: Colors.red,
+                                title: "Delete",
+                                onPressed: () async {
+                                  bool result = true;
+                                  if (medicalFormController
+                                          .currentHealthRecord.value ==
+                                      null) {
+                                    result = false;
+                                  } else {
+                                    result = await medicalFormController
+                                        .deleteHealthRecordData(
+                                      medicalFormController
+                                          .currentHealthRecord.value!.id!,
+                                      context,
+                                    );
+                                  }
+                                  Utils.notifyHandle(
+                                    response: result,
+                                    successTitle:
+                                        'Delete Health Record Successfully',
+                                    successQuestion: 'Successful',
+                                    errorTitle:
+                                        'Something happened !!! Can not delete current record or you haven\'t create the form yet',
+                                    errorQuestion: 'Error',
+                                  );
+                                },
+                              ),
+                            ),
                             const SizedBox(width: 50.0),
                           ],
                         ),
