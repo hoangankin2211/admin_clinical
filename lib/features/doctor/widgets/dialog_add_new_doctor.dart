@@ -419,18 +419,21 @@ class _DialogAddNewDoctorState extends State<DialogAddNewDoctor> {
                         ],
                       ),
                       const Spacer(),
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: SizedBox(
-                          width: double.infinity,
-                          height: 50.0,
-                          child: CustomButton(
-                            title: "Create Doctor",
-                            onPressed: () =>
-                                controller.insertDoctor(context, _image),
+                      Obx(
+                        () => Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: SizedBox(
+                            width: double.infinity,
+                            height: 50.0,
+                            child: CustomButton(
+                              check: controller.isLoadingInsert.value,
+                              title: "Create Doctor",
+                              onPressed: () =>
+                                  controller.insertDoctor(context, _image),
+                            ),
                           ),
                         ),
-                      ),
+                      )
                     ],
                   ),
                 ),

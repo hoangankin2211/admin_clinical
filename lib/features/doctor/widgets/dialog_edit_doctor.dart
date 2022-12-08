@@ -7,9 +7,9 @@ import 'package:intl/intl.dart';
 
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_decoration.dart';
-import '../../../constants/global_widgets/custom_button.dart';
 import '../../../constants/utils.dart';
 import '../../../services/data_service/data_service.dart';
+import '../../auth/widgets/custom_button.dart';
 import '../../patient/widgets/custom_text_form_field.dart';
 import '../controller/doctor_main_controller.dart';
 
@@ -105,8 +105,8 @@ class _DialogEditDoctorState extends State<DialogEditDoctor> {
                 width: 150,
                 height: 30.0,
                 child: CustomButton(
-                  text: "Choose Avt",
-                  onTap: () => selectedImage(),
+                  title: "Choose Avt",
+                  onPressed: () => selectedImage(),
                 ),
               ),
             ],
@@ -379,13 +379,17 @@ class _DialogEditDoctorState extends State<DialogEditDoctor> {
                         // mainAxisAlignment: MainAxisAlignment.end  ,
                         children: [
                           const SizedBox(height: 30.0),
-                          SizedBox(
-                              height: 50.0,
-                              child: CustomButton(
-                                onTap: () =>
-                                    controller.editDoctor(context, _image),
-                                text: "Update Doctor",
-                              )),
+                          Obx(
+                            () => SizedBox(
+                                height: 50.0,
+                                width: double.infinity,
+                                child: CustomButton(
+                                  check: controller.isLoadingEdit.value,
+                                  onPressed: () =>
+                                      controller.editDoctor(context, _image),
+                                  title: "Update Doctor",
+                                )),
+                          )
                         ],
                       ),
                     ),

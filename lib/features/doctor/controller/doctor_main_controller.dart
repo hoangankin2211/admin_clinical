@@ -16,13 +16,15 @@ class DoctorMainController extends GetxController {
   RxList<Department> listDepartMentForSearch = <Department>[].obs;
   RxList<Doctor1> listDoctor = <Doctor1>[].obs;
   RxList<Doctor1> listSearchDoctor = <Doctor1>[].obs;
+  RxBool isLoadingInsert = false.obs;
+  RxBool isLoadingEdit = false.obs;
 
   @override
   void onInit() {
     super.onInit();
-    listDepartMent.value = DataService.instance.listDepartMent.value;
-    listDoctor.value = DataService.instance.listDoctor.value;
-    listDepartMentForSearch.value = DataService.instance.listDepartMent.value;
+    listDepartMent.value = DataService.instance.listDepartMent;
+    listDoctor.value = DataService.instance.listDoctor;
+    listDepartMentForSearch.value = DataService.instance.listDepartMent;
     listDepartMentForSearch.value.add(Department(id: '00', name: 'All'));
     update(['listDoctor']);
   }
@@ -69,16 +71,16 @@ class DoctorMainController extends GetxController {
   }
 
   deleteDoctor(BuildContext context, String id) async {
-    DataService.instance.deleteDoctor(context, (value) {
-      listDoctor.value = value;
-      showDialog(
-        context: context,
-        builder: (context) => const SuccessDialog(
-            question: "Delete new Doctor", title1: "Sucess"),
-      );
+    bool check = await DataService.instance.deleteDoctor(context, id: id);
+    if (check) {
       selectDoctor.value = 0;
-      update(['listDoctor']);
-    }, id: id);
+      DataService.instance.listDoctor
+          .removeWhere((element) => element.iDBS == id);
+      Get.back();
+      Get.dialog(
+        const SuccessDialog(question: "Delete Doctor", title1: "Success"),
+      );
+    }
   }
 
   void initAllDataDialogEdit() {
@@ -111,23 +113,15 @@ class DoctorMainController extends GetxController {
             question: "Edit new Doctor", title1: "Field is null"),
       );
     } else {
-      String? imageUrl = "";
+      isLoadingEdit = true.obs;
+      String? imageUrl = listDoctor.value[selectDoctor.value].avt!;
       if (image != null) {
         imageUrl = await convertUti8ListToUrl(
             image, listDepartMent.value[selectDepartMent.value].id!);
       }
       // ignore: use_build_context_synchronously
-      DataService.instance.editDoctor(
+      Doctor1? temp = await DataService.instance.editDoctor(
         context,
-        (value) {
-          listDoctor.value = value;
-          showDialog(
-            context: context,
-            builder: (context) =>
-                const SuccessDialog(question: "Edit Doctor", title1: "Success"),
-          );
-          update(['listDoctor']);
-        },
         id: listDoctor.value[selectDoctor.value].iDBS!,
         name: nameController.text,
         address: addressController.text,
@@ -139,6 +133,13 @@ class DoctorMainController extends GetxController {
         dateBorn: dateBorn.value,
         experience: experince.value,
       );
+      if (temp != null) {
+        DataService.instance.listDoctor[selectDoctor.value] = temp;
+        isLoadingEdit.value = false;
+        Get.back();
+        Get.dialog(
+            const SuccessDialog(question: "Edit Doctor", title1: "Success"));
+      }
     }
   }
 
@@ -154,20 +155,12 @@ class DoctorMainController extends GetxController {
             const ErrorDialog(question: "Insert new Doctor", title1: "Failed"),
       );
     } else {
+      isLoadingInsert.value = true;
       String? imageUrl =
           await convertUti8ListToUrl(image, emailController.text);
       // ignore: use_build_context_synchronously
-      DataService.instance.insertNewDoctor(
+      Doctor1? temp = await DataService.instance.insertNewDoctor(
         context,
-        (value) {
-          listDoctor.value = value;
-          showDialog(
-            context: context,
-            builder: (context) => const SuccessDialog(
-                question: "Insert new Doctor", title1: "Success"),
-          );
-          update(['listDoctor']);
-        },
         name: nameController.text,
         address: addressController.text,
         phoneNumber: phoneController.text,
@@ -180,6 +173,14 @@ class DoctorMainController extends GetxController {
         email: emailController.text,
         password: passController.text,
       );
+      if (temp != null) {
+        DataService.instance.listDoctor.add(temp);
+        isLoadingInsert.value = false;
+        Get.back();
+        Get.dialog(
+          const SuccessDialog(question: "Insert new Doctor", title1: "Success"),
+        );
+      }
     }
   }
 

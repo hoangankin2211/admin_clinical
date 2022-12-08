@@ -157,7 +157,7 @@ class MedicineController extends GetxController {
           .removeWhere((element) => element.id == id);
       Get.back();
       Get.dialog(
-        const SuccessDialog(question: "Insert new Medicine", title1: "Success"),
+        const SuccessDialog(question: "Delete Medicine", title1: "Success"),
       );
     }
   }

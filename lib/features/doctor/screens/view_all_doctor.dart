@@ -349,46 +349,35 @@ class ViewAllDoctor extends StatelessWidget {
       Expanded(
         child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
-            child: GetBuilder<DoctorMainController>(
-                id: 'listDoctor',
-                autoRemove: false,
-                assignId: true,
-                builder: (_controller) =>
-                    (_controller.listSearchDoctor.value.isEmpty)
-                        ? Column(children: [
-                            for (int i = 0;
-                                i < _controller.listDoctor.value.length;
-                                i++)
-                              InkWell(
-                                onTap: () => controller.selectDoctor.value = i,
-                                child: DoctorRowIte(
-                                  doctor: _controller.listDoctor.value[i],
-                                  departMent: controller
-                                      .getDepartMent(
-                                          _controller
-                                              .listDoctor.value[i].departMent!,
-                                          _controller.listDepartMent.value)
-                                      .name!,
-                                ),
-                              )
-                          ])
-                        : Column(children: [
-                            for (int i = 0;
-                                i < _controller.listSearchDoctor.value.length;
-                                i++)
-                              InkWell(
-                                onTap: () => controller.selectDoctor.value = i,
-                                child: DoctorRowIte(
-                                  doctor: _controller.listSearchDoctor.value[i],
-                                  departMent: controller
-                                      .getDepartMent(
-                                          _controller.listSearchDoctor.value[i]
-                                              .departMent!,
-                                          _controller.listDepartMent.value)
-                                      .name!,
-                                ),
-                              )
-                          ]))),
+            child: Obx(() => (controller.listSearchDoctor.isEmpty)
+                ? Column(children: [
+                    for (int i = 0; i < controller.listDoctor.length; i++)
+                      InkWell(
+                        onTap: () => controller.selectDoctor.value = i,
+                        child: DoctorRowIte(
+                          doctor: controller.listDoctor[i],
+                          departMent: controller
+                              .getDepartMent(
+                                  controller.listDoctor[i].departMent!,
+                                  controller.listDepartMent)
+                              .name!,
+                        ),
+                      )
+                  ])
+                : Column(children: [
+                    for (int i = 0; i < controller.listSearchDoctor.length; i++)
+                      InkWell(
+                        onTap: () => controller.selectDoctor.value = i,
+                        child: DoctorRowIte(
+                          doctor: controller.listSearchDoctor[i],
+                          departMent: controller
+                              .getDepartMent(
+                                  controller.listSearchDoctor[i].departMent!,
+                                  controller.listDepartMent)
+                              .name!,
+                        ),
+                      )
+                  ]))),
       )
     ]);
   }
