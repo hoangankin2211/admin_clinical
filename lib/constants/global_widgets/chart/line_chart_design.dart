@@ -5,7 +5,10 @@ import '../../app_colors.dart';
 
 class LineChartDesign extends StatefulWidget {
   final List<FlSpot> listData;
-  const LineChartDesign({super.key, required this.listData});
+  final Color? color;
+  final Color? color1;
+  const LineChartDesign(
+      {super.key, required this.listData, this.color, this.color1});
 
   @override
   State<LineChartDesign> createState() => _LineChartDesignState();

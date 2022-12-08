@@ -4,6 +4,7 @@ import 'package:admin_clinical/features/doctor/screens/doctor_main_screen.dart';
 import 'package:admin_clinical/features/invoice/screens/invoice_view_screen.dart';
 import 'package:admin_clinical/features/medicine/screens/medicine_screen.dart';
 import 'package:admin_clinical/features/overview/screens/overview_screen.dart';
+import 'package:admin_clinical/features/patient/screens/patient_detail_screen.dart';
 import 'package:admin_clinical/features/patient/screens/patient_main_screen.dart';
 import 'package:admin_clinical/features/settings/screen/setting_main_screen.dart';
 import 'package:admin_clinical/services/data_service/data_service.dart';
@@ -71,6 +72,7 @@ class DashboardController extends GetxController {
           .toList();
 
   late final List<Widget> listPage = [
+    // PatientDetailScreen(),
     OverviewScreen(),
     PatientMainScreen(),
     DoctorMainScreen(),

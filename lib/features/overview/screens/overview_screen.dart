@@ -692,7 +692,9 @@ class OverviewScreen extends StatelessWidget {
                           fontSize: 18.0),
                     ),
                     InkWell(
-                      onTap: () {},
+                      onTap: () async {
+                        await _showDatePicker(context: Get.context!);
+                      },
                       child: Row(
                         children: const [
                           Text("Week ",
