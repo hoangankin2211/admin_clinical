@@ -1,6 +1,7 @@
 import 'package:admin_clinical/constants/global_widgets/custom_dialog_error/error_dialog.dart';
 import 'package:admin_clinical/constants/global_widgets/custom_dialog_error/success_dialog.dart';
 import 'package:admin_clinical/constants/utils.dart';
+import 'package:admin_clinical/features/overview/controller/overview_controller.dart';
 import 'package:admin_clinical/models/invoice.dart';
 import 'package:admin_clinical/models/medicine.dart';
 import 'package:admin_clinical/services/data_service/invoice_service.dart';
@@ -10,6 +11,7 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 class MedicineController extends GetxController {
+  final controller = Get.find<OverviewController>();
   RxList<Medicine> listMedicine = <Medicine>[].obs;
   RxList<String> listType = <String>[].obs;
   List<String> listUnit = [
@@ -99,6 +101,7 @@ class MedicineController extends GetxController {
           InvoiceService.instance.listInvoice.add(temp1);
         }
         listMedicine.value[index] = temp;
+        controller.fetchDataInvoiceChart();
         Get.back();
         Get.dialog(
           const SuccessDialog(

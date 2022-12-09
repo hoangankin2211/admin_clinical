@@ -18,6 +18,7 @@ import '../../../models/medicine.dart';
 import '../../../models/user.dart';
 import '../../../services/auth_service/auth_service.dart';
 import '../screens/overview_screen.dart';
+import 'date_picker_controller.dart';
 
 class OverviewController extends GetxController {
   final _auth = AuthService.instance;
@@ -26,6 +27,51 @@ class OverviewController extends GetxController {
   RxList<Data> dataPiechartMedicine = <Data>[].obs;
   RxList<Invoice> listInvoice = <Invoice>[].obs;
   User getUser() => _auth.user;
+  DateRangePicker dateControllerTurnover = DateRangePicker(
+      selectDateTemp1: DateTime.now(),
+      selectDateTemp2: DateTime.now(),
+      dateController: DateRangePickerController(),
+      startDate: DateTime.now().obs,
+      finishDate: DateTime.now().obs,
+      allDateBetWeen: <DateTime>[].obs);
+  DateRangePicker dateControllerPatient = DateRangePicker(
+      selectDateTemp1: DateTime.now(),
+      selectDateTemp2: DateTime.now(),
+      dateController: DateRangePickerController(),
+      startDate: DateTime.now().obs,
+      finishDate: DateTime.now().obs,
+      allDateBetWeen: <DateTime>[].obs);
+
+  //chart
+
+  RxList<Map<String, dynamic>> data_invoice_chart =
+      <Map<String, dynamic>>[].obs;
+  RxInt maxOfListInvoice = 0.obs;
+
+  fetchDataInvoiceChart() {
+    data_invoice_chart.clear();
+    print(DateTime.now().weekday);
+    data_invoice_chart.value = [
+      for (var item in dateControllerTurnover.allDateBetWeen)
+        {
+          'id': item.weekday,
+          'data': 0,
+        }
+    ];
+    data_invoice_chart.sort((a, b) => a['id'].compareTo(b['id']));
+    for (var data in InvoiceService.instance.listInvoice) {
+      if (dateControllerTurnover.checkDateInList(
+          data.createTime, dateControllerTurnover.allDateBetWeen)) {
+        data_invoice_chart[data.createTime.weekday - 1]['data'] += data.amount;
+      }
+    }
+    data_invoice_chart[6]['id'] = 0;
+    data_invoice_chart.sort((a, b) => a['id'].compareTo(b['id']));
+
+    // print(data_invoice_chart);
+    maxOfListInvoice.value = [for (var item in data_invoice_chart) item['data']]
+        .reduce((v, e) => v > e ? v : e);
+  }
 
   List<Color> listColor = [
     Colors.green,
@@ -213,6 +259,9 @@ class OverviewController extends GetxController {
         }
       }
     }
+    dateControllerTurnover.getStartDateAndFinishDate();
+    print(dateControllerTurnover.allDateBetWeen);
+    fetchDataInvoiceChart();
   }
 
   List<Data> getDataPieChartMedicine() => [

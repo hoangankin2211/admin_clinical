@@ -7,8 +7,15 @@ class LineChartDesign extends StatefulWidget {
   final List<FlSpot> listData;
   final Color? color;
   final Color? color1;
+  final String? maxTitle;
+  final String? middleTitle;
   const LineChartDesign(
-      {super.key, required this.listData, this.color, this.color1});
+      {super.key,
+      required this.listData,
+      this.color,
+      this.color1,
+      this.maxTitle,
+      this.middleTitle});
 
   @override
   State<LineChartDesign> createState() => _LineChartDesignState();
@@ -79,14 +86,14 @@ class _LineChartDesignState extends State<LineChartDesign> {
     );
     String text;
     switch (value.toInt()) {
-      case 1:
+      case 0:
         text = '0';
         break;
       case 3:
-        text = '5';
+        text = widget.middleTitle ?? '5';
         break;
       case 5:
-        text = '10';
+        text = widget.maxTitle ?? '10';
         break;
       default:
         return Container();

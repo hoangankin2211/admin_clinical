@@ -677,19 +677,33 @@ class OverviewScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 10.0),
-                const SizedBox(
-                  width: double.infinity,
-                  height: 210,
-                  child: LineChartDesign(listData: [
-                    FlSpot(0, 3.44),
-                    FlSpot(1, 2.44),
-                    FlSpot(2, 4.44),
-                    FlSpot(3, 1.44),
-                    FlSpot(4, 6.44),
-                    FlSpot(5, 4.44),
-                    FlSpot(6, 2.44),
-                  ]),
-                )
+                Obx(
+                  () => SizedBox(
+                    width: double.infinity,
+                    height: 210,
+                    child: LineChartDesign(
+                        maxTitle: overviewController.maxOfListInvoice.value
+                            .toString(),
+                        middleTitle:
+                            (overviewController.maxOfListInvoice.value / 2)
+                                .round()
+                                .toString(),
+                        listData: [
+                          ...overviewController.data_invoice_chart.map(
+                            (element) => FlSpot(
+                              element['id'],
+                              // ignore: unrelated_type_equality_checks
+                              overviewController.maxOfListInvoice != 0
+                                  ? (element['data'] /
+                                          overviewController
+                                              .maxOfListInvoice.value) *
+                                      5
+                                  : 0,
+                            ),
+                          ),
+                        ]),
+                  ),
+                ),
               ],
             ),
           ),
@@ -998,7 +1012,14 @@ class OverviewScreen extends StatelessWidget {
       useRootNavigator: false,
       barrierColor: Colors.black54,
       context: context,
-      builder: (context) => DialogPickRangeDate(),
+      builder: (context) => DialogPickRangeDate(
+        controller: overviewController.dateControllerTurnover,
+        callback: () {
+          overviewController.dateControllerTurnover.selectDateDoneClick();
+          overviewController.fetchDataInvoiceChart();
+          Get.back();
+        },
+      ),
     );
   }
 }
