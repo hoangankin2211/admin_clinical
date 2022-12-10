@@ -2,6 +2,7 @@ import 'package:admin_clinical/commons/widgets/custom_icon_button.dart';
 import 'package:admin_clinical/constants/app_decoration.dart';
 import 'package:admin_clinical/features/overview/widgets/custom_table.dart';
 import 'package:admin_clinical/features/patient/controller/patient_page_controller.dart';
+import 'package:admin_clinical/features/patient/screens/patient_detail_screen.dart';
 import 'package:admin_clinical/features/patient/screens/patient_screen.dart';
 import 'package:admin_clinical/features/patient/widgets/edit_patient_dialog.dart';
 import 'package:admin_clinical/models/patient.dart';
@@ -28,15 +29,15 @@ const Map<String, String> patientListField = {
 class ListPatientScreen extends StatelessWidget {
   ListPatientScreen({super.key, required this.examinationActionHandle});
   final Function(String) examinationActionHandle;
-  final patientPageController = Get.find<PatientPageController>();
+  final patientPageController = Get.put(PatientPageController());
 
-  void onSelectionAction(
+  void _onSelectionAction(
       String value, int index, BuildContext context, Patient patient) async {
     if (value == 'Examination') {
       examinationActionHandle(
           patientPageController.data.value.values.elementAt(index).id);
     } else if (value == 'Detail') {
-      Get.to(() => const PatientScreen());
+      Get.dialog(const PatientDetailScreen());
     } else if (value == 'Edit') {
       Get.dialog(
         EditPatientDialog(
@@ -201,7 +202,7 @@ class ListPatientScreen extends StatelessWidget {
                                     onClick: () => patientPageController
                                         .selectedPatient.value = tempPatient.id,
                                     onSelectedAction: (value) {
-                                      onSelectionAction(
+                                      _onSelectionAction(
                                           value, index, context, tempPatient);
                                     },
                                     removeEntries:

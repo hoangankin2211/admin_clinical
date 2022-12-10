@@ -10,25 +10,35 @@ import '../../../models/patient.dart';
 import 'medical_examination_tab.dart';
 import 'medicine_indication_dialog.dart';
 
-class MedicalFormScreen extends StatelessWidget {
-  MedicalFormScreen(
-      {super.key, required this.patient, required this.backButton});
+class MedicalFormScreen extends StatefulWidget {
+  const MedicalFormScreen({
+    super.key,
+    required this.patient,
+    required this.backButton,
+  });
+
   final Function() backButton;
   final Patient patient;
-  final medicalFormController = Get.find<MedicalFormController>();
+
+  @override
+  State<MedicalFormScreen> createState() => _MedicalFormScreenState();
+}
+
+class _MedicalFormScreenState extends State<MedicalFormScreen> {
+  final medicalFormController = Get.put(MedicalFormController());
 
   late final List<Map<String, dynamic>> listIconAndLabel = [
     {
       'title': 'Service Indication',
       'icon': Icons.note_add_outlined,
-      'dialog': ServiceIndicationDialog(patient: patient),
+      'dialog': ServiceIndicationDialog(patient: widget.patient),
       'cacheData': medicalFormController.listServiceIndicator,
       'finalData': medicalFormController.listServiceIndicatorFINAL
     },
     {
       'title': 'Medicine Indication',
       'icon': Icons.note_add_outlined,
-      'dialog': MedicineIndicationDialog(patient: patient),
+      'dialog': MedicineIndicationDialog(patient: widget.patient),
       'cacheData': medicalFormController.listMedicineIndicator,
       'finalData': medicalFormController.listMedicineIndicatorFINAL
     },
@@ -49,7 +59,6 @@ class MedicalFormScreen extends StatelessWidget {
         }
       }
     } else {
-      print('here');
       finalData.clear();
       finalData.addAll(cacheData.keys);
     }
@@ -90,6 +99,12 @@ class MedicalFormScreen extends StatelessWidget {
       .toList();
 
   @override
+  void dispose() {
+    medicalFormController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -105,7 +120,7 @@ class MedicalFormScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             IconButton(
-                              onPressed: backButton,
+                              onPressed: widget.backButton,
                               icon: const Icon(
                                 Icons.cancel_rounded,
                                 size: 40,
@@ -123,16 +138,16 @@ class MedicalFormScreen extends StatelessWidget {
                               onPressed: () async {
                                 final result = await Get.dialog(
                                   const CustomNotificationDialog(
-                                      title: 'Payment',
-                                      content:
-                                          'Do you want to export invoice ?'),
+                                    title: 'Payment',
+                                    content: 'Do you want to export invoice ?',
+                                  ),
                                 );
 
                                 // ignore: curly_braces_in_flow_control_structures
                                 if (result != null) {
                                   if (result as bool) {
                                   } else {
-                                    backButton();
+                                    widget.backButton();
                                   }
                                 }
                               },
@@ -153,7 +168,8 @@ class MedicalFormScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 10.0),
                         Expanded(
-                            child: MedicalExaminationTab(patient: patient)),
+                            child:
+                                MedicalExaminationTab(patient: widget.patient)),
                       ],
                     ),
                     Padding(

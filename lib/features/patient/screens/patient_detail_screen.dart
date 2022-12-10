@@ -5,62 +5,78 @@ import 'package:intl/intl.dart';
 
 import '../../../constants/app_decoration.dart';
 import '../../../constants/global_widgets/comment_card.dart';
-import '../../form/widgets/form_card.dart';
 
 class PatientDetailScreen extends StatelessWidget {
-  PatientDetailScreen({super.key});
+  const PatientDetailScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      return Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              InkWell(
-                onTap: () {},
-                child: const Text(
-                  'Patient List ',
-                  style: TextStyle(
-                    color: AppColors.primaryColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20.0,
-                  ),
-                ),
-              ),
-              const Icon(Icons.arrow_forward_ios_outlined, color: Colors.grey),
-              InkWell(
-                onTap: () {},
-                child: const Text(
-                  ' Nguyen Minh Hung ',
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20.0,
-                  ),
-                ),
-              )
-            ],
-          ),
-          const SizedBox(height: 10.0),
-          Expanded(
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: Column(
+      return Dialog(
+        backgroundColor: Colors.transparent,
+        child: Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10), color: Colors.white),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.9,
+              maxWidth: MediaQuery.of(context).size.width * 0.9,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(15),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      _profileFiled(),
-                      _listMedicalField(),
+                      InkWell(
+                        onTap: () {},
+                        child: const Text(
+                          'Patient List ',
+                          style: TextStyle(
+                            color: AppColors.primaryColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20.0,
+                          ),
+                        ),
+                      ),
+                      const Icon(Icons.arrow_forward_ios_outlined,
+                          color: Colors.grey),
+                      InkWell(
+                        onTap: () {},
+                        child: const Text(
+                          ' Nguyen Minh Hung ',
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20.0,
+                          ),
+                        ),
+                      )
                     ],
                   ),
-                ),
-                _reviewField(constraints, context),
-              ],
+                  const SizedBox(height: 10.0),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: Column(
+                            children: [
+                              _profileFiled(),
+                              _listMedicalField(),
+                            ],
+                          ),
+                        ),
+                        _reviewField(constraints, context),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-        ],
+        ),
       );
     });
   }

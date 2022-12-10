@@ -1,4 +1,5 @@
 import 'package:admin_clinical/constants/app_decoration.dart';
+import 'package:admin_clinical/constants/utils.dart';
 import 'package:admin_clinical/features/form/controller/medical_form_controller.dart';
 import 'package:admin_clinical/features/form/widgets/examination_information_form.dart';
 import 'package:admin_clinical/features/form/widgets/record_information_form.dart';
@@ -13,7 +14,7 @@ import '../../../services/auth_service/auth_service.dart';
 // ignore: must_be_immutable
 class MedicalExaminationTab extends StatelessWidget {
   MedicalExaminationTab({super.key, required this.patient});
-
+  static const String getBuilderId = 'MedicalExaminationTab';
   final Patient patient;
   final medicalFormController = Get.find<MedicalFormController>();
 
@@ -66,7 +67,11 @@ class MedicalExaminationTab extends StatelessWidget {
               const SizedBox(height: 5),
               Flexible(
                 flex: 3,
-                child: ExaminationInformationForm(),
+                child: ExaminationInformationForm(
+                  examField: Utils.examField,
+                  formKey: medicalFormController.formKey,
+                  measureField: Utils.measureField,
+                ),
               ),
             ],
           );

@@ -5,6 +5,7 @@ import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -110,4 +111,88 @@ class Utils {
     Get.back(result: response);
     return response;
   }
+
+  static final List<Map<String, dynamic>> examField = [
+    {
+      'title': 'Clinical Examination',
+      'maxLine': 4,
+      'icon': Icons.checklist_rounded,
+      // 'textController': TextEditingController(text: " "),
+    },
+    {
+      'title': 'Symptom',
+      'maxLine': 4,
+      'icon': Icons.playlist_add_check_circle_rounded,
+      // 'textController': TextEditingController(text: " "),
+    },
+    {
+      'title': 'Diagnostic',
+      'maxLine': 4,
+      'icon': Icons.file_copy_rounded,
+      // 'textController': TextEditingController(text: " "),
+    },
+    {
+      'title': 'Conclusion and Treatment',
+      'maxLine': 4,
+      'icon': Icons.confirmation_number_rounded,
+      // 'textController': TextEditingController(text: " "),
+    },
+  ];
+
+  static final List<Map<String, dynamic>> measureField = [
+    {
+      'title': 'Weight',
+      'maxLine': 1,
+      'icon': Icons.scale_outlined,
+      'inputFormatters': [
+        FilteringTextInputFormatter.allow(RegExp(r'[0-9]+[,.]{0,1}[0-9]*'))
+      ],
+      // 'textController': TextEditingController(text: " "),
+    },
+    {
+      'title': 'Height',
+      'maxLine': 1,
+      'icon': Icons.height_rounded,
+      'inputFormatter': [
+        FilteringTextInputFormatter.allow(RegExp(r'[0-9]+[,.]{0,1}[0-9]*'))
+      ],
+      'textController': TextEditingController(text: " "),
+    },
+    {
+      'title': 'Heartbeat',
+      'maxLine': 1,
+      'icon': Icons.monitor_heart_rounded,
+      'inputFormatters': [
+        FilteringTextInputFormatter.allow(RegExp(r'[0-9]+[,.]{0,1}[0-9]*'))
+      ],
+      // 'textController': TextEditingController(text: " "),
+    },
+    {
+      'title': 'Temperature',
+      'maxLine': 1,
+      'icon': Icons.ac_unit_rounded,
+      'inputFormatters': [
+        FilteringTextInputFormatter.allow(RegExp(r'[0-9]+[,.]{0,1}[0-9]*'))
+      ],
+      // 'textController': TextEditingController(text: " "),
+    },
+    {
+      'title': 'Blood Pressure',
+      'maxLine': 1,
+      'icon': Icons.bloodtype_rounded,
+      'inputFormatters': [
+        FilteringTextInputFormatter.allow(RegExp(r'[0-9]+[,.]{0,1}[0-9]*'))
+      ],
+      // 'textController': TextEditingController(text: " "),
+    },
+    {
+      'title': 'Allergy',
+      'maxLine': 2,
+      'inputFormatters': [
+        FilteringTextInputFormatter.allow(RegExp(r'[0-9]+[,.]{0,1}[0-9]*'))
+      ],
+      'icon': Icons.sick_rounded,
+      // 'textController': TextEditingController(text: " "),
+    },
+  ];
 }

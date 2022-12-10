@@ -27,9 +27,7 @@ class MakeInvoiceScreen extends StatelessWidget {
                   child: InvoiceWidget(),
                 ),
                 Flexible(
-                  child: FormCard(
-                    child: ServiceDetailWidget(),
-                  ),
+                  child: FormCard(child: ServiceDetailWidget()),
                 )
               ],
             ),

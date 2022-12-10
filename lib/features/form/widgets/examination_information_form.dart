@@ -1,20 +1,26 @@
+import 'package:admin_clinical/constants/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 
 import '../../../constants/app_decoration.dart';
-import '../controller/medical_form_controller.dart';
 
 // ignore: must_be_immutable
 class ExaminationInformationForm extends StatelessWidget {
-  ExaminationInformationForm({super.key});
+  const ExaminationInformationForm({
+    super.key,
+    required this.examField,
+    required this.formKey,
+    required this.measureField,
+  });
 
-  var medicalFormController = Get.find<MedicalFormController>();
+  final List<Map<String, dynamic>> examField;
+  final GlobalKey<FormState> formKey;
+  final List<Map<String, dynamic>> measureField;
 
   @override
   Widget build(BuildContext context) {
     return Form(
-      key: medicalFormController.formKey,
+      key: formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -26,23 +32,19 @@ class ExaminationInformationForm extends StatelessWidget {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    for (int i = 0;
-                        i < medicalFormController.measureField.length;
-                        i++) ...[
+                    for (int i = 0; i < measureField.length; i++) ...[
                       Flexible(
                         child: TextFormFieldInformationWidget(
                           isDense: true,
-                          inputFormatters: medicalFormController.measureField
-                              .elementAt(i)['inputFormatters'],
-                          suffixIcon: Icon(medicalFormController.measureField
-                              .elementAt(i)['icon'] as IconData),
-                          textEditingController: medicalFormController
-                              .measureField
-                              .elementAt(i)['textController'],
+                          inputFormatters:
+                              measureField.elementAt(i)['inputFormatters'],
+                          suffixIcon: Icon(
+                              measureField.elementAt(i)['icon'] as IconData),
+                          textEditingController:
+                              measureField.elementAt(i)['textController'],
                           numberOfLine: 4,
                           keyboardType: TextInputType.number,
-                          label: medicalFormController.measureField
-                              .elementAt(i)['title'] as String,
+                          label: measureField.elementAt(i)['title'] as String,
                           validator: (value) {
                             if (value!.isEmpty) {
                               return 'This field can not be empty';
@@ -72,17 +74,14 @@ class ExaminationInformationForm extends StatelessWidget {
             flex: 11,
             child: Column(
               children: [
-                for (int i = 0; i < medicalFormController.examField.length; i++)
+                for (int i = 0; i < Utils.examField.length; i++)
                   Expanded(
                     child: TextFormFieldInformationWidget(
-                      titleIcon:
-                          medicalFormController.examField.elementAt(i)['icon'],
-                      textEditingController: medicalFormController.examField
-                          .elementAt(i)['textController'],
-                      numberOfLine: medicalFormController.examField
-                          .elementAt(i)['maxLine'] as int,
-                      label: medicalFormController.examField
-                          .elementAt(i)['title'] as String,
+                      titleIcon: examField.elementAt(i)['icon'],
+                      textEditingController:
+                          examField.elementAt(i)['textController'],
+                      numberOfLine: examField.elementAt(i)['maxLine'] as int,
+                      label: examField.elementAt(i)['title'] as String,
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'This field can not be empty';

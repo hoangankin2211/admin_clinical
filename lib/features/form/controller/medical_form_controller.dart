@@ -14,96 +14,34 @@ class MedicalFormController extends GetxController {
   final formKey = GlobalKey<FormState>();
   var isLoading = false.obs;
   var isCreatedForm = false.obs;
+  Rx<HealthRecord?> currentHealthRecord = Rx(null);
+
+  final clinicalExamination = TextEditingController();
+  final symptom = TextEditingController();
+  final diagnostic = TextEditingController();
+  final conclusionAndTreatment = TextEditingController();
+  final weight = TextEditingController();
+  final heartBeat = TextEditingController();
+  final height = TextEditingController();
+  final temperature = TextEditingController();
+  final bloodPressure = TextEditingController();
+  final allergy = TextEditingController();
+  final note = TextEditingController();
+
+  @override
+  void onInit() {
+    currentHealthRecord.listen((record) {
+      if (record != null) {}
+    });
+    super.onInit();
+  }
 
   void updateGetBuilder(List<String> id) {
     update(id);
   }
 
-  Rx<HealthRecord?> currentHealthRecord = Rx(null);
 //////////////////////////////////////////////////////////////////////
-  final List<Map<String, dynamic>> examField = [
-    {
-      'title': 'Clinical Examination',
-      'maxLine': 4,
-      'icon': Icons.checklist_rounded,
-      'textController': TextEditingController(),
-    },
-    {
-      'title': 'Symptom',
-      'maxLine': 4,
-      'icon': Icons.playlist_add_check_circle_rounded,
-      'textController': TextEditingController(),
-    },
-    {
-      'title': 'Diagnostic',
-      'maxLine': 4,
-      'icon': Icons.file_copy_rounded,
-      'textController': TextEditingController(),
-    },
-    {
-      'title': 'Conclusion and Treatment',
-      'maxLine': 4,
-      'icon': Icons.confirmation_number_rounded,
-      'textController': TextEditingController(),
-    },
-  ];
 
-  final List<Map<String, dynamic>> measureField = [
-    {
-      'title': 'Weight',
-      'maxLine': 1,
-      'icon': Icons.scale_outlined,
-      'inputFormatters': [
-        FilteringTextInputFormatter.allow(RegExp(r'[0-9]+[,.]{0,1}[0-9]*'))
-      ],
-      'textController': TextEditingController(),
-    },
-    {
-      'title': 'Height',
-      'maxLine': 1,
-      'icon': Icons.height_rounded,
-      'inputFormatter': [
-        FilteringTextInputFormatter.allow(RegExp(r'[0-9]+[,.]{0,1}[0-9]*'))
-      ],
-      'textController': TextEditingController(),
-    },
-    {
-      'title': 'Heartbeat',
-      'maxLine': 1,
-      'icon': Icons.monitor_heart_rounded,
-      'inputFormatters': [
-        FilteringTextInputFormatter.allow(RegExp(r'[0-9]+[,.]{0,1}[0-9]*'))
-      ],
-      'textController': TextEditingController(),
-    },
-    {
-      'title': 'Temperature',
-      'maxLine': 1,
-      'icon': Icons.ac_unit_rounded,
-      'inputFormatters': [
-        FilteringTextInputFormatter.allow(RegExp(r'[0-9]+[,.]{0,1}[0-9]*'))
-      ],
-      'textController': TextEditingController(),
-    },
-    {
-      'title': 'Blood Pressure',
-      'maxLine': 1,
-      'icon': Icons.bloodtype_rounded,
-      'inputFormatters': [
-        FilteringTextInputFormatter.allow(RegExp(r'[0-9]+[,.]{0,1}[0-9]*'))
-      ],
-      'textController': TextEditingController(),
-    },
-    {
-      'title': 'Allergy',
-      'maxLine': 2,
-      'inputFormatters': [
-        FilteringTextInputFormatter.allow(RegExp(r'[0-9]+[,.]{0,1}[0-9]*'))
-      ],
-      'icon': Icons.sick_rounded,
-      'textController': TextEditingController(),
-    },
-  ];
   //////////////////////////////////////////////////////////////////////
   void onPressedCreateButton(BuildContext context) async {
     final isValidated = formKey.currentState!.validate();
@@ -171,28 +109,17 @@ class MedicalFormController extends GetxController {
         'departmentId': 'departmentId',
         'doctorId': 'doctorId',
         'totalMoney': totalMoney.value,
-        'allergy':
-            (measureField[5]['textController'] as TextEditingController).text,
-        'bloodPressure': double.parse(
-            (measureField[4]['textController'] as TextEditingController).text),
-        'clinicalExamination':
-            (examField[0]['textController'] as TextEditingController).text,
-        'conclusionAndTreatment':
-            (examField[3]['textController'] as TextEditingController).text,
-        'diagnostic':
-            (examField[2]['textController'] as TextEditingController).text,
-        'heartBeat': double.parse(
-            (measureField[2]['textController'] as TextEditingController).text),
-        'height': double.parse(
-            (measureField[1]['textController'] as TextEditingController).text),
-        'note':
-            (measureField[5]['textController'] as TextEditingController).text,
-        'symptom':
-            (examField[1]['textController'] as TextEditingController).text,
-        'temperature': double.parse(
-            (measureField[3]['textController'] as TextEditingController).text),
-        'weight': double.parse(
-            (measureField[0]['textController'] as TextEditingController).text),
+        'allergy': allergy.text,
+        'bloodPressure': double.parse(bloodPressure.text),
+        'clinicalExamination': clinicalExamination.text,
+        'conclusionAndTreatment': conclusionAndTreatment.text,
+        'diagnostic': diagnostic.text,
+        'heartBeat': double.parse(heartBeat.text),
+        'height': double.parse(height.text),
+        'note': note.text,
+        'symptom': symptom.text,
+        'temperature': double.parse(temperature.text),
+        'weight': double.parse(weight.text),
         'medicines': medicineFinal,
         'services': serviceFinal,
       };
@@ -213,17 +140,17 @@ class MedicalFormController extends GetxController {
   }
 
   void onPressedClearButton() async {
-    (measureField[5]['textController'] as TextEditingController).clear();
-    (measureField[4]['textController'] as TextEditingController).clear();
-    (examField[0]['textController'] as TextEditingController).clear();
-    (examField[3]['textController'] as TextEditingController).clear();
-    (examField[2]['textController'] as TextEditingController).clear();
-    (measureField[2]['textController'] as TextEditingController).clear();
-    (measureField[1]['textController'] as TextEditingController).clear();
-    (measureField[5]['textController'] as TextEditingController).clear();
-    (examField[1]['textController'] as TextEditingController).clear();
-    (measureField[3]['textController'] as TextEditingController).clear();
-    (measureField[0]['textController'] as TextEditingController).clear();
+    note.clear();
+    clinicalExamination.clear();
+    symptom.clear();
+    diagnostic.clear();
+    conclusionAndTreatment.clear();
+    weight.clear();
+    height.clear();
+    heartBeat.clear();
+    temperature.clear();
+    bloodPressure.clear();
+    allergy.clear();
   }
 
 //////////////////////////////////////////////////////////////////////
@@ -252,26 +179,17 @@ class MedicalFormController extends GetxController {
         departmentId: 'departmentId',
         doctorId: 'doctorId',
         totalMoney: totalMoney.value,
-        allergy:
-            (measureField[5]['textController'] as TextEditingController).text,
-        bloodPressure: double.parse(
-            (measureField[4]['textController'] as TextEditingController).text),
-        clinicalExamination:
-            (examField[0]['textController'] as TextEditingController).text,
-        conclusionAndTreatment:
-            (examField[3]['textController'] as TextEditingController).text,
-        diagnostic:
-            (examField[2]['textController'] as TextEditingController).text,
-        heartBeat: double.parse(
-            (measureField[2]['textController'] as TextEditingController).text),
-        height: double.parse(
-            (measureField[1]['textController'] as TextEditingController).text),
-        note: (measureField[5]['textController'] as TextEditingController).text,
-        symptom: (examField[1]['textController'] as TextEditingController).text,
-        temperature: double.parse(
-            (measureField[3]['textController'] as TextEditingController).text),
-        weight: double.parse(
-            (measureField[0]['textController'] as TextEditingController).text),
+        allergy: allergy.text,
+        bloodPressure: double.parse(bloodPressure.text),
+        clinicalExamination: clinicalExamination.text,
+        conclusionAndTreatment: conclusionAndTreatment.text,
+        diagnostic: diagnostic.text,
+        heartBeat: double.parse(heartBeat.text),
+        height: double.parse(height.text),
+        note: note.text,
+        symptom: symptom.text,
+        temperature: double.parse(temperature.text),
+        weight: double.parse(weight.text),
         medicines: medicineFinal,
         services: serviceFinal,
       );
