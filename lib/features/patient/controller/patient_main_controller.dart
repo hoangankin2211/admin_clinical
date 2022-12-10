@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:admin_clinical/services/data_service/health_record_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -8,37 +10,39 @@ import '../../form/screens/medical_form_screen.dart';
 import '../screens/list_patients_screen.dart';
 
 class PatientMainController extends GetxController {
-  String? selectedPatient;
+  Rx<String?> selectedPatient = Rx(null);
   late PageController pageController;
   @override
   void onInit() {
-    selectedPatient = null;
+    selectedPatient.value = null;
     pageController = PageController(keepPage: false);
     super.onInit();
   }
 
-  late Rx<Widget> nextPage = Rx<Widget>(
-    MedicalFormScreen(
-      patient: PatientService.listPatients[selectedPatient!]!,
-      backButton: backButton,
-    ),
-  );
+  late Rx<MedicalFormScreen?> nextPage = Rx<MedicalFormScreen?>(null);
 
   late final List<Widget> pages = [
     ListPatientScreen(examinationActionHandle: examinationActionHandle),
     Obx(
-      () => selectedPatient != null ? nextPage.value : const SizedBox(),
+      () => (selectedPatient.value != null && nextPage.value != null)
+          ? nextPage.value!
+          : const SizedBox(),
     ),
   ];
 
   void examinationActionHandle(String patientId, {String? healthRecordId}) {
-    selectedPatient = patientId;
+    selectedPatient.value = patientId;
 
     if (healthRecordId != null) {
       nextPage.value = MedicalFormScreen(
-        patient: PatientService.listPatients[selectedPatient!]!,
+        patient: PatientService.listPatients[selectedPatient.value]!,
         backButton: backButton,
         healthRecordId: HealthRecordService.listHealthRecord[healthRecordId],
+      );
+    } else {
+      nextPage.value = MedicalFormScreen(
+        patient: PatientService.listPatients[selectedPatient.value!]!,
+        backButton: backButton,
       );
     }
 
@@ -47,7 +51,8 @@ class PatientMainController extends GetxController {
   }
 
   void backButton() {
-    selectedPatient = null;
+    selectedPatient.value = null;
+    nextPage.value = null;
     pageController.animateToPage(0,
         duration: const Duration(milliseconds: 200), curve: Curves.easeIn);
   }

@@ -69,7 +69,6 @@ class SelectRecordDialog extends StatelessWidget {
                               return InkWell(
                                 onTap: () {
                                   Get.back();
-                                  print(records);
                                   onTapRecord(
                                     patientId,
                                     healthRecordId: records[index].id,

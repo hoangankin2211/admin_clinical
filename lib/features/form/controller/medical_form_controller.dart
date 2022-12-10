@@ -1,8 +1,6 @@
 import 'dart:convert';
 
 import 'package:admin_clinical/constants/utils.dart';
-import 'package:admin_clinical/features/auth/controller/auth_controller.dart';
-import 'package:admin_clinical/models/patient.dart';
 import 'package:admin_clinical/services/auth_service/auth_service.dart';
 import 'package:admin_clinical/services/data_service/health_record_service.dart';
 import 'package:admin_clinical/services/data_service/medicine_service.dart';
@@ -22,7 +20,6 @@ class MedicalFormController extends GetxController {
   HealthRecord? record;
   final formKey = GlobalKey<FormState>();
   var isLoading = false.obs;
-  var isCreatedForm = false.obs;
   Rx<HealthRecord?> currentHealthRecord = Rx(null);
 
   late final Map<String, TextEditingController> textController = {
@@ -71,7 +68,6 @@ class MedicalFormController extends GetxController {
             response['id'],
           );
           if (updatePatientResponse) {
-            isCreatedForm.value = true;
             PatientService.listPatients.update(patientId, (value) {
               value.healthRecord?.add(response['id'] as String);
               return value;
@@ -130,7 +126,6 @@ class MedicalFormController extends GetxController {
         final deletePatientResponse =
             await deleteHealthRecordPatient(patientId, id);
         if (deletePatientResponse) {
-          isCreatedForm.value = true;
           PatientService.listPatients.update(patientId, (value) {
             value.healthRecord ??= [] as List<String>;
             value.healthRecord?.removeWhere((element) => element == id);
@@ -195,13 +190,22 @@ class MedicalFormController extends GetxController {
       await Future(
         () {
           for (var element in listServiceIndicatorFINAL) {
-            serviceFinal.add({element: services[element]});
+            Map<String, dynamic> serviceFinalTemp = {};
+
+            serviceFinalTemp.addAll({'service': element});
+            serviceFinalTemp.addAll({'provider': 'USA'});
+            serviceFinalTemp.addAll({'quantity': 1});
+            serviceFinalTemp.addAll({'amount': 10.0});
+
+            serviceFinal.add(serviceFinalTemp);
           }
           for (var element in listMedicineIndicatorFINAL) {
-            medicineFinal.add({
-              element:
-                  medicines.firstWhere((medicine) => medicine.id == element)
-            });
+            Map<String, dynamic> medicineFinalTemp = {};
+            medicineFinalTemp.addAll({'medicine': element});
+            medicineFinalTemp.addAll({'provider': 'USA'});
+            medicineFinalTemp.addAll({'quantity': 1});
+            medicineFinalTemp.addAll({'amount': 10.0});
+            medicineFinal.add(medicineFinalTemp);
           }
         },
       );
@@ -236,10 +240,10 @@ class MedicalFormController extends GetxController {
         'medicines': medicineFinal,
         'services': serviceFinal,
       };
+
       formKey.currentState!.save();
       isLoading.value = true;
-      final response =
-          await editHealthRecordData(newHealthRecord, Get.context ?? context);
+      final response = await editHealthRecordData(newHealthRecord);
       isLoading.value = false;
       Utils.notifyHandle(
         response: response,
@@ -254,10 +258,6 @@ class MedicalFormController extends GetxController {
 
   void onPressedClearButton() async {
     textController.forEach((key, value) => value.clear());
-    listMedicineIndicatorFINAL.clear();
-    listServiceIndicatorFINAL.clear();
-    listMedicineIndicator.clear();
-    listServiceIndicator.clear();
   }
 
 //////////////////////////////////////////////////////////////////////
@@ -270,13 +270,22 @@ class MedicalFormController extends GetxController {
       await Future(
         () {
           for (var element in listServiceIndicatorFINAL) {
-            serviceFinal.add({element: services[element]});
+            Map<String, dynamic> serviceFinalTemp = {};
+
+            serviceFinalTemp.addAll({'service': element});
+            serviceFinalTemp.addAll({'provider': 'USA'});
+            serviceFinalTemp.addAll({'quantity': 1});
+            serviceFinalTemp.addAll({'amount': 10.0});
+
+            serviceFinal.add(serviceFinalTemp);
           }
           for (var element in listMedicineIndicatorFINAL) {
-            medicineFinal.add({
-              element:
-                  medicines.firstWhere((medicine) => medicine.id == element)
-            });
+            Map<String, dynamic> medicineFinalTemp = {};
+            medicineFinalTemp.addAll({'medicine': element});
+            medicineFinalTemp.addAll({'provider': 'USA'});
+            medicineFinalTemp.addAll({'quantity': 1});
+            medicineFinalTemp.addAll({'amount': 10.0});
+            medicineFinal.add(medicineFinalTemp);
           }
         },
       );
@@ -328,12 +337,10 @@ class MedicalFormController extends GetxController {
     return {"isSuccess": false};
   }
 
-  Future<bool> editHealthRecordData(
-      Map<String, dynamic> healthRecord, BuildContext context) async {
+  Future<bool> editHealthRecordData(Map<String, dynamic> healthRecord) async {
     try {
       isLoading.value = true;
-      final response =
-          await HealthRecordService.editHealthRecord(healthRecord, context);
+      final response = await HealthRecordService.editHealthRecord(healthRecord);
       isLoading.value = false;
       if (response != null) {
         if (response['isSuccess'] != null &&
@@ -343,7 +350,7 @@ class MedicalFormController extends GetxController {
               (value) => value = HealthRecord.fromJson(healthRecord));
           return true;
         }
-      }
+      } else {}
     } catch (e) {
       print('editHealthRecordData: ${e.toString()}');
     }
@@ -403,18 +410,17 @@ class MedicalFormController extends GetxController {
   }
 
 //////////////////////////////////////////////////////////////////////\
-  List<String> convertMap2List(List<Map<String, dynamic>> source) {
+  List<String> convertMap2List(List<Map<String, dynamic>> source, String key) {
     List<String> result = [];
-    for (var element in source) {}
+    for (var element in source) {
+      result.add(element[key]);
+    }
     return result;
   }
 
   //////////////////////////////////////////////////////////////////////\
-  late List<String> listServiceIndicatorFINAL = convertMap2List(
-    currentHealthRecord.value?.services ?? [],
-  );
-  late final RxMap<String, Service> listServiceIndicator =
-      RxMap<String, Service>({});
+  late List<String> listServiceIndicatorFINAL;
+  late RxMap<String, Service> listServiceIndicator;
 
   final Map<String, Service> services = ServiceDataService.instance.service;
   void onChoiceServiceChange(bool value, String id) {
@@ -437,10 +443,8 @@ class MedicalFormController extends GetxController {
     update(['resultService', id]);
   }
 
-  late List<String> listMedicineIndicatorFINAL = [];
-  late final RxMap<String, Medicine> listMedicineIndicator =
-      RxMap<String, Medicine>({});
-
+  late List<String> listMedicineIndicatorFINAL;
+  late RxMap<String, Medicine> listMedicineIndicator;
   final List<Medicine> medicines = MedicineService.instance.listMedicine;
 
   void onChoiceMedicineChange(bool value, String id) {
@@ -461,5 +465,28 @@ class MedicalFormController extends GetxController {
       updateMedicineAmount(-temp.cost);
     }
     update(['ResultMedicineTableRow', id]);
+  }
+
+  @override
+  void onInit() {
+    listMedicineIndicator = RxMap<String, Medicine>({});
+    listServiceIndicator = RxMap<String, Service>({});
+
+    listMedicineIndicatorFINAL =
+        convertMap2List(currentHealthRecord.value?.medicines ?? [], 'medicine');
+    listServiceIndicatorFINAL =
+        convertMap2List(currentHealthRecord.value?.services ?? [], 'service');
+
+    for (var medicine in listMedicineIndicatorFINAL) {
+      print(medicine);
+      MedicineService.instance.listMedicine
+          .firstWhere((element) => element.id == medicine);
+    }
+    for (var service in listServiceIndicatorFINAL) {
+      print(service);
+      ServiceDataService.instance.service.entries
+          .firstWhere((element) => element.value.id == service);
+    }
+    super.onInit();
   }
 }

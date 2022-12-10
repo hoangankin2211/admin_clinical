@@ -58,6 +58,8 @@ class HealthRecord {
           map.forEach((key, value) {
             if (key == "service") {
               result.addAll({key: value as String});
+            } else if (key == "provider") {
+              result.addAll({key: value as String});
             } else if (key == "quantity") {
               result.addAll({key: value as int});
             } else if (key == "amount") {
@@ -78,6 +80,8 @@ class HealthRecord {
           map.forEach((key, value) {
             if (key == "medicine") {
               result.addAll({key: value as String});
+            } else if (key == "provider") {
+              result.addAll({key: value as String});
             } else if (key == "quantity") {
               result.addAll({key: value as int});
             } else if (key == "amount") {
@@ -93,7 +97,7 @@ class HealthRecord {
     }
 
     return HealthRecord(
-      id: json['_id'].toString(),
+      id: json['id'].toString(),
       dateCreate:
           DateTime.parse(json['dateCreate'] ?? DateTime.now().toString()),
       departmentId: json['departmentId'] ?? "",

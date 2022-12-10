@@ -33,6 +33,7 @@ class HealthRecordService {
         print("extractedData: $extractedData");
         for (int i = 0; i < extractedData.length; i++) {
           Map<String, dynamic> map = extractedData[i];
+          map['id'] = map['_id'];
           listHealthRecord.addAll({map['_id']: HealthRecord.fromJson(map)});
         }
         DataService.instance.checkFetchData.add(1);
@@ -75,7 +76,7 @@ class HealthRecordService {
   }
 
   static Future<Map<String, dynamic>?> editHealthRecord(
-      Map<String, dynamic> healthRecord, BuildContext context) async {
+      Map<String, dynamic> healthRecord) async {
     Map<String, dynamic>? result;
 
     try {
@@ -86,17 +87,15 @@ class HealthRecordService {
         },
         body: jsonEncode(healthRecord),
       );
+      final decodeResponse = jsonDecode(response.body);
 
-      httpErrorHandle(
-        response: response,
-        context: context,
-        onSuccess: () {
-          final decodeResponse = jsonDecode(response.body);
-
-          print(decodeResponse);
-          result = decodeResponse;
-        },
-      );
+      if (decodeResponse != null &&
+          decodeResponse['isSuccess'] != null &&
+          decodeResponse['isSuccess']) {
+        result = decodeResponse;
+      } else {
+        result = null;
+      }
     } catch (e) {
       result = null;
       print('editHealthRecord:$e');

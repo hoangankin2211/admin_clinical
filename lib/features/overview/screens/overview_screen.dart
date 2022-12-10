@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import '../../../constants/global_widgets/chart/column_2_chart.dart';
 import '../../../constants/global_widgets/chart/line_chart_design.dart';
 import '../../../constants/global_widgets/color_title.dart';
