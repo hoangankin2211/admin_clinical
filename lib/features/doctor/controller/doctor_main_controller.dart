@@ -3,6 +3,8 @@ import 'dart:typed_data';
 import 'package:admin_clinical/constants/global_widgets/custom_dialog_error/error_dialog.dart';
 import 'package:admin_clinical/constants/global_widgets/custom_dialog_error/success_dialog.dart';
 import 'package:admin_clinical/constants/utils.dart';
+import 'package:admin_clinical/models/health_record.dart';
+import 'package:admin_clinical/services/data_service/health_record_service.dart';
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

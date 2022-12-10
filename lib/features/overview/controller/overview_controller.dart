@@ -48,6 +48,35 @@ class OverviewController extends GetxController {
       <Map<String, dynamic>>[].obs;
   RxInt maxOfListInvoice = 0.obs;
 
+  RxList<Map<String, dynamic>> data_patient_chart =
+      <Map<String, dynamic>>[].obs;
+  RxInt maxOfListPatient = 0.obs;
+
+  fetchDataPatientChart() {
+    data_patient_chart.clear();
+    data_patient_chart.value = [
+      for (var item in dateControllerPatient.allDateBetWeen)
+        {
+          'id': item.weekday,
+          'Male': 0,
+          'Female': 0,
+        }
+    ];
+    data_patient_chart.sort((a, b) => a['id'].compareTo(b['id']));
+    for (var item in HealthRecordService.listHealthRecord.values) {
+      if (dateControllerPatient.checkDateInList(
+          item.dateCreate, dateControllerPatient.allDateBetWeen)) {
+        data_patient_chart[item.dateCreate.weekday - 1]['Male'] += 1;
+      }
+    }
+    data_patient_chart[6]['id'] = 0;
+    data_patient_chart.sort((a, b) => a['id'].compareTo(b['id']));
+    maxOfListPatient.value = [
+      for (var item in data_patient_chart)
+        item['Male'] > item['Female'] ? item['Male'] : item['Female']
+    ].reduce((v, e) => v > e ? v : e);
+  }
+
   fetchDataInvoiceChart() {
     data_invoice_chart.clear();
     print(DateTime.now().weekday);
@@ -262,6 +291,9 @@ class OverviewController extends GetxController {
     dateControllerTurnover.getStartDateAndFinishDate();
     print(dateControllerTurnover.allDateBetWeen);
     fetchDataInvoiceChart();
+
+    dateControllerPatient.getStartDateAndFinishDate();
+    fetchDataPatientChart();
   }
 
   List<Data> getDataPieChartMedicine() => [

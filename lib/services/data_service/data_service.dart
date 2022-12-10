@@ -3,6 +3,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:admin_clinical/models/health_record.dart';
+import 'package:admin_clinical/services/data_service/clinical_room_service.dart';
 import 'package:admin_clinical/services/data_service/health_record_service.dart';
 import 'package:admin_clinical/services/data_service/invoice_service.dart';
 import 'package:admin_clinical/services/data_service/medicine_service.dart';
@@ -53,6 +54,10 @@ class DataService extends GetxController {
         ServiceDataService.instance.fetchAllDataService();
       }
     }
+
+    if (ClinicalRoomService.instance.listClinicalRoom.isEmpty) {
+      ClinicalRoomService.instance.fetchAllClinicalRoomData();
+    }
   }
 
   void fetchAllDoctor(Function(List<Doctor1>) callBack) async {
@@ -77,6 +82,19 @@ class DataService extends GetxController {
       // print('err ${e.toString()}');
     } finally {
       callBack(listDoctor);
+    }
+  }
+
+  deleteAllHealthRecord() async {
+    try {
+      http.Response res = await http.get(
+        Uri.parse('${ApiLink.uri}/deleteAllHealthRecord'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+    } catch (e) {
+      print(e.toString());
     }
   }
 

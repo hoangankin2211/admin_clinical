@@ -1,146 +1,20 @@
 import 'package:admin_clinical/constants/global_widgets/header_list_item.dart';
 import 'package:admin_clinical/constants/global_widgets/list_item.dart';
+import 'package:admin_clinical/features/clinical_room/controller/clinical_room_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 
 import '../../../constants/app_colors.dart';
+import '../../../constants/app_decoration.dart';
 import '../../../constants/global_widgets/btn_with_icon.dart';
+import '../../auth/widgets/custom_button.dart';
 
 class ClinicalRoom extends StatelessWidget {
   ClinicalRoom({super.key});
-  RxList<Map<String, dynamic>> fakeDataBed = [
-    {
-      "id": 117,
-      "patient": "Nguyen Minh Hung",
-      "image": 'assets/images/doctor2.png',
-    },
-    {
-      "id": 113,
-      "patient": "Nguyen Minh Man",
-      "image": 'assets/images/doctor3.png',
-    },
-    {
-      "id": 114,
-      "patient": "",
-      "image": 'assets/images/doctor1.png',
-    },
-    {
-      "id": 115,
-      "patient": "Nguyen Minh Hieu",
-      "image": 'assets/images/doctor2.png',
-    },
-    {
-      "id": 116,
-      "patient": "Nguyen Minh Nhan",
-      "image": 'assets/images/doctor3.png',
-    },
-    {
-      "id": 117,
-      "patient": "",
-      "image": 'assets/images/doctor1.png',
-    },
-    {
-      "id": 118,
-      "patient": "Nguyen Minh Nguyen",
-      "image": 'assets/images/doctor2.png',
-    },
-    {
-      "id": 119,
-      "patient": "Nguyen Minh Ton",
-      "image": 'assets/images/doctor3.png',
-    },
-    {
-      "id": 120,
-      "patient": "",
-      "image": 'assets/images/doctor2.png',
-    },
-  ].obs;
-  RxList<Map<String, dynamic>> fakeData = [
-    {
-      "id": 1,
-      "name": "Dentists",
-      "er": 300,
-      "ner": 100,
-    },
-    {
-      "id": 2,
-      "name": "Neurology",
-      "er": 200,
-      "ner": 80,
-    },
-    {
-      "id": 3,
-      "name": "Opthalmology",
-      "er": 320,
-      "ner": 200,
-    },
-    {
-      "id": 4,
-      "name": "ENT department",
-      "er": 150,
-      "ner": 100,
-    },
-    {
-      "id": 5,
-      "name": "Dentists",
-      "er": 200,
-      "ner": 100,
-    },
-    {
-      "id": 3,
-      "name": "Opthalmology",
-      "er": 320,
-      "ner": 200,
-    },
-    {
-      "id": 4,
-      "name": "ENT department",
-      "er": 150,
-      "ner": 100,
-    },
-    {
-      "id": 5,
-      "name": "Dentists",
-      "er": 200,
-      "ner": 100,
-    },
-    {
-      "id": 3,
-      "name": "Opthalmology",
-      "er": 320,
-      "ner": 200,
-    },
-    {
-      "id": 4,
-      "name": "ENT department",
-      "er": 150,
-      "ner": 100,
-    },
-    {
-      "id": 5,
-      "name": "Dentists",
-      "er": 200,
-      "ner": 100,
-    },
-    {
-      "id": 3,
-      "name": "Opthalmology",
-      "er": 320,
-      "ner": 200,
-    },
-    {
-      "id": 4,
-      "name": "ENT department",
-      "er": 150,
-      "ner": 100,
-    },
-    {
-      "id": 5,
-      "name": "Dentists",
-      "er": 200,
-      "ner": 100,
-    }
-  ].obs;
+  final controller = Get.put(ClinicalRoomController());
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -169,6 +43,7 @@ class ClinicalRoom extends StatelessWidget {
   Container _listRoomViewField() {
     return Container(
       margin: const EdgeInsets.only(right: 20.0, bottom: 20.0),
+      padding: const EdgeInsets.all(10.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15.0),
         color: AppColors.backgroundColor,
@@ -181,135 +56,90 @@ class ClinicalRoom extends StatelessWidget {
       ),
       child: Column(
         children: [
-          const Padding(
-            padding: EdgeInsets.only(left: 15.0, top: 15.0),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                "Room View",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20.0,
-                ),
+          const Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "Name Room",
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 20.0,
               ),
             ),
           ),
           const SizedBox(height: 10.0),
           const Divider(thickness: 1),
           const SizedBox(height: 10.0),
-          const Padding(
-            padding: EdgeInsets.only(left: 15.0),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                "List Room",
-                style: TextStyle(
-                  color: AppColors.primarySecondColor,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18.0,
+          Expanded(
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      "Reception",
+                      style: TextStyle(
+                        color: AppColors.primarySecondColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18.0,
+                      ),
+                    ),
+                    Container(
+                      height: 10,
+                      width: 10,
+                      decoration: const BoxDecoration(
+                          shape: BoxShape.circle, color: Colors.green),
+                    ),
+                  ],
                 ),
-              ),
+                const SizedBox(height: 20.0),
+                Expanded(
+                  child: ListView(
+                    children: [
+                      ClinicalPatientItem(),
+                      ClinicalPatientItem(),
+                      ClinicalPatientItem(),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 20.0),
+          const SizedBox(height: 10.0),
+          const Divider(thickness: 1),
+          const SizedBox(height: 10.0),
           Expanded(
-            child: GridView.count(
-              primary: false,
-              crossAxisCount: 2,
-              children: <Widget>[
-                ...fakeDataBed.map((element) => Container(
-                      padding: const EdgeInsets.all(10.0),
-                      margin: const EdgeInsets.all(10.0),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10.0),
-                        boxShadow: [
-                          BoxShadow(
-                            color:
-                                AppColors.headline1TextColor.withOpacity(0.3),
-                            blurRadius: 10.0,
-                          )
-                        ],
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      "Exmained",
+                      style: TextStyle(
+                        color: AppColors.primarySecondColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18.0,
                       ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: 90.0,
-                            height: 90.0,
-                            decoration: BoxDecoration(
-                              color: AppColors.backgroundColor,
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: AppColors.headline1TextColor
-                                      .withOpacity(0.3),
-                                  blurRadius: 10.0,
-                                ),
-                              ],
-                              image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: AssetImage(element["patient"] != ""
-                                    ? element["image"]
-                                    : 'assets/images/google.png'),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 10.0),
-                          Text(
-                            element["patient"] != ""
-                                ? "Patient: ${element["patient"]}"
-                                : "Empty Bed",
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              color: AppColors.headline1TextColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16.0,
-                            ),
-                          ),
-                          const SizedBox(height: 5.0),
-                          Text(
-                            "Bed: ${element["id"]}",
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              color: AppColors.primarySecondColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18.0,
-                            ),
-                          ),
-                          const Spacer(),
-                          Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: InkWell(
-                                    onTap: () {},
-                                    child: Container(
-                                      alignment: Alignment.center,
-                                      padding: const EdgeInsets.all(10.0),
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(5.0),
-                                          color: AppColors.primaryColor),
-                                      child: const Text(
-                                        "View",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ))
+                    ),
+                    Container(
+                      height: 10,
+                      width: 10,
+                      decoration: const BoxDecoration(
+                          shape: BoxShape.circle, color: Colors.red),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20.0),
+                Expanded(
+                  child: ListView(
+                    children: [
+                      ClinicalPatientItem(),
+                      ClinicalPatientItem(),
+                      ClinicalPatientItem(),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
@@ -317,8 +147,8 @@ class ClinicalRoom extends StatelessWidget {
           InkWell(
             onTap: () {},
             child: Container(
-              margin:
-                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
+              // margin:
+              //     const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
               width: double.infinity,
               height: 55,
               alignment: Alignment.center,
@@ -341,68 +171,74 @@ class ClinicalRoom extends StatelessWidget {
     );
   }
 
-  Column _listField() {
-    return Column(
-      children: [
-        const HeaderListItem(
-          checkHeader: true,
-          titles: [
-            "ID",
-            "Name",
-            "Empy Bed",
-            "No Empty Bed",
-          ],
-        ),
-        const SizedBox(height: 10.0),
-        ...fakeData.value.map((element) => InkWell(
-              onTap: () {},
-              child: ListItem(
-                widgets: [
-                  Text(
-                    element["id"].toString(),
-                    style: const TextStyle(
-                        color: AppColors.primarySecondColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18.0),
-                  ),
-                  Text(
-                    element["name"],
-                    style: const TextStyle(
-                        color: AppColors.primarySecondColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18.0),
-                  ),
-                  Row(
-                    children: [
-                      const Icon(Icons.bed, color: Colors.green, size: 20.0),
-                      Text(
-                        ' ${element["er"]}',
-                        style: const TextStyle(
-                          color: Colors.green,
+  Widget _listField() {
+    return Obx(
+      () => Column(
+        children: [
+          const HeaderListItem(
+            checkHeader: true,
+            titles: [
+              "ID",
+              "Name",
+              "Reception",
+              "Exmained",
+            ],
+          ),
+          const SizedBox(height: 10.0),
+          ...controller.listClincalRoom.map((element) => InkWell(
+                onTap: () => controller.selectRoomId.value = element.id,
+                child: ListItem(
+                  widgets: [
+                    Text(
+                      element.id,
+                      style: const TextStyle(
+                          overflow: TextOverflow.ellipsis,
+                          color: AppColors.primarySecondColor,
                           fontWeight: FontWeight.bold,
-                          fontSize: 18.0,
-                        ),
-                      )
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      const Icon(Icons.bed, color: Colors.red, size: 20.0),
-                      Text(
-                        ' ${element["ner"]}',
-                        style: const TextStyle(
-                          color: Colors.red,
+                          fontSize: 18.0),
+                    ),
+                    Text(
+                      element.name,
+                      style: const TextStyle(
+                          overflow: TextOverflow.ellipsis,
+                          color: AppColors.primarySecondColor,
                           fontWeight: FontWeight.bold,
-                          fontSize: 18.0,
-                        ),
-                      )
-                    ],
-                  ),
-                ],
-                checkHeader: true,
-              ),
-            ))
-      ],
+                          fontSize: 18.0),
+                    ),
+                    Row(
+                      children: [
+                        const Icon(FontAwesomeIcons.userDoctor,
+                            color: Colors.green, size: 20.0),
+                        Text(
+                          ' ${element.reception}',
+                          style: const TextStyle(
+                            color: Colors.green,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18.0,
+                          ),
+                        )
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        const Icon(Icons.medical_services,
+                            color: Colors.red, size: 20.0),
+                        Text(
+                          ' ${element.exmained}',
+                          style: const TextStyle(
+                            color: Colors.red,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18.0,
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                  checkHeader: true,
+                ),
+              ))
+        ],
+      ),
     );
   }
 
@@ -442,9 +278,129 @@ class ClinicalRoom extends StatelessWidget {
           title: "Add new Room",
           icon: Icons.add,
           color: AppColors.primaryColor.withOpacity(0.5),
-          callBack: () {},
+          callBack: () => Get.dialog(
+            Dialog(
+              backgroundColor: Colors.transparent,
+              child: Container(
+                width: 400,
+                height: 300,
+                padding: const EdgeInsets.all(10.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.0),
+                  color: Colors.white,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Add new Room",
+                      style: TextStyle(
+                          color: AppColors.headline1TextColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20.0),
+                    ),
+                    const SizedBox(height: 5.0),
+                    const Divider(thickness: 1),
+                    const SizedBox(height: 15.0),
+                    TextFormField(
+                      autofocus: true,
+                      controller: controller.textController,
+                      decoration: InputDecoration(
+                        suffixIcon: const SizedBox(),
+                        hintText: "Enter Name Room",
+                        hintStyle: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.grey),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 10),
+                        labelText: 'Name Room',
+                        labelStyle: const TextStyle(
+                          color: Colors.grey,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: AppDecoration.primaryRadiusBorder,
+                          borderSide: const BorderSide(color: Colors.grey),
+                        ),
+                      ),
+                    ),
+                    const Spacer(),
+                    Obx(
+                      () => SizedBox(
+                        width: double.infinity,
+                        height: 40.0,
+                        child: CustomButton(
+                          check: controller.isLoadingInsert.value,
+                          title: "Add new room",
+                          onPressed: () => controller.insertNewRoom(
+                            context,
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
         ),
         const SizedBox(width: 10.0),
+      ],
+    );
+  }
+}
+
+class ClinicalPatientItem extends StatelessWidget {
+  const ClinicalPatientItem({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const SizedBox(height: 10.0),
+        Row(
+          children: [
+            Expanded(
+              flex: 1,
+              child: Text(
+                '01',
+                style: const TextStyle(
+                  overflow: TextOverflow.ellipsis,
+                  color: Colors.grey,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18.0,
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 2,
+              child: Text(
+                'Nguyen Minh Hung',
+                style: const TextStyle(
+                  color: AppColors.headline1TextColor,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 18.0,
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 2,
+              child: Text(
+                DateFormat().add_yMEd().format(DateTime.now()),
+                style: const TextStyle(
+                  color: AppColors.headline1TextColor,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 18.0,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const Divider(thickness: 1),
+        const SizedBox(height: 10.0),
       ],
     );
   }
