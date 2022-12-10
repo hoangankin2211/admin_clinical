@@ -3,6 +3,7 @@ import 'package:admin_clinical/constants/utils.dart';
 import 'package:admin_clinical/features/auth/widgets/custom_button.dart';
 import 'package:admin_clinical/features/form/controller/medical_form_controller.dart';
 import 'package:admin_clinical/features/form/screens/service_indication_dialog.dart';
+import 'package:admin_clinical/models/health_record.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -15,10 +16,12 @@ class MedicalFormScreen extends StatefulWidget {
     super.key,
     required this.patient,
     required this.backButton,
+    this.healthRecordId,
   });
 
   final Function() backButton;
   final Patient patient;
+  final HealthRecord? healthRecordId;
 
   @override
   State<MedicalFormScreen> createState() => _MedicalFormScreenState();
@@ -43,6 +46,12 @@ class _MedicalFormScreenState extends State<MedicalFormScreen> {
       'finalData': medicalFormController.listMedicineIndicatorFINAL
     },
   ];
+
+  @override
+  void initState() {
+    medicalFormController.currentHealthRecord.value = widget.healthRecordId;
+    super.initState();
+  }
 
   Future _openDialog(Widget widget, Map<String, dynamic> cacheData,
       List<String> finalData) async {
@@ -99,12 +108,6 @@ class _MedicalFormScreenState extends State<MedicalFormScreen> {
       .toList();
 
   @override
-  void dispose() {
-    medicalFormController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -120,7 +123,10 @@ class _MedicalFormScreenState extends State<MedicalFormScreen> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             IconButton(
-                              onPressed: widget.backButton,
+                              onPressed: () {
+                                medicalFormController.onPressedClearButton();
+                                widget.backButton();
+                              },
                               icon: const Icon(
                                 Icons.cancel_rounded,
                                 size: 40,
@@ -143,7 +149,6 @@ class _MedicalFormScreenState extends State<MedicalFormScreen> {
                                   ),
                                 );
 
-                                // ignore: curly_braces_in_flow_control_structures
                                 if (result != null) {
                                   if (result as bool) {
                                   } else {
@@ -183,16 +188,20 @@ class _MedicalFormScreenState extends State<MedicalFormScreen> {
                               height: 40,
                               child: Obx(
                                 () => CustomButton(
-                                  title:
-                                      medicalFormController.isCreatedForm.value
-                                          ? "Update "
-                                          : "Create",
+                                  title: medicalFormController
+                                              .currentHealthRecord.value !=
+                                          null
+                                      ? "Update "
+                                      : "Create",
                                   onPressed: () =>
                                       medicalFormController.isCreatedForm.value
                                           ? medicalFormController
                                               .onPressedUpdateButton(context)
                                           : medicalFormController
-                                              .onPressedCreateButton(context),
+                                              .onPressedCreateButton(
+                                              context,
+                                              widget.patient.id,
+                                            ),
                                 ),
                               ),
                             ),
@@ -210,30 +219,13 @@ class _MedicalFormScreenState extends State<MedicalFormScreen> {
                               child: CustomButton(
                                 color: Colors.red,
                                 title: "Delete",
-                                onPressed: () async {
-                                  bool result = true;
-                                  if (medicalFormController
-                                          .currentHealthRecord.value ==
-                                      null) {
-                                    result = false;
-                                  } else {
-                                    result = await medicalFormController
-                                        .deleteHealthRecordData(
-                                      medicalFormController
-                                          .currentHealthRecord.value!.id!,
-                                      context,
-                                    );
-                                  }
-                                  Utils.notifyHandle(
-                                    response: result,
-                                    successTitle:
-                                        'Delete Health Record Successfully',
-                                    successQuestion: 'Successful',
-                                    errorTitle:
-                                        'Something happened !!! Can not delete current record or you haven\'t create the form yet',
-                                    errorQuestion: 'Error',
-                                  );
-                                },
+                                onPressed: () =>
+                                    medicalFormController.onPressedDeleteButton(
+                                  medicalFormController
+                                      .currentHealthRecord.value!.id!,
+                                  context,
+                                  widget.patient.id,
+                                ),
                               ),
                             ),
                             const SizedBox(width: 50.0),

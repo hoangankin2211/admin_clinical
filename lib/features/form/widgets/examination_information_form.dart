@@ -11,11 +11,13 @@ class ExaminationInformationForm extends StatelessWidget {
     required this.examField,
     required this.formKey,
     required this.measureField,
+    required this.textController,
   });
 
   final List<Map<String, dynamic>> examField;
   final GlobalKey<FormState> formKey;
   final List<Map<String, dynamic>> measureField;
+  final Map<String, TextEditingController> textController;
 
   @override
   Widget build(BuildContext context) {
@@ -26,42 +28,45 @@ class ExaminationInformationForm extends StatelessWidget {
         children: [
           Flexible(
             flex: 2,
-            child: LayoutBuilder(builder: (context, constraints) {
-              return SizedBox(
-                height: constraints.maxHeight * 0.8,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    for (int i = 0; i < measureField.length; i++) ...[
-                      Flexible(
-                        child: TextFormFieldInformationWidget(
-                          isDense: true,
-                          inputFormatters:
-                              measureField.elementAt(i)['inputFormatters'],
-                          suffixIcon: Icon(
-                              measureField.elementAt(i)['icon'] as IconData),
-                          textEditingController:
-                              measureField.elementAt(i)['textController'],
-                          numberOfLine: 4,
-                          keyboardType: TextInputType.number,
-                          label: measureField.elementAt(i)['title'] as String,
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'This field can not be empty';
-                            }
-                            if (int.tryParse(value) == null) {
-                              return 'Not a number';
-                            }
-                            return null;
-                          },
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return SizedBox(
+                  height: constraints.maxHeight * 0.8,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      for (int i = 0; i < measureField.length; i++) ...[
+                        Flexible(
+                          child: TextFormFieldInformationWidget(
+                            isDense: true,
+                            inputFormatters:
+                                measureField.elementAt(i)['inputFormatters'],
+                            suffixIcon: Icon(
+                                measureField.elementAt(i)['icon'] as IconData),
+                            textEditingController:
+                                textController[measureField.elementAt(i)['key']]
+                                    as TextEditingController,
+                            numberOfLine: 4,
+                            keyboardType: TextInputType.number,
+                            label: measureField.elementAt(i)['title'] as String,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'This field can not be empty';
+                              }
+                              if (int.tryParse(value) == null) {
+                                return 'Not a number';
+                              }
+                              return null;
+                            },
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 8),
-                    ]
-                  ],
-                ),
-              );
-            }),
+                        const SizedBox(width: 8),
+                      ]
+                    ],
+                  ),
+                );
+              },
+            ),
           ),
           Container(
             margin: const EdgeInsets.symmetric(vertical: 10),
@@ -79,7 +84,8 @@ class ExaminationInformationForm extends StatelessWidget {
                     child: TextFormFieldInformationWidget(
                       titleIcon: examField.elementAt(i)['icon'],
                       textEditingController:
-                          examField.elementAt(i)['textController'],
+                          textController[examField.elementAt(i)['key']]
+                              as TextEditingController,
                       numberOfLine: examField.elementAt(i)['maxLine'] as int,
                       label: examField.elementAt(i)['title'] as String,
                       validator: (value) {

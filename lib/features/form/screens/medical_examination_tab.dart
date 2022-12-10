@@ -68,6 +68,7 @@ class MedicalExaminationTab extends StatelessWidget {
               Flexible(
                 flex: 3,
                 child: ExaminationInformationForm(
+                  textController: medicalFormController.textController,
                   examField: Utils.examField,
                   formKey: medicalFormController.formKey,
                   measureField: Utils.measureField,

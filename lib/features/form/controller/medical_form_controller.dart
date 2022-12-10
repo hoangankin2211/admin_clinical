@@ -1,49 +1,60 @@
+import 'dart:convert';
+
 import 'package:admin_clinical/constants/utils.dart';
+import 'package:admin_clinical/features/auth/controller/auth_controller.dart';
+import 'package:admin_clinical/models/patient.dart';
+import 'package:admin_clinical/services/auth_service/auth_service.dart';
 import 'package:admin_clinical/services/data_service/health_record_service.dart';
 import 'package:admin_clinical/services/data_service/medicine_service.dart';
+import 'package:admin_clinical/services/data_service/patient_service.dart';
 import 'package:admin_clinical/services/data_service/service_data_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 
+import '../../../constants/api_link.dart';
 import '../../../models/health_record.dart';
 import '../../../models/medicine.dart';
 import '../../../models/service.dart';
 
 class MedicalFormController extends GetxController {
+  MedicalFormController({this.record});
+  HealthRecord? record;
   final formKey = GlobalKey<FormState>();
   var isLoading = false.obs;
   var isCreatedForm = false.obs;
   Rx<HealthRecord?> currentHealthRecord = Rx(null);
 
-  final clinicalExamination = TextEditingController();
-  final symptom = TextEditingController();
-  final diagnostic = TextEditingController();
-  final conclusionAndTreatment = TextEditingController();
-  final weight = TextEditingController();
-  final heartBeat = TextEditingController();
-  final height = TextEditingController();
-  final temperature = TextEditingController();
-  final bloodPressure = TextEditingController();
-  final allergy = TextEditingController();
-  final note = TextEditingController();
-
-  @override
-  void onInit() {
-    currentHealthRecord.listen((record) {
-      if (record != null) {}
-    });
-    super.onInit();
-  }
+  late final Map<String, TextEditingController> textController = {
+    'clinicalExamination': TextEditingController(
+        text: currentHealthRecord.value?.clinicalExamination),
+    'symptom': TextEditingController(text: currentHealthRecord.value?.symptom),
+    'diagnostic':
+        TextEditingController(text: currentHealthRecord.value?.diagnostic),
+    'conclusionAndTreatment': TextEditingController(
+        text: currentHealthRecord.value?.conclusionAndTreatment),
+    'weight': TextEditingController(
+        text: currentHealthRecord.value?.weight.toString()),
+    'heartBeat': TextEditingController(
+        text: currentHealthRecord.value?.heartBeat.toString()),
+    'height': TextEditingController(
+        text: currentHealthRecord.value?.height.toString()),
+    'temperature': TextEditingController(
+        text: currentHealthRecord.value?.temperature.toString()),
+    'bloodPressure': TextEditingController(
+        text: currentHealthRecord.value?.bloodPressure.toString()),
+    'allergy': TextEditingController(text: currentHealthRecord.value?.allergy),
+    'note': TextEditingController(text: currentHealthRecord.value?.note),
+  };
 
   void updateGetBuilder(List<String> id) {
     update(id);
   }
 
-//////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////
 
   //////////////////////////////////////////////////////////////////////
-  void onPressedCreateButton(BuildContext context) async {
+  void onPressedCreateButton(BuildContext context, String patientId) async {
     final isValidated = formKey.currentState!.validate();
     if (isValidated) {
       formKey.currentState!.save();
@@ -51,14 +62,30 @@ class MedicalFormController extends GetxController {
       final response = await createNewHealthRecord(context);
       isLoading.value = false;
 
-      if (response['isSuccess']) {
-        isCreatedForm.value = true;
+      bool result = false;
 
-        currentHealthRecord.value =
-            HealthRecordService.listHealthRecord[response['id'] ?? ""];
+      if (response['isSuccess']) {
+        try {
+          final updatePatientResponse = await _updatePatientRecord(
+            patientId,
+            response['id'],
+          );
+          if (updatePatientResponse) {
+            isCreatedForm.value = true;
+            PatientService.listPatients.update(patientId, (value) {
+              value.healthRecord?.add(response['id'] as String);
+              return value;
+            });
+            currentHealthRecord.value =
+                HealthRecordService.listHealthRecord[response['id'] ?? ""];
+            result = true;
+          }
+        } catch (e) {
+          print('updatePatientResponse: $e');
+        }
       }
       Utils.notifyHandle(
-        response: response['isSuccess'],
+        response: result,
         successTitle: 'Success',
         successQuestion: 'Create new Health Record Success',
         errorTitle: 'ERROR',
@@ -68,18 +95,94 @@ class MedicalFormController extends GetxController {
     }
   }
 
-  void onPressedDeleteButton(String id, BuildContext context) async {
+  Future<bool> _updatePatientRecord(
+      String patientId, String newHealthRecord) async {
+    try {
+      final response = await http.post(
+        Uri.parse('${ApiLink.uri}/api/addPatientRecord/'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode({
+          '_id': patientId,
+          'healthRecord': newHealthRecord,
+        }),
+      );
+
+      final extractedData = jsonDecode(response.body);
+
+      if (extractedData['isSuccess'] != null && extractedData['isSuccess']) {
+        return true;
+      }
+    } catch (e) {
+      print('_updatePatientRecord: ${e.toString()}');
+    }
+    return false;
+  }
+
+  void onPressedDeleteButton(
+      String id, BuildContext context, String patientId) async {
     isLoading.value = true;
+    bool result = false;
     final response = await deleteHealthRecordData(id, context);
+    if (response) {
+      try {
+        final deletePatientResponse =
+            await deleteHealthRecordPatient(patientId, id);
+        if (deletePatientResponse) {
+          isCreatedForm.value = true;
+          PatientService.listPatients.update(patientId, (value) {
+            value.healthRecord ??= [] as List<String>;
+            value.healthRecord?.removeWhere((element) => element == id);
+            return value;
+          });
+          result = false;
+        }
+      } catch (e) {
+        print('updatePatientResponse: $e');
+        result = false;
+      }
+    }
     isLoading.value = false;
+
     Utils.notifyHandle(
-      response: response,
+      response: result,
       successTitle: 'Success',
       successQuestion: 'Delete Health Record Success',
       errorTitle: 'ERROR',
       errorQuestion:
           'Something occurred !!! Please check your internet connection',
     );
+  }
+
+  Future<bool> deleteHealthRecordPatient(
+      String patientId, String healthRecordId) async {
+    bool result = false;
+    try {
+      final response = await http.post(
+        Uri.parse('${ApiLink.uri}/api/editPatientRecord/'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode({
+          '_id': patientId,
+          'idHealthRecord': healthRecordId,
+        }),
+      );
+      final extractedData = jsonDecode(response.body);
+      if (extractedData['isSuccess'] != null && extractedData['isSuccess']) {
+        PatientService.listPatients.update(patientId, (value) {
+          value.healthRecord ??= [] as List<String>;
+          value.healthRecord
+              ?.removeWhere((element) => element == healthRecordId);
+          return value;
+        });
+        result = true;
+      }
+    } catch (e) {
+      print('updatePatientResponse: $e');
+    }
+    return result;
   }
 
   void onPressedUpdateButton(BuildContext context) async {
@@ -109,17 +212,27 @@ class MedicalFormController extends GetxController {
         'departmentId': 'departmentId',
         'doctorId': 'doctorId',
         'totalMoney': totalMoney.value,
-        'allergy': allergy.text,
-        'bloodPressure': double.parse(bloodPressure.text),
-        'clinicalExamination': clinicalExamination.text,
-        'conclusionAndTreatment': conclusionAndTreatment.text,
-        'diagnostic': diagnostic.text,
-        'heartBeat': double.parse(heartBeat.text),
-        'height': double.parse(height.text),
-        'note': note.text,
-        'symptom': symptom.text,
-        'temperature': double.parse(temperature.text),
-        'weight': double.parse(weight.text),
+        'allergy': (textController['allergy'] as TextEditingController).text,
+        'bloodPressure': double.parse(
+            (textController['bloodPressure'] as TextEditingController).text),
+        'clinicalExamination':
+            (textController['clinicalExamination'] as TextEditingController)
+                .text,
+        'conclusionAndTreatment':
+            (textController['conclusionAndTreatment'] as TextEditingController)
+                .text,
+        'diagnostic':
+            (textController['diagnostic'] as TextEditingController).text,
+        'heartBeat': double.parse(
+            (textController['heartBeat'] as TextEditingController).text),
+        'height': double.parse(
+            (textController['height'] as TextEditingController).text),
+        'note': (textController['note'] as TextEditingController).text,
+        'symptom': (textController['symptom'] as TextEditingController).text,
+        'temperature': double.parse(
+            (textController['temperature'] as TextEditingController).text),
+        'weight': double.parse(
+            (textController['weight'] as TextEditingController).text),
         'medicines': medicineFinal,
         'services': serviceFinal,
       };
@@ -140,17 +253,11 @@ class MedicalFormController extends GetxController {
   }
 
   void onPressedClearButton() async {
-    note.clear();
-    clinicalExamination.clear();
-    symptom.clear();
-    diagnostic.clear();
-    conclusionAndTreatment.clear();
-    weight.clear();
-    height.clear();
-    heartBeat.clear();
-    temperature.clear();
-    bloodPressure.clear();
-    allergy.clear();
+    textController.forEach((key, value) => value.clear());
+    listMedicineIndicatorFINAL.clear();
+    listServiceIndicatorFINAL.clear();
+    listMedicineIndicator.clear();
+    listServiceIndicator.clear();
   }
 
 //////////////////////////////////////////////////////////////////////
@@ -177,19 +284,29 @@ class MedicalFormController extends GetxController {
       HealthRecord newRecord = HealthRecord(
         dateCreate: DateTime.now(),
         departmentId: 'departmentId',
-        doctorId: 'doctorId',
+        doctorId: AuthService.instance.user.id,
         totalMoney: totalMoney.value,
-        allergy: allergy.text,
-        bloodPressure: double.parse(bloodPressure.text),
-        clinicalExamination: clinicalExamination.text,
-        conclusionAndTreatment: conclusionAndTreatment.text,
-        diagnostic: diagnostic.text,
-        heartBeat: double.parse(heartBeat.text),
-        height: double.parse(height.text),
-        note: note.text,
-        symptom: symptom.text,
-        temperature: double.parse(temperature.text),
-        weight: double.parse(weight.text),
+        allergy: (textController['allergy'] as TextEditingController).text,
+        bloodPressure: double.parse(
+            (textController['bloodPressure'] as TextEditingController).text),
+        clinicalExamination:
+            (textController['clinicalExamination'] as TextEditingController)
+                .text,
+        conclusionAndTreatment:
+            (textController['conclusionAndTreatment'] as TextEditingController)
+                .text,
+        diagnostic:
+            (textController['diagnostic'] as TextEditingController).text,
+        heartBeat: double.parse(
+            (textController['heartBeat'] as TextEditingController).text),
+        height: double.parse(
+            (textController['height'] as TextEditingController).text),
+        note: (textController['note'] as TextEditingController).text,
+        symptom: (textController['symptom'] as TextEditingController).text,
+        temperature: double.parse(
+            (textController['temperature'] as TextEditingController).text),
+        weight: double.parse(
+            (textController['weight'] as TextEditingController).text),
         medicines: medicineFinal,
         services: serviceFinal,
       );
@@ -285,8 +402,17 @@ class MedicalFormController extends GetxController {
     return listServiceIndicator.containsKey(id);
   }
 
+//////////////////////////////////////////////////////////////////////\
+  List<String> convertMap2List(List<Map<String, dynamic>> source) {
+    List<String> result = [];
+    for (var element in source) {}
+    return result;
+  }
+
   //////////////////////////////////////////////////////////////////////\
-  List<String> listServiceIndicatorFINAL = [];
+  late List<String> listServiceIndicatorFINAL = convertMap2List(
+    currentHealthRecord.value?.services ?? [],
+  );
   late final RxMap<String, Service> listServiceIndicator =
       RxMap<String, Service>({});
 
@@ -311,7 +437,7 @@ class MedicalFormController extends GetxController {
     update(['resultService', id]);
   }
 
-  List<String> listMedicineIndicatorFINAL = [];
+  late List<String> listMedicineIndicatorFINAL = [];
   late final RxMap<String, Medicine> listMedicineIndicator =
       RxMap<String, Medicine>({});
 

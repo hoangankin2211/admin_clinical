@@ -1,15 +1,12 @@
 import 'package:admin_clinical/features/form/widgets/form_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../../constants/app_decoration.dart';
 import '../../../overview/widgets/custom_table.dart';
 import '../../controller/medical_form_controller.dart';
 import '../medicine_indication_widgets/medicine_search_form.dart';
 
 class ResultIndication extends StatelessWidget {
-  ResultIndication({super.key});
-
-  final medicalIndicationController = Get.find<MedicalFormController>();
+  const ResultIndication({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +30,7 @@ class ResultIndication extends StatelessWidget {
                   assignId: true,
                   id: 'resultService',
                   autoRemove: false,
-                  builder: (controller) {
+                  builder: (medicalIndicationController) {
                     return ListView.builder(
                       itemBuilder: (context, index) {
                         return ResultServiceTableRow(

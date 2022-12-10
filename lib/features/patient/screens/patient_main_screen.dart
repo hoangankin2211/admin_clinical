@@ -18,20 +18,7 @@ class PatientMainScreen extends StatelessWidget {
       builder: (context, constraints) => PageView(
         controller: patientMainController.pageController,
         physics: const NeverScrollableScrollPhysics(),
-        children: [
-          ListPatientScreen(
-              examinationActionHandle:
-                  patientMainController.examinationActionHandle),
-          Obx(
-            () => patientMainController.selectedPatient.value != null
-                ? MedicalFormScreen(
-                    patient: PatientService.listPatients[
-                        patientMainController.selectedPatient.value!]!,
-                    backButton: patientMainController.backButton,
-                  )
-                : const SizedBox(),
-          ),
-        ],
+        children: patientMainController.pages,
       ),
     );
   }

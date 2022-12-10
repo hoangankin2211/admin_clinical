@@ -2,28 +2,52 @@ import 'package:admin_clinical/services/data_service/health_record_service.dart'
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
-class PatientMainController extends GetxController {
-  late Rx<String?> selectedPatient;
-  late Rx<HealthRecordService?> currentPatientHealthRecord;
-  late PageController pageController;
+import '../../../models/health_record.dart';
+import '../../../services/data_service/patient_service.dart';
+import '../../form/screens/medical_form_screen.dart';
+import '../screens/list_patients_screen.dart';
 
+class PatientMainController extends GetxController {
+  String? selectedPatient;
+  late PageController pageController;
   @override
   void onInit() {
-    selectedPatient = Rx(null);
-    currentPatientHealthRecord = Rx(null);
-    pageController = PageController();
+    selectedPatient = null;
+    pageController = PageController(keepPage: false);
     super.onInit();
   }
 
-  void examinationActionHandle(String patientId) {
-    selectedPatient.value = patientId;
+  late Rx<Widget> nextPage = Rx<Widget>(
+    MedicalFormScreen(
+      patient: PatientService.listPatients[selectedPatient!]!,
+      backButton: backButton,
+    ),
+  );
+
+  late final List<Widget> pages = [
+    ListPatientScreen(examinationActionHandle: examinationActionHandle),
+    Obx(
+      () => selectedPatient != null ? nextPage.value : const SizedBox(),
+    ),
+  ];
+
+  void examinationActionHandle(String patientId, {String? healthRecordId}) {
+    selectedPatient = patientId;
+
+    if (healthRecordId != null) {
+      nextPage.value = MedicalFormScreen(
+        patient: PatientService.listPatients[selectedPatient!]!,
+        backButton: backButton,
+        healthRecordId: HealthRecordService.listHealthRecord[healthRecordId],
+      );
+    }
+
     pageController.animateToPage(1,
         duration: const Duration(milliseconds: 200), curve: Curves.easeIn);
   }
 
   void backButton() {
-    currentPatientHealthRecord.value = null;
-    selectedPatient.value = null;
+    selectedPatient = null;
     pageController.animateToPage(0,
         duration: const Duration(milliseconds: 200), curve: Curves.easeIn);
   }
@@ -31,9 +55,6 @@ class PatientMainController extends GetxController {
   @override
   void onClose() {
     pageController.dispose();
-    selectedPatient.close();
-    currentPatientHealthRecord.close();
-
     super.onClose();
   }
 }

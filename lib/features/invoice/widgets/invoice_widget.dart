@@ -50,6 +50,8 @@ class InvoiceWidget extends StatelessWidget {
                         child: SizedBox(
                           height: constraints.maxHeight * 0.6,
                           child: ExaminationInformationForm(
+                            textController:
+                                medicalFormController.textController,
                             examField: Utils.examField,
                             formKey: medicalFormController.formKey,
                             measureField: Utils.measureField,

@@ -11,8 +11,10 @@ class Patient {
   String status;
   String? avt;
   String? symptom;
+  List<String>? healthRecord = [];
 
   Patient({
+    this.healthRecord,
     this.symptom,
     required this.id,
     required this.name,
@@ -26,17 +28,25 @@ class Patient {
   });
 
   static Patient fromJson(Map<String, dynamic> json) {
+    List<String> healthRecord = [];
+    List<dynamic> temp = json['healthRecord'] ?? [];
+    for (var element in temp) {
+      String recordId = element;
+      healthRecord.add(recordId);
+    }
     return Patient(
-        id: json['_id'] ?? '',
-        name: json['name'] ?? '',
-        gender: json['gender'] ?? '',
-        address: json['address'] ?? '',
-        dob: json['dob'] ?? '',
-        email: json['email'] ?? '',
-        status: json['status'] ?? '',
-        phoneNumber: json['phoneNumber'] ?? '',
-        avt: json['avt'] ?? '',
-        symptom: json['symptom']);
+      id: json['_id'] ?? '',
+      name: json['name'] ?? '',
+      gender: json['gender'] ?? '',
+      address: json['address'] ?? '',
+      dob: json['dob'] ?? '',
+      email: json['email'] ?? '',
+      status: json['status'] ?? '',
+      phoneNumber: json['phoneNumber'] ?? '',
+      avt: json['avt'] ?? '',
+      symptom: json['symptom'],
+      healthRecord: healthRecord,
+    );
   }
 
   String toJson() {
@@ -51,6 +61,7 @@ class Patient {
     data['avt'] = avt;
     data['status'] = status;
     data['symptom'] = symptom;
+    data['healthRecord'] = healthRecord ?? [];
     return jsonEncode(data);
   }
 }

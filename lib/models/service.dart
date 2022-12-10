@@ -29,7 +29,6 @@ class Service {
     data['departmentId'] = departmentId;
     data['price'] = price;
     data['description'] = description;
-
     return data;
   }
 

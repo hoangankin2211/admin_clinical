@@ -5,7 +5,10 @@ import 'package:admin_clinical/features/patient/controller/patient_page_controll
 import 'package:admin_clinical/features/patient/screens/patient_detail_screen.dart';
 import 'package:admin_clinical/features/patient/screens/patient_screen.dart';
 import 'package:admin_clinical/features/patient/widgets/edit_patient_dialog.dart';
+import 'package:admin_clinical/features/patient/widgets/select_health_record_dialog.dart';
+import 'package:admin_clinical/models/health_record.dart';
 import 'package:admin_clinical/models/patient.dart';
+import 'package:admin_clinical/services/data_service/health_record_service.dart';
 import 'package:admin_clinical/services/data_service/patient_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -28,14 +31,27 @@ const Map<String, String> patientListField = {
 
 class ListPatientScreen extends StatelessWidget {
   ListPatientScreen({super.key, required this.examinationActionHandle});
-  final Function(String) examinationActionHandle;
+  final Function(String, {String? healthRecordId}) examinationActionHandle;
   final patientPageController = Get.put(PatientPageController());
 
   void _onSelectionAction(
       String value, int index, BuildContext context, Patient patient) async {
     if (value == 'Examination') {
-      examinationActionHandle(
-          patientPageController.data.value.values.elementAt(index).id);
+      Patient temp = patientPageController.data.value.values.elementAt(index);
+      List<HealthRecord> listHealthRecord = [];
+
+      if (temp.healthRecord != null) {
+        temp.healthRecord?.forEach((element) {
+          listHealthRecord.add(HealthRecordService.listHealthRecord[element]!);
+        });
+      }
+      Get.dialog(
+        SelectRecordDialog(
+          records: listHealthRecord,
+          onTapRecord: examinationActionHandle,
+          patientId: patient.id,
+        ),
+      );
     } else if (value == 'Detail') {
       Get.dialog(const PatientDetailScreen());
     } else if (value == 'Edit') {
