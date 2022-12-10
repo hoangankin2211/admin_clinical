@@ -14,6 +14,7 @@ class Medicine {
   String description;
   String unit;
   int amount;
+  List<Map<String, dynamic>> listPass;
   Medicine({
     required this.id,
     required this.name,
@@ -24,6 +25,7 @@ class Medicine {
     required this.description,
     required this.unit,
     required this.amount,
+    required this.listPass,
   });
   factory Medicine.fromMap(Map<String, dynamic> json) => Medicine(
         id: json['_id'],
@@ -35,6 +37,14 @@ class Medicine {
         description: json['description'],
         unit: json['unit'],
         amount: json['amount'],
+        listPass: [
+          for (var item in List<Map<String, dynamic>>.from((json['listPass'])))
+            {
+              'date': DateTime.fromMillisecondsSinceEpoch(item['date']),
+              'price': item['price'],
+              'remain': item['remain'],
+            }
+        ],
       );
   Map<String, dynamic> toJson() => {
         '_id': id,
@@ -46,6 +56,7 @@ class Medicine {
         'description': description,
         'unit': unit,
         'amount': amount,
+        'listPass': listPass,
       };
 
   factory Medicine.fromJson(String source) =>
@@ -61,6 +72,7 @@ class Medicine {
     String? description,
     String? unit,
     int? amount,
+    List<Map<String, dynamic>>? listPass,
   }) {
     return Medicine(
       id: id ?? this.id,
@@ -72,6 +84,7 @@ class Medicine {
       description: description ?? this.description,
       unit: unit ?? this.unit,
       amount: amount ?? this.amount,
+      listPass: listPass ?? this.listPass,
     );
   }
 }

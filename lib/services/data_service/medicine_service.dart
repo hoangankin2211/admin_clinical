@@ -154,6 +154,36 @@ class MedicineService {
     return result;
   }
 
+  Future<Medicine?> passMedicine(
+    BuildContext context, {
+    required String id,
+    required DateTime time,
+    required double price,
+  }) async {
+    Medicine? result;
+    try {
+      print('Pass Medicine is called');
+      http.Response res = await http.post(
+        Uri.parse('${ApiLink.uri}/api/medicine/pass_medicine'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode({
+          'id': id,
+          'datePass': time.millisecondsSinceEpoch,
+          'price': price,
+        }),
+      );
+      print(res.body);
+      if (res.statusCode == 200) {
+        result = Medicine.fromMap(jsonDecode(res.body));
+      }
+    } catch (e) {
+      result = null;
+    } finally {}
+    return result;
+  }
+
   Future<Medicine?> insertNewMedcine(
     BuildContext context, {
     required String name,

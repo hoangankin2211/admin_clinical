@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:admin_clinical/constants/fake_data.dart';
 import 'package:admin_clinical/constants/global_widgets/list_item.dart';
+import 'package:admin_clinical/constants/global_widgets/rangeDate_picker_dialog.dart';
 import 'package:admin_clinical/features/auth/widgets/custom_button.dart';
 import 'package:admin_clinical/features/medicine/controller/medicine_controller.dart';
 import 'package:admin_clinical/features/medicine/widgets/change_no_data_field.dart';
@@ -420,6 +421,10 @@ class _MedicineScreenState extends State<MedicineScreen> {
                                       isDelete = true;
                                       controller.deleteMedicine(context,
                                           controller.listMedicine.value[i].id);
+                                      // controller.passMedicine(
+                                      //     context,
+                                      //     controller.listMedicine.value[i].id,
+                                      //     controller.listMedicine[i].price);
                                     },
                                     child: const Text('YES'),
                                   ),
@@ -471,7 +476,16 @@ class _MedicineScreenState extends State<MedicineScreen> {
               ),
             ),
             InkWell(
-              onTap: () {},
+              onTap: () => Get.dialog(
+                DialogPickRangeDate(
+                  controller: controller.dateController2Column,
+                  callback: () {
+                    controller.dateController2Column.selectDateDoneClick();
+                    controller.fetchData2ColumnChart();
+                    Get.back();
+                  },
+                ),
+              ),
               child: Row(children: const [
                 Text("Last Week ",
                     style: TextStyle(
@@ -499,40 +513,48 @@ class _MedicineScreenState extends State<MedicineScreen> {
                 ),
               ),
               const SizedBox(width: 10),
-              Expanded(
-                flex: 6,
-                child: Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: AppColors.backgroundColor,
-                    borderRadius: BorderRadius.circular(10.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.headline1TextColor.withOpacity(0.3),
-                        blurRadius: 10.0,
-                      ),
-                    ],
-                  ),
-                  child: ColumnChartTwoColumnCustom(
-                    barGroups: [
-                      makeGroupData(0, 150 / 300 * 20, 60 / 300 * 20),
-                      makeGroupData(1, 180 / 300 * 20, 70 / 300 * 20),
-                      makeGroupData(2, 80 / 300 * 20, 50 / 300 * 20),
-                      makeGroupData(2, 100 / 300 * 20, 30 / 300 * 20),
-                      makeGroupData(1, 180 / 300 * 20, 70 / 300 * 20),
-                      makeGroupData(2, 80 / 300 * 20, 50 / 300 * 20),
-                      makeGroupData(2, 100 / 300 * 20, 30 / 300 * 20),
-                    ],
-                    members: const [
-                      'Sun',
-                      'Mon',
-                      'Tue',
-                      'Wed',
-                      'Thu',
-                      'Fri',
-                      'Sat'
-                    ],
-                    columnData: 300,
+              Obx(
+                () => Expanded(
+                  flex: 6,
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: AppColors.backgroundColor,
+                      borderRadius: BorderRadius.circular(10.0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.headline1TextColor.withOpacity(0.3),
+                          blurRadius: 10.0,
+                        ),
+                      ],
+                    ),
+                    child: ColumnChartTwoColumnCustom(
+                      barGroups: [
+                        ...controller.listDataChart1.map((e) => makeGroupData(
+                              e['id'],
+                              controller.maxOfList2ColumnChart == 0
+                                  ? 0
+                                  : e['remain'] /
+                                      controller.maxOfList2ColumnChart.value *
+                                      20,
+                              controller.maxOfList2ColumnChart == 0
+                                  ? 0
+                                  : e['sold'] /
+                                      controller.maxOfList2ColumnChart.value *
+                                      20,
+                            )),
+                      ],
+                      members: const [
+                        'Sun',
+                        'Mon',
+                        'Tue',
+                        'Wed',
+                        'Thu',
+                        'Fri',
+                        'Sat'
+                      ],
+                      columnData: controller.maxOfList2ColumnChart.value,
+                    ),
                   ),
                 ),
               ),
@@ -543,186 +565,186 @@ class _MedicineScreenState extends State<MedicineScreen> {
     );
   }
 
-  Expanded _remainingMedcineField() {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.all(15.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10.0),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.3),
-              blurRadius: 10.0,
-            )
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: const [
-                Icon(FontAwesome.medkit, color: Colors.red),
-                Expanded(
-                  child: Text(
-                    " Remaining medicine",
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18.0,
-                    ),
-                  ),
-                ),
+  Widget _remainingMedcineField() {
+    return Obx(() => Expanded(
+          child: Container(
+            padding: const EdgeInsets.all(15.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10.0),
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.3),
+                  blurRadius: 10.0,
+                )
               ],
             ),
-            const Spacer(),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                RichText(
-                  text: const TextSpan(
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18.0,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: const [
+                    Icon(FontAwesome.medkit, color: AppColors.primaryColor),
+                    Expanded(
+                      child: Text(
+                        " Remaining medicine",
+                        style: TextStyle(
+                          color: AppColors.primaryColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18.0,
+                        ),
+                      ),
                     ),
-                    children: [
-                      TextSpan(
-                        text: "Amount: ",
-                        style: TextStyle(
-                          color: AppColors.headline1TextColor,
-                        ),
-                      ),
-                      TextSpan(
-                        text: "233 ",
-                        style: TextStyle(
-                          color: AppColors.primarySecondColor,
-                        ),
-                      ),
-                    ],
-                  ),
+                  ],
                 ),
-                const SizedBox(height: 5.0),
-                RichText(
-                  text: const TextSpan(
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18.0,
+                const Spacer(),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    RichText(
+                      text: TextSpan(
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18.0,
+                        ),
+                        children: [
+                          const TextSpan(
+                            text: "Amount: ",
+                            style: TextStyle(
+                              color: AppColors.headline1TextColor,
+                            ),
+                          ),
+                          TextSpan(
+                            text: "${controller.remainAmount} ",
+                            style: const TextStyle(
+                              color: AppColors.primarySecondColor,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    children: [
-                      TextSpan(
-                        text: "Price: ",
-                        style: TextStyle(
-                          color: AppColors.headline1TextColor,
+                    const SizedBox(height: 5.0),
+                    RichText(
+                      text: TextSpan(
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18.0,
                         ),
+                        children: [
+                          const TextSpan(
+                            text: "Price: ",
+                            style: TextStyle(
+                              color: AppColors.headline1TextColor,
+                            ),
+                          ),
+                          TextSpan(
+                            text: "\$${controller.priceRemain} ",
+                            style: const TextStyle(
+                              color: AppColors.primarySecondColor,
+                            ),
+                          ),
+                        ],
                       ),
-                      TextSpan(
-                        text: "\$300 ",
-                        style: TextStyle(
-                          color: AppColors.primarySecondColor,
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
-        ),
-      ),
-    );
+          ),
+        ));
   }
 
-  Expanded _numberDrugField() {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.all(15.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10.0),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.3),
-              blurRadius: 10.0,
-            )
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: const [
-                Icon(FontAwesome.medkit, color: Colors.green),
-                Expanded(
-                  child: Text(
-                    " Number of drugs sold",
-                    style: TextStyle(
-                      color: Colors.green,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18.0,
-                    ),
-                  ),
-                ),
+  Widget _numberDrugField() {
+    return Obx(() => Expanded(
+          child: Container(
+            padding: const EdgeInsets.all(15.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10.0),
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.3),
+                  blurRadius: 10.0,
+                )
               ],
             ),
-            const Spacer(),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                RichText(
-                  text: const TextSpan(
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18.0,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: const [
+                    Icon(FontAwesome.medkit, color: Colors.red),
+                    Expanded(
+                      child: Text(
+                        " Number of drugs sold",
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18.0,
+                        ),
+                      ),
                     ),
-                    children: [
-                      TextSpan(
-                        text: "Amount: ",
-                        style: TextStyle(
-                          color: AppColors.headline1TextColor,
-                        ),
-                      ),
-                      TextSpan(
-                        text: "233 ",
-                        style: TextStyle(
-                          color: AppColors.primarySecondColor,
-                        ),
-                      ),
-                    ],
-                  ),
+                  ],
                 ),
-                const SizedBox(height: 5.0),
-                RichText(
-                  text: const TextSpan(
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18.0,
+                const Spacer(),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    RichText(
+                      text: TextSpan(
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18.0,
+                        ),
+                        children: [
+                          const TextSpan(
+                            text: "Amount: ",
+                            style: TextStyle(
+                              color: AppColors.headline1TextColor,
+                            ),
+                          ),
+                          TextSpan(
+                            text: "${controller.noSoldAmount.value} ",
+                            style: const TextStyle(
+                              color: AppColors.primarySecondColor,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    children: [
-                      TextSpan(
-                        text: "Price: ",
-                        style: TextStyle(
-                          color: AppColors.headline1TextColor,
+                    const SizedBox(height: 5.0),
+                    RichText(
+                      text: TextSpan(
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18.0,
                         ),
+                        children: [
+                          const TextSpan(
+                            text: "Price: ",
+                            style: TextStyle(
+                              color: AppColors.headline1TextColor,
+                            ),
+                          ),
+                          TextSpan(
+                            text: "\$${controller.priceSold.value} ",
+                            style: const TextStyle(
+                              color: AppColors.primarySecondColor,
+                            ),
+                          ),
+                        ],
                       ),
-                      TextSpan(
-                        text: "\$300 ",
-                        style: TextStyle(
-                          color: AppColors.primarySecondColor,
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
-        ),
-      ),
-    );
+          ),
+        ));
   }
 }
 

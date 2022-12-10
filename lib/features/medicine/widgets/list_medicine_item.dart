@@ -69,9 +69,9 @@ class ListMedicineItem extends StatelessWidget {
             fontSize: 18.0,
           ),
         ),
-        const Text(
-          '200',
-          style: TextStyle(
+        Text(
+          e.listPass.length.toString(),
+          style: const TextStyle(
             color: Colors.red,
             fontWeight: FontWeight.bold,
             fontSize: 18.0,

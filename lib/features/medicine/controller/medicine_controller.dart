@@ -9,6 +9,9 @@ import 'package:admin_clinical/services/data_service/medicine_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+
+import '../../overview/controller/date_picker_controller.dart';
 
 class MedicineController extends GetxController {
   final controller = Get.find<OverviewController>();
@@ -25,6 +28,79 @@ class MedicineController extends GetxController {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController typeController = TextEditingController();
+
+  RxList<Map<String, dynamic>> listDataChart1 = <Map<String, dynamic>>[].obs;
+
+  //chart
+
+  DateRangePicker dateController2Column = DateRangePicker(
+      selectDateTemp1: DateTime.now(),
+      selectDateTemp2: DateTime.now(),
+      dateController: DateRangePickerController(),
+      startDate: DateTime.now().obs,
+      finishDate: DateTime.now().obs,
+      allDateBetWeen: <DateTime>[].obs);
+
+  DateRangePicker dateController1Line = DateRangePicker(
+      selectDateTemp1: DateTime.now(),
+      selectDateTemp2: DateTime.now(),
+      dateController: DateRangePickerController(),
+      startDate: DateTime.now().obs,
+      finishDate: DateTime.now().obs,
+      allDateBetWeen: <DateTime>[].obs);
+
+  RxInt maxOfList2ColumnChart = 0.obs;
+
+  RxInt noSoldAmount = 0.obs;
+  RxDouble priceSold = 0.0.obs;
+
+  RxInt remainAmount = 0.obs;
+  RxDouble priceRemain = 0.0.obs;
+
+  fetchData2ColumnChart() {
+    noSoldAmount.value = 0;
+    priceSold.value = 0.0;
+
+    remainAmount.value = 0;
+    priceRemain.value = 0.0;
+
+    listDataChart1.clear();
+    listDataChart1.value = [
+      for (var item in dateController2Column.allDateBetWeen)
+        {
+          'id': item.weekday,
+          'remain': 0,
+          'sold': 0,
+        }
+    ];
+    listDataChart1.sort((a, b) => a['id'].compareTo(b['id']));
+    for (var item in MedicineService.instance.listMedicine) {
+      int weekDay = -1;
+      int remain = 0;
+      for (var i in item.listPass) {
+        if (dateController2Column.checkDateInList(
+            i['date'], dateController2Column.allDateBetWeen)) {
+          weekDay = (i['date'] as DateTime).weekday;
+          listDataChart1[weekDay - 1]['sold'] += 1;
+          noSoldAmount.value += 1;
+          priceSold.value += price * 1.0;
+          remain = i['remain'];
+        }
+      }
+      remainAmount.value += remain;
+      priceRemain.value += remain * item.price;
+
+      if (weekDay != -1) {
+        listDataChart1[weekDay - 1]['remain'] += remain;
+      }
+    }
+    listDataChart1[6]['id'] = 0;
+    listDataChart1.sort((a, b) => a['id'].compareTo(b['id']));
+    maxOfList2ColumnChart.value = [
+      for (var item in listDataChart1)
+        item['remain'] > item['sold'] ? item['remain'] : item['sold']
+    ].reduce((v, e) => v > e ? v : e);
+  }
 
   RxInt selectType = 0.obs;
   RxInt selectUnit = 0.obs;
@@ -165,6 +241,18 @@ class MedicineController extends GetxController {
     }
   }
 
+  passMedicine(BuildContext context, String id, double price) async {
+    Medicine? temp = await MedicineService.instance
+        .passMedicine(context, id: id, time: DateTime.now(), price: price);
+    if (temp != null) {
+      MedicineService.instance.listMedicine[selectMedcine.value] = temp;
+      isLoadingEdit.value = false;
+      Get.dialog(
+        const SuccessDialog(question: "Edit Medicine", title1: "Success"),
+      );
+    }
+  }
+
   editMedicine(BuildContext context, Uint8List? image) async {
     if (rxnameController.value.text == "" ||
         rxdescriptionController.value.text == "" ||
@@ -212,5 +300,8 @@ class MedicineController extends GetxController {
     if (listMedicine.isNotEmpty) {
       funcselectMedincine(0);
     }
+
+    dateController2Column.getStartDateAndFinishDate();
+    fetchData2ColumnChart();
   }
 }

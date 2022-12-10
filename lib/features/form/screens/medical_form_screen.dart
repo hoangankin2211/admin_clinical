@@ -4,6 +4,8 @@ import 'package:admin_clinical/features/auth/widgets/custom_button.dart';
 import 'package:admin_clinical/features/form/controller/medical_form_controller.dart';
 import 'package:admin_clinical/features/form/screens/service_indication_dialog.dart';
 import 'package:admin_clinical/models/health_record.dart';
+import 'package:admin_clinical/models/invoice.dart';
+import 'package:admin_clinical/services/data_service/invoice_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -151,6 +153,36 @@ class MedicalFormScreen extends StatelessWidget {
 
                                       if (result != null) {
                                         if (result as bool) {
+                                          if (medicalFormController
+                                                  .currentHealthRecord
+                                                  .value!
+                                                  .totalMoney !=
+                                              0.0) {
+                                            // ignore: use_build_context_synchronously
+                                            Invoice? temp = await InvoiceService
+                                                .instance
+                                                .addInvoiceHealthRecord(
+                                              context,
+                                              thumb:
+                                                  'https://www.wellsteps.com/blog/wp-content/uploads/2017/05/benefits-of-wellness.jpg',
+                                              amount: medicalFormController
+                                                  .currentHealthRecord
+                                                  .value!
+                                                  .totalMoney,
+                                              status: 0,
+                                              title: "Make Payment",
+                                              hrId: medicalFormController
+                                                  .currentHealthRecord
+                                                  .value!
+                                                  .id!,
+                                              category: "Payment",
+                                            );
+                                            if (temp != null) {
+                                              InvoiceService
+                                                  .instance.listInvoice
+                                                  .add(temp);
+                                            }
+                                          }
                                         } else {
                                           backButton();
                                         }
