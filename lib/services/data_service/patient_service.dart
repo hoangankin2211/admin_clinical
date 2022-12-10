@@ -32,7 +32,7 @@ class PatientService {
           Map<String, dynamic> map = extractedData[i];
           listPatients.addAll({map['_id']: Patient.fromJson(map)});
         }
-        DataService.instance.checkFetchData.value.add(1);
+        DataService.instance.checkFetchData.add(1);
       }
     } catch (e) {
       print('fetchAllPatientData:$e');

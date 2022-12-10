@@ -26,13 +26,17 @@ class MedicalFormScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<MedicalFormController>(
-        init: MedicalFormController(record: healthRecordId),
+        init: MedicalFormController(),
         builder: (medicalFormController) {
+          medicalFormController.currentHealthRecord.value = healthRecordId;
+          medicalFormController.fetchIndicatorData();
           final List<Map<String, dynamic>> listIconAndLabel = [
             {
               'title': 'Service Indication',
               'icon': Icons.note_add_outlined,
-              'dialog': ServiceIndicationDialog(patient: patient),
+              'dialog': ServiceIndicationDialog(
+                patient: patient,
+              ),
               'cacheData': medicalFormController.listServiceIndicator,
               'finalData': medicalFormController.listServiceIndicatorFINAL
             },
@@ -44,8 +48,11 @@ class MedicalFormScreen extends StatelessWidget {
               'finalData': medicalFormController.listMedicineIndicatorFINAL
             },
           ];
-          Future openDialog(Widget widget, Map<String, dynamic> cacheData,
-              List<String> finalData) async {
+          Future openDialog(
+            Widget widget,
+            Map<String, dynamic> cacheData,
+            List<String> finalData,
+          ) async {
             final response = await Get.dialog(widget);
 
             if (response == null || response == false) {
@@ -74,8 +81,11 @@ class MedicalFormScreen extends StatelessWidget {
                   onPressed: () async {
                     if (medicalFormController.currentHealthRecord.value !=
                         null) {
-                      await openDialog(element['dialog'], element['cacheData'],
-                          element['finalData']);
+                      await openDialog(
+                        element['dialog'],
+                        element['cacheData'],
+                        element['finalData'],
+                      );
                     } else {
                       Utils.notifyHandle(
                         response: false,
@@ -101,7 +111,6 @@ class MedicalFormScreen extends StatelessWidget {
               .toList();
           return LayoutBuilder(
             builder: (context, constraints) {
-              medicalFormController.currentHealthRecord.value = healthRecordId;
               return Obx(
                 () => medicalFormController.isLoading.value
                     ? const Center(child: CircularProgressIndicator())
@@ -191,7 +200,13 @@ class MedicalFormScreen extends StatelessWidget {
                                                     .value !=
                                                 null
                                             ? medicalFormController
-                                                .onPressedUpdateButton(context)
+                                                .onPressedUpdateButton(
+                                                context,
+                                                // listIconAndLabel[0]['finalData']
+                                                //     as List<String>,
+                                                // listIconAndLabel[1]['finalData']
+                                                //     as List<String>,
+                                              )
                                             : medicalFormController
                                                 .onPressedCreateButton(
                                                 context,
@@ -220,6 +235,7 @@ class MedicalFormScreen extends StatelessWidget {
                                             .currentHealthRecord.value!.id!,
                                         context,
                                         patient.id,
+                                        backButton,
                                       ),
                                     ),
                                   ),

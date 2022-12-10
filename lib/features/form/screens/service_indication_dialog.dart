@@ -92,7 +92,7 @@ class ServiceIndicationDialog extends StatelessWidget {
                           ],
                         ),
                       ),
-                      Flexible(
+                      const Flexible(
                         child: FormCard(
                           child: ResultIndication(),
                         ),

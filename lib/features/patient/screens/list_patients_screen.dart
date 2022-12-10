@@ -42,7 +42,10 @@ class ListPatientScreen extends StatelessWidget {
 
       if (temp.healthRecord != null) {
         temp.healthRecord?.forEach((element) {
-          listHealthRecord.add(HealthRecordService.listHealthRecord[element]!);
+          if (HealthRecordService.listHealthRecord[element] != null) {
+            listHealthRecord
+                .add(HealthRecordService.listHealthRecord[element]!);
+          }
         });
       }
       Get.dialog(
