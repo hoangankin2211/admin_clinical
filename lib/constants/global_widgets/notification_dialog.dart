@@ -9,7 +9,7 @@ class CustomNotificationDialog extends StatelessWidget {
     required this.content,
   }) : super(key: key);
 
-  final String title;
+  final String title; 
   final String content;
 
   @override

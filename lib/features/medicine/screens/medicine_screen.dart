@@ -118,9 +118,22 @@ class _MedicineScreenState extends State<MedicineScreen> {
                                 ),
                               ),
                               InkWell(
-                                onTap: () {},
+                                onTap: () => Get.dialog(
+                                  DialogPickRangeDate(
+                                    controller: controller.dateController1Line,
+                                    callback: () {
+                                      controller.dateController1Line
+                                          .selectDateDoneClick();
+                                      controller.fetchData1LineChart(controller
+                                          .listMedicine[
+                                              controller.selectMedcine.value]
+                                          .id);
+                                      Get.back();
+                                    },
+                                  ),
+                                ),
                                 child: Row(children: const [
-                                  Text("Last Week ",
+                                  Text("Selecct Week ",
                                       style: TextStyle(
                                           color: AppColors.primarySecondColor,
                                           fontWeight: FontWeight.bold,
@@ -132,30 +145,44 @@ class _MedicineScreenState extends State<MedicineScreen> {
                             ],
                           ),
                           const SizedBox(height: 20.0),
-                          Container(
-                            height: 210,
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(15.0),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.0),
-                              color: AppColors.backgroundColor,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: AppColors.headline1TextColor
-                                      .withOpacity(0.2),
-                                  blurRadius: 4.0,
-                                )
-                              ],
+                          Obx(
+                            () => Container(
+                              height: 210,
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(15.0),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.0),
+                                color: AppColors.backgroundColor,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: AppColors.headline1TextColor
+                                        .withOpacity(0.2),
+                                    blurRadius: 4.0,
+                                  )
+                                ],
+                              ),
+                              child: LineChartDesign(
+                                  maxTitle: controller.maxOflistChart2.value
+                                      .toString(),
+                                  middleTitle:
+                                      (controller.maxOflistChart2.value / 2)
+                                          .round()
+                                          .toString(),
+                                  listData: [
+                                    ...controller.listDataChart2.map(
+                                      (element) => FlSpot(
+                                        element['id'],
+                                        // ignore: unrelated_type_equality_checks
+                                        controller.maxOflistChart2 != 0
+                                            ? (element['price'] /
+                                                    controller.maxOflistChart2
+                                                        .value) *
+                                                5
+                                            : 0,
+                                      ),
+                                    ),
+                                  ]),
                             ),
-                            child: const LineChartDesign(listData: [
-                              FlSpot(0, 3.44),
-                              FlSpot(1, 2.44),
-                              FlSpot(2, 4.44),
-                              FlSpot(3, 1.44),
-                              FlSpot(4, 5),
-                              FlSpot(5, 4.44),
-                              FlSpot(6, 2.44),
-                            ]),
                           ),
                           const SizedBox(height: 10.0),
                           const Divider(thickness: 1),

@@ -50,10 +50,8 @@ class MedicineController extends GetxController {
       allDateBetWeen: <DateTime>[].obs);
 
   RxInt maxOfList2ColumnChart = 0.obs;
-
   RxInt noSoldAmount = 0.obs;
   RxDouble priceSold = 0.0.obs;
-
   RxInt remainAmount = 0.obs;
   RxDouble priceRemain = 0.0.obs;
 
@@ -83,7 +81,7 @@ class MedicineController extends GetxController {
           weekDay = (i['date'] as DateTime).weekday;
           listDataChart1[weekDay - 1]['sold'] += 1;
           noSoldAmount.value += 1;
-          priceSold.value += price * 1.0;
+          priceSold.value += item.price * 1.0;
           remain = i['remain'];
         }
       }
@@ -100,6 +98,38 @@ class MedicineController extends GetxController {
       for (var item in listDataChart1)
         item['remain'] > item['sold'] ? item['remain'] : item['sold']
     ].reduce((v, e) => v > e ? v : e);
+  }
+
+  RxList<Map<String, dynamic>> listDataChart2 = <Map<String, dynamic>>[].obs;
+
+  RxInt maxOflistChart2 = 0.obs;
+
+  fetchData1LineChart(String id) {
+    listDataChart2.clear();
+    listDataChart2.value = [
+      for (var item in dateController1Line.allDateBetWeen)
+        {
+          'id': item.weekday,
+          'price': 0,
+        }
+    ];
+    listDataChart2.sort((a, b) => a['id'].compareTo(b['id']));
+    for (var item in MedicineService.instance.listMedicine) {
+      if (item.id == id) {
+        for (var i in item.listPass) {
+          if (dateController1Line.checkDateInList(
+              i['date'], dateController1Line.allDateBetWeen)) {
+            int weekDay = (i['date'] as DateTime).weekday;
+            listDataChart2[weekDay - 1]['price'] += i['price'];
+          }
+        }
+        break;
+      }
+    }
+    listDataChart2[6]['id'] = 0;
+    listDataChart2.sort((a, b) => a['id'].compareTo(b['id']));
+    maxOflistChart2.value = [for (var item in listDataChart2) item['price']]
+        .reduce((v, e) => v > e ? v : e);
   }
 
   RxInt selectType = 0.obs;
@@ -127,6 +157,7 @@ class MedicineController extends GetxController {
   RxInt selectTypeEdit = 0.obs;
   RxBool isLoadingEdit = false.obs;
   Rx<TextEditingController> rxpriceController = TextEditingController().obs;
+
   funcselectMedincine(int index) {
     selectMedcine.value = index;
     rxnameController.value.text = listMedicine[selectMedcine.value].name;
@@ -140,6 +171,7 @@ class MedicineController extends GetxController {
         break;
       }
     }
+    fetchData1LineChart(listMedicine[selectMedcine.value].id);
   }
 
   void nullAllField() {
@@ -298,6 +330,7 @@ class MedicineController extends GetxController {
       }
     }
     if (listMedicine.isNotEmpty) {
+      dateController1Line.getStartDateAndFinishDate();
       funcselectMedincine(0);
     }
 

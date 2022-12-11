@@ -153,39 +153,30 @@ class MedicalFormScreen extends StatelessWidget {
 
                                       if (result != null) {
                                         if (result as bool) {
-                                          if (medicalFormController
-                                                  .currentHealthRecord
-                                                  .value!
-                                                  .totalMoney !=
-                                              0.0) {
-                                            // ignore: use_build_context_synchronously
-                                            Invoice? temp = await InvoiceService
-                                                .instance
-                                                .addInvoiceHealthRecord(
-                                              context,
-                                              thumb:
-                                                  'https://www.wellsteps.com/blog/wp-content/uploads/2017/05/benefits-of-wellness.jpg',
-                                              amount: medicalFormController
-                                                  .currentHealthRecord
-                                                  .value!
-                                                  .totalMoney,
-                                              status: 0,
-                                              title: "Make Payment",
-                                              hrId: medicalFormController
-                                                  .currentHealthRecord
-                                                  .value!
-                                                  .id!,
-                                              category: "Payment",
-                                            );
-                                            if (temp != null) {
-                                              InvoiceService
-                                                  .instance.listInvoice
-                                                  .add(temp);
-                                            }
+                                          // ignore: use_build_context_synchronously
+                                          Invoice? temp = await InvoiceService
+                                              .instance
+                                              .addInvoiceHealthRecord(
+                                            context,
+                                            thumb:
+                                                'https://www.wellsteps.com/blog/wp-content/uploads/2017/05/benefits-of-wellness.jpg',
+                                            amount: medicalFormController
+                                                .currentHealthRecord
+                                                .value!
+                                                .totalMoney,
+                                            status: 0,
+                                            title: "Make Payment",
+                                            hrId: medicalFormController
+                                                .currentHealthRecord.value!.id!,
+                                            category: "Payment",
+                                          );
+                                          if (temp != null) {
+                                            InvoiceService.instance.listInvoice
+                                                .add(temp);
                                           }
-                                        } else {
-                                          backButton();
                                         }
+                                      } else {
+                                        backButton();
                                       }
                                     },
                                     icon: const Icon(

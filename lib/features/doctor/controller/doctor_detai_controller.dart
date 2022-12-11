@@ -14,11 +14,13 @@ class DoctorDetailController extends GetxController {
   RxMap<String, HealthRecord> listRecord = RxMap({});
   RxMap<String, Patient> listPatient = PatientService.listPatients;
   RxString selectRecord = "".obs;
+  bool checkPatient = false;
   RxString select_patient_record = "".obs;
 
   int get checkNull => listRecord.isEmpty
       ? 0
-      : select_patient_record.value == ""
+      : select_patient_record.value == "" ||
+              !listPatient.containsKey(select_patient_record.value)
           ? 1
           : 2;
 
@@ -28,9 +30,9 @@ class DoctorDetailController extends GetxController {
     doctor = Get.arguments['doctor'] as Doctor1;
     listPatient = PatientService.listPatients;
     for (var item in HealthRecordService.listHealthRecord.values) {
-      // if (item.doctorId == doctor.iDBS) {
-      listRecord.addAll({item.id!: item});
-      // }
+      if (item.doctorId == doctor.iDBS) {
+        listRecord.addAll({item.id!: item});
+      }
     }
     if (listRecord.isNotEmpty) {
       selectRecordFunc(listRecord.keys.first);

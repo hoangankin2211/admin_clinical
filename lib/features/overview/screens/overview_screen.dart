@@ -594,7 +594,7 @@ class OverviewScreen extends StatelessWidget {
                                           ),
                                         ),
                                         Text(
-                                          e.amount.toString(),
+                                          e.listPass.length.toString(),
                                           style: const TextStyle(
                                             overflow: TextOverflow.ellipsis,
                                             color: AppColors.primarySecondColor,
