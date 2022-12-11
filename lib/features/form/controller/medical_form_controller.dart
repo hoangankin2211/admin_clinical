@@ -54,7 +54,7 @@ class MedicalFormController extends GetxController {
     if (isValidated) {
       formKey.currentState!.save();
       isLoading.value = true;
-      final response = await createNewHealthRecord(context);
+      final response = await createNewHealthRecord(patientId, context);
       isLoading.value = false;
 
       bool result = false;
@@ -180,6 +180,7 @@ class MedicalFormController extends GetxController {
 
   void onPressedUpdateButton(
     BuildContext context,
+    String patientId,
     // List<String> listServiceIndicatorFINAL,
     // List<String> listMedicineIndicatorFINAL,
   ) async {
@@ -211,6 +212,7 @@ class MedicalFormController extends GetxController {
 
       Map<String, dynamic> newHealthRecord = {
         'id': currentHealthRecord.value!.id,
+        'patientId': patientId,
         'dateCreate': currentHealthRecord.value!.dateCreate.toIso8601String(),
         'departmentId': 'departmentId',
         'doctorId': 'doctorId',
@@ -261,7 +263,7 @@ class MedicalFormController extends GetxController {
 
 //////////////////////////////////////////////////////////////////////
   Future<Map<String, dynamic>> createNewHealthRecord(
-      BuildContext context) async {
+      String patientId, BuildContext context) async {
     try {
       List<Map<String, dynamic>> serviceFinal = [];
       List<Map<String, dynamic>> medicineFinal = [];
@@ -292,6 +294,7 @@ class MedicalFormController extends GetxController {
       HealthRecord newRecord = HealthRecord(
         dateCreate: DateTime.now(),
         departmentId: 'departmentId',
+        patientId: patientId,
         doctorId: AuthService.instance.user.id,
         totalMoney: totalMoney.value,
         allergy: (textController['allergy'] as TextEditingController).text,
@@ -465,27 +468,33 @@ class MedicalFormController extends GetxController {
     update(['ResultMedicineTableRow', id]);
   }
 
+  void fetchIndicatorService() {
+    listServiceIndicatorFINAL =
+        convertMap2List(currentHealthRecord.value?.services ?? [], 'service');
+    for (var service in listServiceIndicatorFINAL) {
+      listServiceIndicator.addAll({
+        service: ServiceDataService.instance.service.entries
+            .firstWhere((element) => element.value.id == service)
+            .value
+      });
+    }
+  }
+
+  void fetchIndicatorMedicine() {
+    listMedicineIndicatorFINAL =
+        convertMap2List(currentHealthRecord.value?.medicines ?? [], 'medicine');
+    for (var medicine in listMedicineIndicatorFINAL) {
+      listMedicineIndicator.addAll({
+        medicine: MedicineService.instance.listMedicine
+            .firstWhere((element) => element.id == medicine)
+      });
+    }
+  }
+
   void fetchIndicatorData() {
     if (currentHealthRecord.value != null) {
-      listMedicineIndicatorFINAL = convertMap2List(
-          currentHealthRecord.value?.medicines ?? [], 'medicine');
-
-      listServiceIndicatorFINAL =
-          convertMap2List(currentHealthRecord.value?.services ?? [], 'service');
-
-      for (var medicine in listMedicineIndicatorFINAL) {
-        listMedicineIndicator.addAll({
-          medicine: MedicineService.instance.listMedicine
-              .firstWhere((element) => element.id == medicine)
-        });
-      }
-      for (var service in listServiceIndicatorFINAL) {
-        listServiceIndicator.addAll({
-          service: ServiceDataService.instance.service.entries
-              .firstWhere((element) => element.value.id == service)
-              .value
-        });
-      }
+      fetchIndicatorMedicine();
+      fetchIndicatorService();
     }
   }
 

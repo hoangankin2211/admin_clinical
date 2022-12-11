@@ -1,15 +1,12 @@
 import 'package:admin_clinical/features/invoice/controllers/invoice_controller.dart';
-import 'package:admin_clinical/features/invoice/screens/invoice_view_screen.dart';
 import 'package:admin_clinical/features/patient/widgets/custom_text_form_field.dart';
 import 'package:admin_clinical/features/patient/widgets/show_entries_widget.dart';
-import 'package:admin_clinical/models/invoice.dart';
+import 'package:admin_clinical/services/data_service/health_record_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 
 import '../../../constants/app_colors.dart';
-import '../../../constants/app_decoration.dart';
 import '../../../constants/global_widgets/button_mouse_region.dart';
 import '../../auth/widgets/custom_button.dart';
 import '../../invoice/widgets/dialog_change_status.dart';
@@ -30,6 +27,7 @@ List<String> headerTitle = [
   "Action",
 ];
 
+// ignore: must_be_immutable
 class TurnoverMainScreen extends StatelessWidget {
   TurnoverMainScreen({super.key});
   final patientPageController = Get.put(PatientPageController());
@@ -252,6 +250,16 @@ class TurnoverMainScreen extends StatelessWidget {
                                                 invoice: element,
                                               ),
                                             );
+                                          } else if (value == 'Make Invoice') {
+                                            invoiceController
+                                                    .selectedHealthRecord
+                                                    .value =
+                                                HealthRecordService
+                                                        .listHealthRecord[
+                                                    element.hrId];
+                                            invoiceController.selectedInvoice
+                                                .value = element;
+                                            invoiceController.changePage(1);
                                           } else {
                                             Get.dialog(
                                               DialogChangeStatus(

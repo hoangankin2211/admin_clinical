@@ -9,7 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ServiceDetailWidget extends StatelessWidget {
-  ServiceDetailWidget({super.key});
+  ServiceDetailWidget({super.key, required this.patientName});
+  final String patientName;
 
   final invoiceController = Get.find<InvoiceController>();
 
@@ -24,9 +25,9 @@ class ServiceDetailWidget extends StatelessWidget {
               child: FormCard(
                 child: Row(
                   children: [
-                    const Text(
-                      'Hoang Ankin',
-                      style: TextStyle(
+                    Text(
+                      patientName,
+                      style: const TextStyle(
                         color: Colors.black,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -75,8 +76,8 @@ class ServiceDetailWidget extends StatelessWidget {
                 ),
               ),
             ),
-            Expanded(child: ResultIndication()),
-            Expanded(child: FormCard(child: ResultMedicineIndication())),
+            const Expanded(child: ResultIndication()),
+            const Expanded(child: FormCard(child: ResultMedicineIndication())),
           ],
         );
       },

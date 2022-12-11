@@ -163,6 +163,10 @@ class ListInvoiceItem extends StatelessWidget {
                     value: 'Change Status',
                     child: Text('change Status'),
                   ),
+                  const PopupMenuItem<String>(
+                    value: 'Make Invoice',
+                    child: Text('Make Invoice'),
+                  ),
                 ],
                 child: const Icon(
                   Icons.more_vert_outlined,

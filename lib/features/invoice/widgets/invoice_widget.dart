@@ -1,25 +1,31 @@
-import 'package:admin_clinical/constants/utils.dart';
 import 'package:admin_clinical/features/form/controller/medical_form_controller.dart';
 import 'package:admin_clinical/features/form/widgets/form_card.dart';
-import 'package:admin_clinical/features/invoice/widgets/invoice_form.dart';
+import 'package:admin_clinical/features/invoice/controllers/invoice_controller.dart';
 import 'package:admin_clinical/models/patient.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../constants/utils.dart';
 import '../../form/widgets/examination_information_form.dart';
 import '../../form/widgets/patient_information_form.dart';
+import 'invoice_form.dart';
 
 class InvoiceWidget extends StatelessWidget {
-  const InvoiceWidget({super.key});
+  InvoiceWidget({super.key, required this.patient});
+  final Patient patient;
 
   static const getBuilderId = 'InvoiceWidget';
+  final invoiceController = Get.find<InvoiceController>();
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<MedicalFormController>(
         assignId: true,
         id: getBuilderId,
+        init: MedicalFormController(),
         builder: (medicalFormController) {
+          medicalFormController.currentHealthRecord.value =
+              invoiceController.selectedHealthRecord.value;
           return LayoutBuilder(
             builder: (context, constraints) {
               return Column(
@@ -27,21 +33,22 @@ class InvoiceWidget extends StatelessWidget {
                 children: [
                   Flexible(
                     child: FormCard(
-                      child: PatientInformationForm(
-                        patient: Patient(
-                          address: "",
-                          dob: "",
-                          gender: "",
-                          id: "",
-                          name: "",
-                          phoneNumber: "",
-                          status: "",
-                        ),
-                      ),
+                      child: PatientInformationForm(patient: patient),
                     ),
                   ),
                   Flexible(
-                    child: FormCard(child: InvoiceForm()),
+                    child: FormCard(
+                      child: InvoiceForm(
+                        invoice: invoiceController.selectedInvoice.value!,
+                        patientId: patient.id,
+                        numberOfService: invoiceController
+                            .selectedHealthRecord.value!.services!.length,
+                        numberOfMedicine: invoiceController
+                            .selectedHealthRecord.value!.medicines!.length,
+                        totalMoney: invoiceController
+                            .selectedHealthRecord.value!.totalMoney,
+                      ),
+                    ),
                   ),
                   Flexible(
                     flex: 2,

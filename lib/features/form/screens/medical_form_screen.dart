@@ -233,12 +233,12 @@ class MedicalFormScreen extends StatelessWidget {
                                                 null
                                             ? medicalFormController
                                                 .onPressedUpdateButton(
-                                                context,
-                                                // listIconAndLabel[0]['finalData']
-                                                //     as List<String>,
-                                                // listIconAndLabel[1]['finalData']
-                                                //     as List<String>,
-                                              )
+                                                    context, patient.id
+                                                    // listIconAndLabel[0]['finalData']
+                                                    //     as List<String>,
+                                                    // listIconAndLabel[1]['finalData']
+                                                    //     as List<String>,
+                                                    )
                                             : medicalFormController
                                                 .onPressedCreateButton(
                                                 context,

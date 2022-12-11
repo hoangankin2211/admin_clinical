@@ -6,9 +6,9 @@ import '../../controller/medical_form_controller.dart';
 import 'medicine_search_form.dart';
 
 class ResultMedicineIndication extends StatelessWidget {
-  ResultMedicineIndication({super.key});
+  const ResultMedicineIndication({super.key});
 
-  final medicalFormController = Get.find<MedicalFormController>();
+  // final medicalIndicationController = Get.find<MedicalFormController>();
 
   @override
   Widget build(BuildContext context) {
@@ -32,13 +32,14 @@ class ResultMedicineIndication extends StatelessWidget {
             assignId: true,
             id: 'ResultMedicineTableRow',
             autoRemove: false,
-            builder: (controller) {
+            builder: (medicalIndicationController) {
+              medicalIndicationController.fetchIndicatorMedicine();
               return ListView.builder(
                 itemBuilder: (context, index) {
                   return ResultMedicineTableRow(
                     deleteMedicineChoice:
-                        medicalFormController.onChoiceMedicineChange,
-                    medicine: medicalFormController
+                        medicalIndicationController.onChoiceMedicineChange,
+                    medicine: medicalIndicationController
                         .listMedicineIndicator.entries
                         .elementAt(index)
                         .value,
@@ -46,7 +47,7 @@ class ResultMedicineIndication extends StatelessWidget {
                   );
                 },
                 itemCount:
-                    medicalFormController.listMedicineIndicator.value.length,
+                    medicalIndicationController.listMedicineIndicator.length,
               );
             },
           ),
