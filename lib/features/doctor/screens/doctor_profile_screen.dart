@@ -218,31 +218,28 @@ class DoctorProfileScreen extends StatelessWidget {
             ],
           ),
         ),
-        SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Obx(
-              () => Column(
-                children: [
-                  ...controller.listRecord.values.map(
-                    (e) => InkWell(
-                      onTap: () => controller.selectRecordFunc(e.id!),
-                      child: MedicalExaminationItem(
-                        id: e.id!,
-                        date: e.dateCreate,
-                        clinicRoom: "phong 01",
-                        patientName: controller.checkNull
-                            ? PatientService
-                                .listPatients[
-                                    controller.select_patient_record.value]!
-                                .name
-                            : '',
-                        status: 1,
-                      ),
+        Expanded(
+          child: Obx(
+            () => ListView(
+              children: [
+                for (var item in controller.listRecord.values)
+                  InkWell(
+                    onTap: () => controller.selectRecordFunc(item.id!),
+                    child: MedicalExaminationItem(
+                      id: item.id!,
+                      date: item.dateCreate,
+                      clinicRoom: "phong 01",
+                      patientName: item.patientId ?? "",
+                      status: 1,
                     ),
                   )
-                ],
-              ),
-            )),
+                // controller.listRecord.forEach((key, e) {
+                //   ;
+                // })
+              ],
+            ),
+          ),
+        )
       ],
     );
   }
@@ -295,12 +292,14 @@ class DoctorProfileScreen extends StatelessWidget {
                       child: Row(
                         children: [
                           Text(
-                            controller.checkNull
-                                ? PatientService
-                                    .listPatients[
-                                        controller.select_patient_record.value]!
-                                    .name
-                                : '',
+                            controller.checkNull == 0
+                                ? ''
+                                : controller.checkNull == 1
+                                    ? 'Is Removed'
+                                    : PatientService
+                                        .listPatients[controller
+                                            .select_patient_record.value]!
+                                        .name,
                             style: const TextStyle(
                                 color: Colors.grey,
                                 fontWeight: FontWeight.bold,
@@ -322,12 +321,14 @@ class DoctorProfileScreen extends StatelessWidget {
                       child: Row(
                         children: [
                           Text(
-                            controller.checkNull
-                                ? PatientService
-                                    .listPatients[
-                                        controller.select_patient_record.value]!
-                                    .phoneNumber
-                                : '',
+                            controller.checkNull == 0
+                                ? ''
+                                : controller.checkNull == 1
+                                    ? 'Is Removed'
+                                    : PatientService
+                                        .listPatients[controller
+                                            .select_patient_record.value]!
+                                        .phoneNumber,
                             style: const TextStyle(
                                 color: Colors.grey,
                                 fontWeight: FontWeight.bold,
@@ -347,12 +348,14 @@ class DoctorProfileScreen extends StatelessWidget {
                           color: AppColors.backgroundColor,
                           border: Border.all(width: 1, color: Colors.grey)),
                       child: Text(
-                        controller.checkNull
-                            ? PatientService
-                                .listPatients[
-                                    controller.select_patient_record.value]!
-                                .dob
-                            : '',
+                        controller.checkNull == 0
+                            ? ''
+                            : controller.checkNull == 1
+                                ? 'Is Removed'
+                                : PatientService
+                                    .listPatients[
+                                        controller.select_patient_record.value]!
+                                    .dob,
                         style: const TextStyle(
                             color: Colors.grey,
                             fontWeight: FontWeight.bold,
@@ -370,12 +373,14 @@ class DoctorProfileScreen extends StatelessWidget {
                           color: AppColors.backgroundColor,
                           border: Border.all(width: 1, color: Colors.grey)),
                       child: Text(
-                        controller.checkNull
-                            ? PatientService
-                                .listPatients[
-                                    controller.select_patient_record.value]!
-                                .gender
-                            : '',
+                        controller.checkNull == 0
+                            ? ''
+                            : controller.checkNull == 1
+                                ? 'Is Removed'
+                                : PatientService
+                                    .listPatients[
+                                        controller.select_patient_record.value]!
+                                    .gender,
                         style: const TextStyle(
                             color: Colors.grey,
                             fontWeight: FontWeight.bold,
@@ -393,12 +398,14 @@ class DoctorProfileScreen extends StatelessWidget {
                           color: AppColors.backgroundColor,
                           border: Border.all(width: 1, color: Colors.grey)),
                       child: Text(
-                        controller.checkNull
-                            ? PatientService
-                                .listPatients[
-                                    controller.select_patient_record.value]!
-                                .address
-                            : '',
+                        controller.checkNull == 0
+                            ? ''
+                            : controller.checkNull == 1
+                                ? 'Is Removed'
+                                : PatientService
+                                    .listPatients[
+                                        controller.select_patient_record.value]!
+                                    .address,
                         style: const TextStyle(
                             color: Colors.grey,
                             fontWeight: FontWeight.bold,

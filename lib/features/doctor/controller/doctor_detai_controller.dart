@@ -16,7 +16,11 @@ class DoctorDetailController extends GetxController {
   RxString selectRecord = "".obs;
   RxString select_patient_record = "".obs;
 
-  bool get checkNull => listRecord.isEmpty ? false : true;
+  int get checkNull => listRecord.isEmpty
+      ? 0
+      : select_patient_record.value == ""
+          ? 1
+          : 2;
 
   @override
   void onInit() {
@@ -24,9 +28,9 @@ class DoctorDetailController extends GetxController {
     doctor = Get.arguments['doctor'] as Doctor1;
     listPatient = PatientService.listPatients;
     for (var item in HealthRecordService.listHealthRecord.values) {
-      if (item.doctorId == doctor.iDBS) {
-        listRecord.addAll({item.id!: item});
-      }
+      // if (item.doctorId == doctor.iDBS) {
+      listRecord.addAll({item.id!: item});
+      // }
     }
     if (listRecord.isNotEmpty) {
       selectRecordFunc(listRecord.keys.first);
@@ -35,9 +39,7 @@ class DoctorDetailController extends GetxController {
 
   selectRecordFunc(String id) {
     selectRecord.value = id;
-    for (var item in PatientService.listPatients.values) {
-      print(item.healthRecord);
-      select_patient_record.value = item.id;
-    }
+    select_patient_record.value =
+        listRecord[selectRecord.value]!.patientId ?? "";
   }
 }
