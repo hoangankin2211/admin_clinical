@@ -8,9 +8,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../constants/global_widgets/custom_dialog_error/success_dialog.dart';
+import '../../../models/health_record.dart';
 import '../../../models/invoice.dart';
+import '../../../models/patient.dart';
 
 class InvoiceController extends GetxController {
+  // Rx<Patient?> selectedPatient = Rx(null);
+  Rx<HealthRecord?> selectedHealthRecord = Rx(null);
+  Rx<Invoice?> selectedInvoice = Rx(null);
+
   final controller = Get.find<OverviewController>();
   var selectedPage = 0.obs;
   RxList<Invoice> listInvoice = <Invoice>[].obs;

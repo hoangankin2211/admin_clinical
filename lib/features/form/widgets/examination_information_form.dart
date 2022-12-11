@@ -139,7 +139,7 @@ class TextFormFieldInformationWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Icon(titleIcon),
-            const SizedBox(width: 5),
+            const SizedBox(width: 1),
             Text(
               label,
               style: Theme.of(context).textTheme.headline4,

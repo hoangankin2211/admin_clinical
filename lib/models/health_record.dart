@@ -35,6 +35,7 @@ class HealthRecord {
     this.heartBeat,
     this.height,
     this.id,
+    this.patientId,
     this.medicines,
     this.note,
     this.services,
@@ -98,6 +99,7 @@ class HealthRecord {
 
     return HealthRecord(
       id: json['id'].toString(),
+      patientId: json['patientId'] ?? "",
       dateCreate:
           DateTime.parse(json['dateCreate'] ?? DateTime.now().toString()),
       departmentId: json['departmentId'] ?? "",
@@ -122,6 +124,7 @@ class HealthRecord {
   Map<String, dynamic> toMap() {
     Map<String, dynamic> data = {};
     if (id != null) data['id'] = id;
+    data['patientId'] = patientId;
     data['dateCreate'] = dateCreate.toIso8601String();
     data['totalMoney'] = totalMoney;
     data['departmentId'] = departmentId;

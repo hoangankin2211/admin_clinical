@@ -85,7 +85,7 @@ class MedicineIndicationDialog extends StatelessWidget {
                           ],
                         ),
                       ),
-                      Flexible(
+                      const Flexible(
                         child: FormCard(child: ResultMedicineIndication()),
                       ),
                     ],
