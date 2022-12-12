@@ -38,7 +38,7 @@ class ResultIndication extends StatelessWidget {
                   id: 'resultService',
                   autoRemove: false,
                   builder: (medicalIndicationController) {
-                    medicalIndicationController.fetchIndicatorService();
+                    // medicalIndicationController.fetchIndicatorService();
                     return ListView.builder(
                       itemBuilder: (context, index) {
                         return ResultServiceTableRow(
