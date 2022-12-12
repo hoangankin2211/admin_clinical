@@ -16,7 +16,8 @@ import '../widgets/patient_information_form.dart';
 class MedicineIndicationDialog extends StatelessWidget {
   MedicineIndicationDialog({super.key, required this.patient});
   final Patient patient;
-  final medicalFormController = Get.find<MedicalFormController>(/** */);
+  final medicalFormController =
+      Get.find<MedicalFormController>(tag: MedicalFormScreen.tagBuilder);
 
   @override
   Widget build(BuildContext context) {
@@ -86,10 +87,10 @@ class MedicineIndicationDialog extends StatelessWidget {
                           ],
                         ),
                       ),
-                      Flexible(
+                      const Flexible(
                         child: FormCard(
                             child: ResultMedicineIndication(
-                          tagBuilder: 'MedicalFormScreen.tagBuilder',
+                          tagBuilder: MedicalFormScreen.tagBuilder,
                         )),
                       ),
                     ],

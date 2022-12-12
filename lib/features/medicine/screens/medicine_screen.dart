@@ -25,7 +25,7 @@ import '../widgets/input_with_header_text.dart';
 import '../widgets/list_medicine_item.dart';
 
 class MedicineScreen extends StatefulWidget {
-  MedicineScreen({super.key});
+  const MedicineScreen({super.key});
   @override
   State<MedicineScreen> createState() => _MedicineScreenState();
 }
@@ -38,7 +38,6 @@ class _MedicineScreenState extends State<MedicineScreen> {
     Uint8List image = await pickImage(ImageSource.gallery);
     setState(() {
       _image = image;
-      //convertoBytes();
     });
   }
 
@@ -301,83 +300,16 @@ class _MedicineScreenState extends State<MedicineScreen> {
                           const SizedBox(height: 10.0),
                           const Divider(thickness: 1),
                           const SizedBox(height: 10.0),
-                          InputWithHeaderText(
-                            header: "Medicine Name",
-                            hint: "Enter Medicine Name",
-                            controller: controller.rxnameController.value,
-                          ),
-                          const SizedBox(height: 10.0),
-                          InputWithHeaderText(
-                            header: "Medicine Price",
-                            hint: "Enter Medicine Price",
-                            controller: controller.rxpriceController.value,
-                          ),
-                          const SizedBox(height: 10.0),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "Select type of Medecine",
-                                style: TextStyle(
-                                  color: AppColors.headline1TextColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20.0,
-                                ),
-                              ),
-                              const SizedBox(height: 5.0),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 20, vertical: 1.0),
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: AppDecoration.primaryBorder,
-                                  borderRadius:
-                                      AppDecoration.primaryRadiusBorder,
-                                ),
-                                child: Obx(
-                                  () => DropdownButton<int>(
-                                    underline: const SizedBox(),
-                                    items: controller.listType
-                                        .asMap()
-                                        .entries
-                                        .map((e) => DropdownMenuItem<int>(
-                                              value: e.key,
-                                              child: Text(
-                                                e.value,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline4,
-                                              ),
-                                            ))
-                                        .toList(),
-                                    value: controller.selectTypeEdit.value,
-                                    onChanged: (value) {
-                                      controller.selectTypeEdit.value = value!;
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 10.0),
-                          InputWithHeaderText(
-                            header: "Description",
-                            hint: "Enter description",
-                            maxLines: 4,
-                            controller:
-                                controller.rxdescriptionController.value,
-                          ),
-                          const SizedBox(height: 20.0),
-                          SizedBox(
-                            width: double.infinity,
-                            height: 50,
-                            child: CustomButton(
-                              check: controller.isLoadingEdit.value,
-                              title: "Edit Medicine",
-                              onPressed: () =>
-                                  controller.editMedicine(context, _image),
-                            ),
+                          MedicineFormWidget(
+                            name: controller.rxnameController.value,
+                            price: controller.rxpriceController.value,
+                            listType: controller.listType,
+                            selectTypeEdit: controller.selectTypeEdit.value,
+                            description: controller.descriptionController,
+                            isLoadingEdit: controller.isLoadingEdit.value,
+                            editMedicine: controller.editMedicine,
+                            onChanged: (value) =>
+                                controller.selectTypeEdit.value = value ?? 0,
                           ),
                         ],
                       ),
@@ -772,6 +704,107 @@ class _MedicineScreenState extends State<MedicineScreen> {
             ),
           ),
         ));
+  }
+}
+
+class MedicineFormWidget extends StatelessWidget {
+  const MedicineFormWidget(
+      {super.key,
+      this.image,
+      required this.name,
+      required this.price,
+      required this.listType,
+      required this.selectTypeEdit,
+      required this.description,
+      required this.isLoadingEdit,
+      required this.editMedicine,
+      required this.onChanged});
+  final TextEditingController name;
+  final TextEditingController price;
+  final TextEditingController description;
+  final bool isLoadingEdit;
+  final int selectTypeEdit;
+  final Function(int?) onChanged;
+  final Function(BuildContext context, Uint8List? image) editMedicine;
+  final List<String> listType;
+  final Uint8List? image;
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        InputWithHeaderText(
+          header: "Medicine Name",
+          hint: "Enter Medicine Name",
+          controller: name,
+        ),
+        const SizedBox(height: 10.0),
+        InputWithHeaderText(
+          header: "Medicine Price",
+          hint: "Enter Medicine Price",
+          controller: price,
+        ),
+        const SizedBox(height: 10.0),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "Select type of Medecine",
+              style: TextStyle(
+                color: AppColors.headline1TextColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 20.0,
+              ),
+            ),
+            const SizedBox(height: 5.0),
+            Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20, vertical: 1.0),
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: AppDecoration.primaryBorder,
+                borderRadius: AppDecoration.primaryRadiusBorder,
+              ),
+              child: Obx(
+                () => DropdownButton<int>(
+                  underline: const SizedBox(),
+                  items: listType
+                      .asMap()
+                      .entries
+                      .map((e) => DropdownMenuItem<int>(
+                            value: e.key,
+                            child: Text(
+                              e.value,
+                              style: Theme.of(context).textTheme.headline4,
+                            ),
+                          ))
+                      .toList(),
+                  value: selectTypeEdit,
+                  onChanged: onChanged,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 10.0),
+        InputWithHeaderText(
+          header: "Description",
+          hint: "Enter description",
+          maxLines: 4,
+          controller: description,
+        ),
+        const SizedBox(height: 20.0),
+        SizedBox(
+          width: double.infinity,
+          height: 50,
+          child: CustomButton(
+            check: isLoadingEdit,
+            title: "Edit Medicine",
+            onPressed: () => editMedicine(context, image),
+          ),
+        ),
+      ],
+    );
   }
 }
 

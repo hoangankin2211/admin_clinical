@@ -1,4 +1,3 @@
-import 'package:admin_clinical/features/form/controller/medical_form_controller.dart';
 import 'package:admin_clinical/services/data_service/health_record_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -30,6 +29,7 @@ class PatientMainController extends GetxController {
 
   void examinationActionHandle(String patientId, {String? healthRecordId}) {
     selectedPatient.value = patientId;
+
     if (healthRecordId != null) {
       nextPage.value = MedicalFormScreen(
         patient: PatientService.listPatients[selectedPatient.value]!,

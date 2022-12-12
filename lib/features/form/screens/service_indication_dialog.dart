@@ -18,7 +18,7 @@ class ServiceIndicationDialog extends StatelessWidget {
   ServiceIndicationDialog({super.key, required this.patient});
   final Patient patient;
   final medicalFormController =
-      Get.find<MedicalFormController>(/**tag: MedicalFormScreen.tagBuilder */);
+      Get.find<MedicalFormController>(tag: MedicalFormScreen.tagBuilder);
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -90,10 +90,10 @@ class ServiceIndicationDialog extends StatelessWidget {
                           )
                         ]),
                       ),
-                      Flexible(
+                      const Flexible(
                         child: FormCard(
                           child: ResultIndication(
-                            tagBuilder: 'MedicalFormScreen.tagBuilder',
+                            tagBuilder: MedicalFormScreen.tagBuilder,
                           ),
                         ),
                       ),

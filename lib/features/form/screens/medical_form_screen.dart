@@ -8,6 +8,7 @@ import 'package:admin_clinical/models/invoice.dart';
 import 'package:admin_clinical/services/data_service/invoice_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 
 import '../../../models/medicine.dart';
 import '../../../models/patient.dart';
@@ -15,7 +16,7 @@ import 'medical_examination_tab.dart';
 import 'medicine_indication_dialog.dart';
 
 class MedicalFormScreen extends StatelessWidget {
-  const MedicalFormScreen({
+  MedicalFormScreen({
     super.key,
     required this.patient,
     required this.backButton,
@@ -25,7 +26,7 @@ class MedicalFormScreen extends StatelessWidget {
   final Function() backButton;
   final Patient patient;
   final HealthRecord? healthRecordId;
-  // static const tagBuilder = 'MedicalFormScreen';
+  static const String tagBuilder = 'MedicalFormScreen';
 
   @override
   Widget build(BuildContext context) {
@@ -33,13 +34,12 @@ class MedicalFormScreen extends StatelessWidget {
       builder: (context, constraints) {
         return GetBuilder<MedicalFormController>(
           init: MedicalFormController(),
-          // tag: tagBuilder,
-          // assignId: true,
-          // id: tagBuilder,
+          tag: tagBuilder,
           builder: (medicalFormController) {
             medicalFormController.currentHealthRecord.value = healthRecordId;
             medicalFormController.fetchIndicatorData();
-            late final List<Map<String, dynamic>> listIconAndLabel = [
+
+            final List<Map<String, dynamic>> listIconAndLabel = [
               {
                 'title': 'Service Indication',
                 'icon': Icons.note_add_outlined,
@@ -87,7 +87,7 @@ class MedicalFormScreen extends StatelessWidget {
               }
             }
 
-            late final List<Widget> listServiceChoice = listIconAndLabel
+            final List<Widget> listServiceChoice = listIconAndLabel
                 .map(
                   (element) => TextButton.icon(
                     style: ElevatedButton.styleFrom(
@@ -211,7 +211,6 @@ class MedicalFormScreen extends StatelessWidget {
                           Expanded(
                               child: MedicalExaminationTab(
                             patient: patient,
-                            tagBuilder: /*tagBuilder*/ '',
                           )),
                         ],
                       ),
@@ -234,13 +233,9 @@ class MedicalFormScreen extends StatelessWidget {
                                     onPressed: () => medicalFormController
                                                 .currentHealthRecord.value !=
                                             null
-                                        ? medicalFormController.onPressedUpdateButton(
-                                            context, patient.id
-                                            // listIconAndLabel[0]['finalData']
-                                            //     as List<String>,
-                                            // listIconAndLabel[1]['finalData']
-                                            //     as List<String>,
-                                            )
+                                        ? medicalFormController
+                                            .onPressedUpdateButton(
+                                                context, patient.id)
                                         : medicalFormController
                                             .onPressedCreateButton(
                                             context,
