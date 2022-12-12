@@ -29,11 +29,12 @@ class MakeInvoiceScreen extends StatelessWidget {
             width: constraints.maxWidth,
             height: constraints.maxHeight,
             child: GetBuilder<MedicalFormController>(
-                // init: MedicalFormController(),
+                init: MedicalFormController(),
                 tag: tagBuilder,
                 builder: (medicalFormController) {
                   medicalFormController.currentHealthRecord.value =
                       invoiceController.selectedHealthRecord.value;
+                  medicalFormController.fetchIndicatorData();
                   return Row(
                     children: [
                       Flexible(

@@ -14,7 +14,7 @@ class ServiceIndicationForm extends StatelessWidget {
   ServiceIndicationForm({super.key});
 
   final medicalIndicationController =
-      Get.find<MedicalFormController>(/*tag: MedicalFormScreen.tagBuilder*/);
+      Get.find<MedicalFormController>(tag: MedicalFormScreen.tagBuilder);
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +107,7 @@ class ServiceIndicationForm extends StatelessWidget {
                   return GetBuilder<MedicalFormController>(
                       assignId: true,
                       autoRemove: false,
-                      // tag: MedicalFormScreen.tagBuilder,
+                      tag: MedicalFormScreen.tagBuilder,
                       id: tempService.id,
                       builder: (controller) {
                         return ServiceTableRow(

@@ -6,14 +6,11 @@ import '../../controller/medical_form_controller.dart';
 import '../medicine_indication_widgets/medicine_search_form.dart';
 
 class ResultIndication extends StatelessWidget {
-  ResultIndication({
+  const ResultIndication({
     super.key,
     required this.tagBuilder,
   });
   final String tagBuilder;
-
-  // late final medicalFormController =
-  //     Get.find<MedicalFormController>(tag: tagBuilder);
 
   @override
   Widget build(BuildContext context) {
@@ -36,9 +33,9 @@ class ResultIndication extends StatelessWidget {
                 child: GetBuilder<MedicalFormController>(
                   assignId: true,
                   id: 'resultService',
+                  tag: tagBuilder,
                   autoRemove: false,
                   builder: (medicalIndicationController) {
-                    // medicalIndicationController.fetchIndicatorService();
                     return ListView.builder(
                       itemBuilder: (context, index) {
                         return ResultServiceTableRow(

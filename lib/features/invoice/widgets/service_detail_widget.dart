@@ -78,11 +78,11 @@ class ServiceDetailWidget extends StatelessWidget {
                 ),
               ),
             ),
-            Expanded(
+            const Expanded(
                 child: ResultIndication(
               tagBuilder: MakeInvoiceScreen.tagBuilder,
             )),
-            Expanded(
+            const Expanded(
               child: FormCard(
                 child: ResultMedicineIndication(
                     tagBuilder: MakeInvoiceScreen.tagBuilder),

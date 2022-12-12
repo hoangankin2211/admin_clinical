@@ -14,13 +14,11 @@ import '../../../services/auth_service/auth_service.dart';
 
 // ignore: must_be_immutable
 class MedicalExaminationTab extends StatelessWidget {
-  MedicalExaminationTab(
-      {super.key, required this.patient, required this.tagBuilder});
+  MedicalExaminationTab({super.key, required this.patient});
   static const String getBuilderId = 'MedicalExaminationTab';
   final Patient patient;
-  final String tagBuilder;
   final medicalFormController =
-      Get.find<MedicalFormController>(/*tag: MedicalFormScreen.tagBuilder*/);
+      Get.find<MedicalFormController>(tag: MedicalFormScreen.tagBuilder);
 
   @override
   Widget build(BuildContext context) {

@@ -31,8 +31,8 @@ class ResultMedicineIndication extends StatelessWidget {
             assignId: true,
             id: 'ResultMedicineTableRow',
             autoRemove: false,
+            tag: tagBuilder,
             builder: (medicalIndicationController) {
-              // medicalIndicationController.fetchIndicatorMedicine();
               return ListView.builder(
                 itemBuilder: (context, index) {
                   return ResultMedicineTableRow(

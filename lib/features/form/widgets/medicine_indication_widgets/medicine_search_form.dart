@@ -12,7 +12,7 @@ class MedicineSearchForm extends StatelessWidget {
   MedicineSearchForm({super.key});
 
   final medicalIndicationController =
-      Get.find<MedicalFormController>(/*tag: MedicalFormScreen.tagBuilder*/);
+      Get.find<MedicalFormController>(tag: MedicalFormScreen.tagBuilder);
 
   @override
   Widget build(BuildContext context) {
@@ -105,8 +105,8 @@ class MedicineSearchForm extends StatelessWidget {
                       assignId: true,
                       autoRemove: false,
                       id: tempMedicine.id,
-                      // tag: MedicalFormScreen.tagBuilder,
-                      builder: (context) {
+                      tag: MedicalFormScreen.tagBuilder,
+                      builder: (_) {
                         return MedicineTableRow(
                           isSelected: medicalIndicationController
                               .isSelected(tempMedicine.id),
