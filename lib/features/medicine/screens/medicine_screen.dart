@@ -448,10 +448,6 @@ class _MedicineScreenState extends State<MedicineScreen> {
                                       isDelete = true;
                                       controller.deleteMedicine(context,
                                           controller.listMedicine.value[i].id);
-                                      // controller.passMedicine(
-                                      //     context,
-                                      //     controller.listMedicine.value[i].id,
-                                      //     controller.listMedicine[i].price);
                                     },
                                     child: const Text('YES'),
                                   ),

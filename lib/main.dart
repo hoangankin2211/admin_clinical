@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
       title: 'Clinic Management',
       defaultTransition: Transition.fadeIn,
       theme: ThemeData(
-        fontFamily: "Roboto",
+        fontFamily: "Poppins",
         textTheme: const TextTheme(
           headline1: TextStyle(
             color: AppColors.headline1TextColor,

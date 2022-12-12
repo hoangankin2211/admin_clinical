@@ -70,7 +70,7 @@ class ListMedicineItem extends StatelessWidget {
           ),
         ),
         Text(
-          e.listPass.length.toString(),
+          '${e.listPass.length.toString()} ${e.unit}',
           style: const TextStyle(
             color: Colors.red,
             fontWeight: FontWeight.bold,
