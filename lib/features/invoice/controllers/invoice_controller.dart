@@ -22,6 +22,7 @@ class InvoiceController extends GetxController {
   RxList<Invoice> listInvoice = <Invoice>[].obs;
   List<String> listStatus = ["Cancelled", "Overdue", "Paid"];
   RxInt selectStatus = 0.obs;
+  RxList<Invoice> listInvoiceSearchBy = <Invoice>[].obs;
   // RxDouble cancelled_invoice_amount = 0.0.obs;
   RxMap<String, dynamic> cancelled_invoice_amount = RxMap({
     'data': 0.0,
@@ -54,6 +55,39 @@ class InvoiceController extends GetxController {
     );
   }
 
+  RxList<Map<String, dynamic>> name = [
+    {
+      "name": "Medicine",
+      "check": false.obs,
+    },
+    {
+      "name": "Payment",
+      "check": false.obs,
+    },
+  ].obs;
+  RxList<Map<String, dynamic>> status = [
+    {
+      "name": "All Invoices",
+      "check": false.obs,
+      "i": 4,
+    },
+    {
+      "name": "Paid",
+      "check": false.obs,
+      "i": 2,
+    },
+    {
+      "name": "Overdude",
+      "check": false.obs,
+      "i": 1,
+    },
+    {
+      "name": "Cancelled",
+      "check": false.obs,
+      "i": 0,
+    },
+  ].obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -61,19 +95,44 @@ class InvoiceController extends GetxController {
     initAllData();
   }
 
+  fetchDataByCategory() {
+    listInvoiceSearchBy.clear();
+    for (var item in listInvoice) {
+      if (name[name.indexWhere((element) => element['name'] == item.category)]
+              ['check']
+          .value) {
+        listInvoiceSearchBy.add((item));
+      }
+    }
+  }
+
+  fetchDataByStatus() {
+    listInvoiceSearchBy.clear();
+    for (var item in listInvoice) {
+      if (status[status.indexWhere((element) => element['i'] == item.status)]
+              ['check']
+          .value) {
+        listInvoiceSearchBy.add(item);
+      }
+    }
+  }
+
   void initAllData() {
     for (var item in listInvoice) {
       all_invoice_amount.value['data'] += item.amount;
       all_invoice_amount.value['count'] += 1;
+      cancelled_invoice_amount.value['count'] += 1;
       if (item.status == 0) {
         cancelled_invoice_amount.value['data'] += item.amount;
-        cancelled_invoice_amount.value['count'] += 1;
+        paid_invoice_amount.value['count'] += 1;
       } else if (item.status == 2) {
         paid_invoice_amount.value['data'] += item.amount;
-        paid_invoice_amount.value['count'] += 1;
       } else {}
     }
   }
+
+  RxList<Invoice> get getListInvoice =>
+      listInvoiceSearchBy.isEmpty ? listInvoice : listInvoiceSearchBy;
 
   RxBool loadingChangeStatus = false.obs;
   changeStatusInvoice(BuildContext context, String id) async {

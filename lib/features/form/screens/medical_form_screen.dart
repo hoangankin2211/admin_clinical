@@ -9,6 +9,7 @@ import 'package:admin_clinical/services/data_service/invoice_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../models/medicine.dart';
 import '../../../models/patient.dart';
 import 'medical_examination_tab.dart';
 import 'medicine_indication_dialog.dart';
@@ -51,6 +52,7 @@ class MedicalFormScreen extends StatelessWidget {
             },
           ];
           Future openDialog(
+            String title,
             Widget widget,
             Map<String, dynamic> cacheData,
             List<String> finalData,
@@ -59,12 +61,19 @@ class MedicalFormScreen extends StatelessWidget {
 
             if (response == null || response == false) {
               cacheData.clear();
+
               for (var element in finalData) {
-                if (medicalFormController.services[element] != null) {
+                if (title == 'Service Indication' &&
+                    medicalFormController.services[element] != null) {
                   cacheData.putIfAbsent(
-                    element,
-                    () => medicalFormController.services[element]!,
-                  );
+                      element, () => medicalFormController.services[element]!);
+                }
+                if (title == 'Medicine Indication') {
+                  Medicine? temp = medicalFormController.medicines
+                      .firstWhereOrNull((medicine) => medicine.id == element);
+                  if (temp != null) {
+                    cacheData.putIfAbsent(element, () => temp);
+                  }
                 }
               }
             } else {
@@ -84,6 +93,7 @@ class MedicalFormScreen extends StatelessWidget {
                     if (medicalFormController.currentHealthRecord.value !=
                         null) {
                       await openDialog(
+                        element['title'],
                         element['dialog'],
                         element['cacheData'],
                         element['finalData'],

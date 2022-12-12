@@ -65,6 +65,7 @@ class MedicalFormController extends GetxController {
             patientId,
             response['id'],
           );
+
           if (updatePatientResponse) {
             PatientService.listPatients.update(patientId, (value) {
               if (value.healthRecord == null) {
@@ -350,6 +351,19 @@ class MedicalFormController extends GetxController {
             response['id'] != null) {
           HealthRecordService.listHealthRecord.update(response['id'],
               (value) => value = HealthRecord.fromJson(healthRecord));
+          for (var item in healthRecord['medicines']) {
+            print(item['medicine']);
+            Medicine? temp = await MedicineService.instance.passMedicine(
+                Get.context!,
+                id: item['medicine'],
+                time: DateTime.now(),
+                price: item['amount']);
+            if (temp != null) {
+              MedicineService.instance.listMedicine[MedicineService
+                  .instance.listMedicine
+                  .indexWhere((element) => element.id == item)] = temp;
+            }
+          }
           return true;
         }
       } else {}

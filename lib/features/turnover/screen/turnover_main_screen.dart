@@ -234,7 +234,7 @@ class TurnoverMainScreen extends StatelessWidget {
                               () => Expanded(
                                 child: ListView(
                                   children: [
-                                    ...invoiceController.listInvoice.map(
+                                    ...invoiceController.getListInvoice.map(
                                       (element) => ListInvoiceItem(
                                         id: element.id,
                                         category: element.category,
@@ -280,7 +280,7 @@ class TurnoverMainScreen extends StatelessWidget {
                         shrinkWrap: false,
                         crossAxisCount: 6,
                         children: <Widget>[
-                          ...invoiceController.listInvoice.map(
+                          ...invoiceController.getListInvoice.map(
                             (e) => GridInvoiceItem(e: e),
                           ),
                         ],
@@ -416,13 +416,15 @@ class TurnoverMainScreen extends StatelessWidget {
           ...listFilter.map(
             (e) => Expanded(
               child: InkWell(
-                onTap: () => showDialog(
-                  context: context,
-                  builder: (context) => Dialog(
-                    backgroundColor: Colors.transparent,
-                    child: e['onTap'],
-                  ),
-                ),
+                onTap: () async {
+                  final r = await showDialog(
+                    context: context,
+                    builder: (context) => Dialog(
+                      backgroundColor: Colors.transparent,
+                      child: e['onTap'],
+                    ),
+                  );
+                },
                 child: Container(
                   margin: const EdgeInsets.only(right: 10.0),
                   padding: const EdgeInsets.all(15.0),
@@ -713,32 +715,7 @@ class SelectStatusDialog extends StatelessWidget {
   SelectStatusDialog({
     Key? key,
   }) : super(key: key);
-  RxList<Map<String, dynamic>> name = [
-    {
-      "name": "All Invoices",
-      "check": false.obs,
-    },
-    {
-      "name": "Paid",
-      "check": false.obs,
-    },
-    {
-      "name": "Overdude",
-      "check": false.obs,
-    },
-    {
-      "name": "Draft",
-      "check": false.obs,
-    },
-    {
-      "name": "Recuring",
-      "check": false.obs,
-    },
-    {
-      "name": "Cancelled",
-      "check": false.obs,
-    },
-  ].obs;
+  final controller = Get.find<InvoiceController>();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -774,7 +751,7 @@ class SelectStatusDialog extends StatelessWidget {
             () => Expanded(
               child: ListView(
                 children: [
-                  ...name.map(
+                  ...controller.status.map(
                     (e) => Row(
                       children: [
                         Checkbox(
@@ -810,7 +787,12 @@ class SelectStatusDialog extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             height: 40.0,
-            child: CustomButton(title: "Apply", onPressed: () {}),
+            child: CustomButton(
+                title: "Apply",
+                onPressed: () {
+                  controller.fetchDataByStatus();
+                  Get.back();
+                }),
           ),
         ],
       ),

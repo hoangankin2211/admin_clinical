@@ -1,3 +1,4 @@
+import 'package:admin_clinical/features/invoice/controllers/invoice_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -9,33 +10,9 @@ class SelectCategoryDialog extends StatelessWidget {
   SelectCategoryDialog({
     Key? key,
   }) : super(key: key);
-  RxList<Map<String, dynamic>> name = [
-    {
-      "name": "Advertsting",
-      "check": false.obs,
-    },
-    {
-      "name": "Food",
-      "check": false.obs,
-    },
-    {
-      "name": "Marketing",
-      "check": false.obs,
-    },
-    {
-      "name": "Repairs",
-      "check": false.obs,
-    },
-    {
-      "name": "Software",
-      "check": false.obs,
-    },
-    {
-      "name": "Stationary",
-      "check": false.obs,
-    },
-  ].obs;
+
   @override
+  final controller = Get.find<InvoiceController>();
   Widget build(BuildContext context) {
     return Container(
       height: 400,
@@ -70,7 +47,7 @@ class SelectCategoryDialog extends StatelessWidget {
             () => Expanded(
               child: ListView(
                 children: [
-                  ...name.map(
+                  ...controller.name.map(
                     (e) => Row(
                       children: [
                         Checkbox(
@@ -78,7 +55,7 @@ class SelectCategoryDialog extends StatelessWidget {
                             onChanged: (value) => e["check"].value = value),
                         Expanded(
                           child: Text(
-                            '   ${e["name"]}',
+                            '  ${e["name"]}',
                             style: const TextStyle(
                               color: AppColors.headline1TextColor,
                               fontSize: 16.0,
@@ -106,7 +83,18 @@ class SelectCategoryDialog extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             height: 40.0,
-            child: CustomButton(text: "Apply", onTap: () {}),
+            child: CustomButton(
+                text: "Apply",
+                onTap: () {
+                  controller.fetchDataByCategory();
+                  Get.back();
+                }
+                // Navigator.of(context).pop(
+                //   {
+                //     'type': "category",
+                //   },
+                // ),
+                ),
           ),
         ],
       ),
