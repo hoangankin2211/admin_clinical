@@ -184,6 +184,33 @@ class MedicineService {
     return result;
   }
 
+  Future<void> passManyMedicine(BuildContext context,
+      {required List<Map<String, dynamic>> listData}) async {
+    try {
+      print("Pass many medicine is called");
+      http.Response res = await http.post(
+        Uri.parse('${ApiLink.uri}/api/medicine/pass_many_medicine'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode({
+          'datePass': DateTime.now().millisecondsSinceEpoch,
+          'listData': listData,
+        }),
+      );
+      // print(res.body);
+      if (res.statusCode == 200) {
+        listMedicine.clear();
+        for (int i = 0; i < jsonDecode(res.body).length; i++) {
+          Map<String, dynamic> map = jsonDecode(res.body)[i];
+          listMedicine.add(Medicine.fromMap(map));
+        }
+      }
+    } catch (e) {
+      return;
+    } finally {}
+  }
+
   Future<Medicine?> insertNewMedcine(
     BuildContext context, {
     required String name,

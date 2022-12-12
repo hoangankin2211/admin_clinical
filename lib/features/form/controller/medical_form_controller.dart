@@ -355,19 +355,17 @@ class MedicalFormController extends GetxController {
               return value;
             },
           );
+          List<Map<String, dynamic>> listData = [];
           for (var item in healthRecord['medicines']) {
             print(item['medicine']);
-            Medicine? temp = await MedicineService.instance.passMedicine(
-                Get.context!,
-                id: item['medicine'],
-                time: DateTime.now(),
-                price: item['amount']);
-            if (temp != null) {
-              MedicineService.instance.listMedicine[MedicineService
-                  .instance.listMedicine
-                  .indexWhere((element) => element.id == item)] = temp;
-            }
+            Map<String, dynamic> temp = {};
+            temp.addAll({'id': item['medicine']});
+            temp.addAll({'price': item['amount']});
+            temp.addAll({'quantity': item['quantity']});
+            listData.add(temp);
           }
+          MedicineService.instance
+              .passManyMedicine(Get.context!, listData: listData);
           return true;
         }
       } else {}
