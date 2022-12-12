@@ -25,263 +25,265 @@ class MedicalFormScreen extends StatelessWidget {
   final Function() backButton;
   final Patient patient;
   final HealthRecord? healthRecordId;
+  // static const tagBuilder = 'MedicalFormScreen';
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<MedicalFormController>(
-        init: MedicalFormController(),
-        builder: (medicalFormController) {
-          medicalFormController.currentHealthRecord.value = healthRecordId;
-          medicalFormController.fetchIndicatorData();
-          final List<Map<String, dynamic>> listIconAndLabel = [
-            {
-              'title': 'Service Indication',
-              'icon': Icons.note_add_outlined,
-              'dialog': ServiceIndicationDialog(
-                patient: patient,
-              ),
-              'cacheData': medicalFormController.listServiceIndicator,
-              'finalData': medicalFormController.listServiceIndicatorFINAL
-            },
-            {
-              'title': 'Medicine Indication',
-              'icon': Icons.note_add_outlined,
-              'dialog': MedicineIndicationDialog(patient: patient),
-              'cacheData': medicalFormController.listMedicineIndicator,
-              'finalData': medicalFormController.listMedicineIndicatorFINAL
-            },
-          ];
-          Future openDialog(
-            String title,
-            Widget widget,
-            Map<String, dynamic> cacheData,
-            List<String> finalData,
-          ) async {
-            final response = await Get.dialog(widget);
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return GetBuilder<MedicalFormController>(
+          init: MedicalFormController(),
+          // tag: tagBuilder,
+          // assignId: true,
+          // id: tagBuilder,
+          builder: (medicalFormController) {
+            medicalFormController.currentHealthRecord.value = healthRecordId;
+            medicalFormController.fetchIndicatorData();
+            late final List<Map<String, dynamic>> listIconAndLabel = [
+              {
+                'title': 'Service Indication',
+                'icon': Icons.note_add_outlined,
+                'dialog': ServiceIndicationDialog(patient: patient),
+                'cacheData': medicalFormController.listServiceIndicator,
+                'finalData': medicalFormController.listServiceIndicatorFINAL
+              },
+              {
+                'title': 'Medicine Indication',
+                'icon': Icons.note_add_outlined,
+                'dialog': MedicineIndicationDialog(patient: patient),
+                'cacheData': medicalFormController.listMedicineIndicator,
+                'finalData': medicalFormController.listMedicineIndicatorFINAL
+              },
+            ];
 
-            if (response == null || response == false) {
-              cacheData.clear();
+            Future openDialog(
+              String title,
+              Widget widget,
+              Map<String, dynamic> cacheData,
+              List<String> finalData,
+            ) async {
+              final response = await Get.dialog(widget);
 
-              for (var element in finalData) {
-                if (title == 'Service Indication' &&
-                    medicalFormController.services[element] != null) {
-                  cacheData.putIfAbsent(
-                      element, () => medicalFormController.services[element]!);
-                }
-                if (title == 'Medicine Indication') {
-                  Medicine? temp = medicalFormController.medicines
-                      .firstWhereOrNull((medicine) => medicine.id == element);
-                  if (temp != null) {
-                    cacheData.putIfAbsent(element, () => temp);
+              if (response == null || response == false) {
+                cacheData.clear();
+
+                for (var element in finalData) {
+                  if (title == 'Service Indication' &&
+                      medicalFormController.services[element] != null) {
+                    cacheData.putIfAbsent(element,
+                        () => medicalFormController.services[element]!);
+                  }
+                  if (title == 'Medicine Indication') {
+                    Medicine? temp = medicalFormController.medicines
+                        .firstWhereOrNull((medicine) => medicine.id == element);
+                    if (temp != null) {
+                      cacheData.putIfAbsent(element, () => temp);
+                    }
                   }
                 }
+              } else {
+                finalData.clear();
+                finalData.addAll(cacheData.keys);
               }
-            } else {
-              finalData.clear();
-              finalData.addAll(cacheData.keys);
             }
-          }
 
-          late final List<Widget> listServiceChoice = listIconAndLabel
-              .map(
-                (element) => TextButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 20, horizontal: 10),
-                  ),
-                  onPressed: () async {
-                    if (medicalFormController.currentHealthRecord.value !=
-                        null) {
-                      await openDialog(
-                        element['title'],
-                        element['dialog'],
-                        element['cacheData'],
-                        element['finalData'],
-                      );
-                    } else {
-                      Utils.notifyHandle(
-                        response: false,
-                        successTitle: '',
-                        successQuestion: '',
-                        errorTitle:
-                            'Something happened !!! Please check your internet connection or press create before open this feature',
-                        errorQuestion: 'ERROR',
-                      );
-                    }
-                  },
-                  icon: Icon(element['icon']),
-                  label: Text(
-                    element['title'],
-                    style: TextStyle(
-                      color: Colors.blueGrey[700],
-                      fontSize: 17,
-                      fontWeight: FontWeight.bold,
+            late final List<Widget> listServiceChoice = listIconAndLabel
+                .map(
+                  (element) => TextButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 20, horizontal: 10),
+                    ),
+                    onPressed: () async {
+                      if (medicalFormController.currentHealthRecord.value !=
+                          null) {
+                        await openDialog(
+                          element['title'],
+                          element['dialog'],
+                          element['cacheData'],
+                          element['finalData'],
+                        );
+                      } else {
+                        Utils.notifyHandle(
+                          response: false,
+                          successTitle: '',
+                          successQuestion: '',
+                          errorTitle:
+                              'Something happened !!! Please check your internet connection or press create before open this feature',
+                          errorQuestion: 'ERROR',
+                        );
+                      }
+                    },
+                    icon: Icon(element['icon']),
+                    label: Text(
+                      element['title'],
+                      style: TextStyle(
+                        color: Colors.blueGrey[700],
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
-              )
-              .toList();
-          return LayoutBuilder(
-            builder: (context, constraints) {
-              return Obx(
-                () => medicalFormController.isLoading.value
-                    ? const Center(child: CircularProgressIndicator())
-                    : Stack(
-                        children: [
-                          Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  IconButton(
-                                    onPressed: () {
-                                      backButton();
-                                    },
-                                    icon: const Icon(
-                                      Icons.cancel_rounded,
-                                      size: 40,
-                                      color: Colors.red,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 20),
-                                  ...listServiceChoice,
-                                  const Spacer(),
-                                  TextButton.icon(
-                                    style: ElevatedButton.styleFrom(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 20, horizontal: 5),
-                                        backgroundColor: Colors.green),
-                                    onPressed: () async {
-                                      final result = await Get.dialog(
-                                        const CustomNotificationDialog(
-                                          title: 'Payment',
-                                          content:
-                                              'Do you want to export invoice ?',
-                                        ),
-                                      );
+                )
+                .toList();
 
-                                      if (result != null) {
-                                        if (result as bool) {
-                                          // ignore: use_build_context_synchronously
-                                          Invoice? temp = await InvoiceService
-                                              .instance
-                                              .addInvoiceHealthRecord(
-                                            context,
-                                            thumb:
-                                                'https://www.wellsteps.com/blog/wp-content/uploads/2017/05/benefits-of-wellness.jpg',
-                                            amount: medicalFormController
-                                                .currentHealthRecord
-                                                .value!
-                                                .totalMoney,
-                                            status: 0,
-                                            title: "Make Payment",
-                                            hrId: medicalFormController
-                                                .currentHealthRecord.value!.id!,
-                                            category: "Payment",
-                                          );
-                                          if (temp != null) {
-                                            InvoiceService.instance.listInvoice
-                                                .add(temp);
-                                          }
-                                        }
-                                      } else {
-                                        backButton();
-                                      }
-                                    },
-                                    icon: const Icon(
-                                      Icons
-                                          .keyboard_double_arrow_right_outlined,
-                                      color: Colors.white,
-                                    ),
-                                    label: const Text(
-                                      'Finish Examination',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  )
-                                ],
+            return !medicalFormController.initialized
+                ? const Center(child: CircularProgressIndicator())
+                : Stack(
+                    children: [
+                      Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  backButton();
+                                },
+                                icon: const Icon(
+                                  Icons.cancel_rounded,
+                                  size: 40,
+                                  color: Colors.red,
+                                ),
                               ),
-                              const SizedBox(height: 10.0),
-                              Expanded(
-                                  child:
-                                      MedicalExaminationTab(patient: patient)),
+                              const SizedBox(width: 20),
+                              ...listServiceChoice,
+                              const Spacer(),
+                              TextButton.icon(
+                                style: ElevatedButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 20, horizontal: 5),
+                                    backgroundColor: Colors.green),
+                                onPressed: () async {
+                                  final result = await Get.dialog(
+                                    const CustomNotificationDialog(
+                                      title: 'Payment',
+                                      content:
+                                          'Do you want to export invoice ?',
+                                    ),
+                                  );
+
+                                  if (result != null) {
+                                    if (result as bool) {
+                                      // ignore: use_build_context_synchronously
+                                      Invoice? temp = await InvoiceService
+                                          .instance
+                                          .addInvoiceHealthRecord(
+                                        context,
+                                        thumb:
+                                            'https://www.wellsteps.com/blog/wp-content/uploads/2017/05/benefits-of-wellness.jpg',
+                                        amount: medicalFormController
+                                            .currentHealthRecord
+                                            .value!
+                                            .totalMoney,
+                                        status: 0,
+                                        title: "Make Payment",
+                                        hrId: medicalFormController
+                                            .currentHealthRecord.value!.id!,
+                                        category: "Payment",
+                                      );
+                                      if (temp != null) {
+                                        InvoiceService.instance.listInvoice
+                                            .add(temp);
+                                      }
+                                    }
+                                  } else {
+                                    backButton();
+                                  }
+                                },
+                                icon: const Icon(
+                                  Icons.keyboard_double_arrow_right_outlined,
+                                  color: Colors.white,
+                                ),
+                                label: const Text(
+                                  'Finish Examination',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              )
                             ],
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 20.0),
-                            child: Align(
-                              alignment: Alignment.bottomRight,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  SizedBox(
-                                    height: 40,
-                                    child: Obx(
-                                      () => CustomButton(
-                                        title: medicalFormController
-                                                    .currentHealthRecord
-                                                    .value !=
-                                                null
-                                            ? "Update "
-                                            : "Create",
-                                        onPressed: () => medicalFormController
-                                                    .currentHealthRecord
-                                                    .value !=
-                                                null
-                                            ? medicalFormController
-                                                .onPressedUpdateButton(
-                                                    context, patient.id
-                                                    // listIconAndLabel[0]['finalData']
-                                                    //     as List<String>,
-                                                    // listIconAndLabel[1]['finalData']
-                                                    //     as List<String>,
-                                                    )
-                                            : medicalFormController
-                                                .onPressedCreateButton(
-                                                context,
-                                                patient.id,
-                                              ),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 10.0),
-                                  SizedBox(
-                                      height: 40,
-                                      child: CustomButton(
-                                        title: "Clear",
-                                        onPressed: () => medicalFormController
-                                            .onPressedClearButton(),
-                                      )),
-                                  const SizedBox(width: 10.0),
-                                  SizedBox(
-                                    height: 40,
-                                    child: CustomButton(
-                                      color: Colors.red,
-                                      title: "Delete",
-                                      onPressed: () => medicalFormController
-                                          .onPressedDeleteButton(
-                                        medicalFormController
-                                            .currentHealthRecord.value!.id!,
-                                        context,
-                                        patient.id,
-                                        backButton,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 50.0),
-                                ],
-                              ),
-                            ),
-                          ),
+                          const SizedBox(height: 10.0),
+                          Expanded(
+                              child: MedicalExaminationTab(
+                            patient: patient,
+                            tagBuilder: /*tagBuilder*/ '',
+                          )),
                         ],
                       ),
-              );
-            },
-          );
-        });
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 20.0),
+                        child: Align(
+                          alignment: Alignment.bottomRight,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              SizedBox(
+                                height: 40,
+                                child: Obx(
+                                  () => CustomButton(
+                                    title: medicalFormController
+                                                .currentHealthRecord.value !=
+                                            null
+                                        ? "Update "
+                                        : "Create",
+                                    onPressed: () => medicalFormController
+                                                .currentHealthRecord.value !=
+                                            null
+                                        ? medicalFormController.onPressedUpdateButton(
+                                            context, patient.id
+                                            // listIconAndLabel[0]['finalData']
+                                            //     as List<String>,
+                                            // listIconAndLabel[1]['finalData']
+                                            //     as List<String>,
+                                            )
+                                        : medicalFormController
+                                            .onPressedCreateButton(
+                                            context,
+                                            patient.id,
+                                          ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 10.0),
+                              SizedBox(
+                                  height: 40,
+                                  child: CustomButton(
+                                    title: "Clear",
+                                    onPressed: () => medicalFormController
+                                        .onPressedClearButton(),
+                                  )),
+                              const SizedBox(width: 10.0),
+                              SizedBox(
+                                height: 40,
+                                child: CustomButton(
+                                  color: Colors.red,
+                                  title: "Delete",
+                                  onPressed: () => medicalFormController
+                                      .onPressedDeleteButton(
+                                    medicalFormController
+                                        .currentHealthRecord.value!.id!,
+                                    context,
+                                    patient.id,
+                                    backButton,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 50.0),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                    // ),
+                  );
+          },
+        );
+      },
+    );
   }
 }

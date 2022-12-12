@@ -16,6 +16,7 @@ class InvoiceView extends StatelessWidget {
           height: constraints.maxHeight,
           width: constraints.maxWidth,
           child: PageView(
+            physics: const NeverScrollableScrollPhysics(),
             controller: invoiceController.pageController,
             children: invoiceController.pages,
           ),

@@ -182,20 +182,18 @@ class MedicalFormController extends GetxController {
   void onPressedUpdateButton(
     BuildContext context,
     String patientId,
-    // List<String> listServiceIndicatorFINAL,
-    // List<String> listMedicineIndicatorFINAL,
   ) async {
     final isValidated = formKey.currentState!.validate();
 
     if (isValidated) {
       print(listServiceIndicatorFINAL.length);
-      print(listMedicineIndicatorFINAL.length);
+      print(
+          'listMedicineIndicatorFINAL.length${listMedicineIndicatorFINAL.length}');
       List<Map<String, dynamic>> serviceFinal = [];
       List<Map<String, dynamic>> medicineFinal = [];
 
       for (var element in listServiceIndicatorFINAL) {
         Map<String, dynamic> serviceFinalTemp = {};
-
         serviceFinalTemp.addAll({'service': element});
         serviceFinalTemp.addAll({'provider': 'USA'});
         serviceFinalTemp.addAll({'quantity': 1});
@@ -349,8 +347,14 @@ class MedicalFormController extends GetxController {
         if (response['isSuccess'] != null &&
             response['isSuccess'] == true &&
             response['id'] != null) {
-          HealthRecordService.listHealthRecord.update(response['id'],
-              (value) => value = HealthRecord.fromJson(healthRecord));
+          HealthRecordService.listHealthRecord.update(
+            response['id'],
+            (value) {
+              value = HealthRecord.fromJson(healthRecord);
+              currentHealthRecord.value = value;
+              return value;
+            },
+          );
           for (var item in healthRecord['medicines']) {
             print(item['medicine']);
             Medicine? temp = await MedicineService.instance.passMedicine(

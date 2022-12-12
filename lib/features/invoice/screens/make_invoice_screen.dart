@@ -1,3 +1,4 @@
+import 'package:admin_clinical/features/form/controller/medical_form_controller.dart';
 import 'package:admin_clinical/features/form/widgets/form_card.dart';
 import 'package:admin_clinical/features/invoice/controllers/invoice_controller.dart';
 import 'package:admin_clinical/features/invoice/widgets/service_detail_widget.dart';
@@ -14,6 +15,7 @@ class MakeInvoiceScreen extends StatelessWidget {
   MakeInvoiceScreen({super.key});
 
   final invoiceController = Get.find<InvoiceController>();
+  static const tagBuilder = 'MakeInvoiceScreen';
 
   @override
   Widget build(BuildContext context) {
@@ -26,19 +28,27 @@ class MakeInvoiceScreen extends StatelessWidget {
           return SizedBox(
             width: constraints.maxWidth,
             height: constraints.maxHeight,
-            child: Row(
-              children: [
-                Flexible(
-                  child: InvoiceWidget(patient: temp),
-                ),
-                Flexible(
-                  child: FormCard(
-                      child: ServiceDetailWidget(
-                    patientName: temp.name,
-                  )),
-                )
-              ],
-            ),
+            child: GetBuilder<MedicalFormController>(
+                // init: MedicalFormController(),
+                tag: tagBuilder,
+                builder: (medicalFormController) {
+                  medicalFormController.currentHealthRecord.value =
+                      invoiceController.selectedHealthRecord.value;
+                  return Row(
+                    children: [
+                      Flexible(
+                        child: InvoiceWidget(patient: temp),
+                      ),
+                      Flexible(
+                        child: FormCard(
+                          child: ServiceDetailWidget(
+                            patientName: temp.name,
+                          ),
+                        ),
+                      )
+                    ],
+                  );
+                }),
           );
         },
       ),

@@ -1,5 +1,6 @@
 import 'package:admin_clinical/constants/app_decoration.dart';
 import 'package:admin_clinical/features/form/controller/medical_form_controller.dart';
+import 'package:admin_clinical/features/form/screens/medical_form_screen.dart';
 import 'package:admin_clinical/features/form/widgets/form_card.dart';
 import 'package:admin_clinical/features/form/widgets/patient_information_form.dart';
 import 'package:admin_clinical/features/form/widgets/record_information_form.dart';
@@ -16,7 +17,8 @@ import '../widgets/service_indication_widgets/result_indication.dart';
 class ServiceIndicationDialog extends StatelessWidget {
   ServiceIndicationDialog({super.key, required this.patient});
   final Patient patient;
-  final medicalFormController = Get.find<MedicalFormController>();
+  final medicalFormController =
+      Get.find<MedicalFormController>(/**tag: MedicalFormScreen.tagBuilder */);
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -88,9 +90,11 @@ class ServiceIndicationDialog extends StatelessWidget {
                           )
                         ]),
                       ),
-                      const Flexible(
+                      Flexible(
                         child: FormCard(
-                          child: ResultIndication(),
+                          child: ResultIndication(
+                            tagBuilder: 'MedicalFormScreen.tagBuilder',
+                          ),
                         ),
                       ),
                     ],

@@ -6,7 +6,14 @@ import '../../controller/medical_form_controller.dart';
 import '../medicine_indication_widgets/medicine_search_form.dart';
 
 class ResultIndication extends StatelessWidget {
-  const ResultIndication({super.key});
+  ResultIndication({
+    super.key,
+    required this.tagBuilder,
+  });
+  final String tagBuilder;
+
+  // late final medicalFormController =
+  //     Get.find<MedicalFormController>(tag: tagBuilder);
 
   @override
   Widget build(BuildContext context) {

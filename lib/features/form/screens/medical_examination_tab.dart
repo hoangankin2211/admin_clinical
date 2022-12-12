@@ -1,6 +1,7 @@
 import 'package:admin_clinical/constants/app_decoration.dart';
 import 'package:admin_clinical/constants/utils.dart';
 import 'package:admin_clinical/features/form/controller/medical_form_controller.dart';
+import 'package:admin_clinical/features/form/screens/medical_form_screen.dart';
 import 'package:admin_clinical/features/form/widgets/examination_information_form.dart';
 import 'package:admin_clinical/features/form/widgets/record_information_form.dart';
 import 'package:admin_clinical/features/form/widgets/patient_information_form.dart';
@@ -13,10 +14,13 @@ import '../../../services/auth_service/auth_service.dart';
 
 // ignore: must_be_immutable
 class MedicalExaminationTab extends StatelessWidget {
-  MedicalExaminationTab({super.key, required this.patient});
+  MedicalExaminationTab(
+      {super.key, required this.patient, required this.tagBuilder});
   static const String getBuilderId = 'MedicalExaminationTab';
   final Patient patient;
-  final medicalFormController = Get.find<MedicalFormController>();
+  final String tagBuilder;
+  final medicalFormController =
+      Get.find<MedicalFormController>(/*tag: MedicalFormScreen.tagBuilder*/);
 
   @override
   Widget build(BuildContext context) {

@@ -1,5 +1,6 @@
 import 'package:admin_clinical/features/form/widgets/form_card.dart';
 import 'package:admin_clinical/features/invoice/controllers/invoice_controller.dart';
+import 'package:admin_clinical/features/invoice/screens/make_invoice_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -90,13 +91,14 @@ class VerifyInvoiceInformationScreen extends StatelessWidget {
                     AppWidget.primaryDivider,
                     const SizedBox(height: 5),
                     const DateTimeInfoField(),
-                    SizedBox(
-                        height: constraints.maxHeight * 0.3,
-                        child: ResultIndication()),
-                    AppWidget.primaryDivider,
-                    SizedBox(
-                        height: constraints.maxHeight * 0.3,
-                        child: FormCard(child: ResultMedicineIndication())),
+                    // SizedBox(
+                    //     height: constraints.maxHeight * 0.3,
+                    //     child: const ResultIndication()),
+                    // AppWidget.primaryDivider,
+                    // SizedBox(
+                    //     height: constraints.maxHeight * 0.3,
+                    //     child:
+                    //         const FormCard(child: ResultMedicineIndication())),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [

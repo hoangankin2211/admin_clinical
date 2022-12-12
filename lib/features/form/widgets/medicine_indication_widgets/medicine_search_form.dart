@@ -6,10 +6,13 @@ import 'package:admin_clinical/models/medicine.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../screens/medical_form_screen.dart';
+
 class MedicineSearchForm extends StatelessWidget {
   MedicineSearchForm({super.key});
 
-  final medicalIndicationController = Get.find<MedicalFormController>();
+  final medicalIndicationController =
+      Get.find<MedicalFormController>(/*tag: MedicalFormScreen.tagBuilder*/);
 
   @override
   Widget build(BuildContext context) {
@@ -102,6 +105,7 @@ class MedicineSearchForm extends StatelessWidget {
                       assignId: true,
                       autoRemove: false,
                       id: tempMedicine.id,
+                      // tag: MedicalFormScreen.tagBuilder,
                       builder: (context) {
                         return MedicineTableRow(
                           isSelected: medicalIndicationController

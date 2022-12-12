@@ -1,6 +1,7 @@
 import 'package:admin_clinical/constants/app_colors.dart';
 import 'package:admin_clinical/constants/utils.dart';
 import 'package:admin_clinical/features/form/controller/medical_form_controller.dart';
+import 'package:admin_clinical/features/form/screens/medical_form_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -15,7 +16,7 @@ import '../widgets/patient_information_form.dart';
 class MedicineIndicationDialog extends StatelessWidget {
   MedicineIndicationDialog({super.key, required this.patient});
   final Patient patient;
-  final medicalFormController = Get.find<MedicalFormController>();
+  final medicalFormController = Get.find<MedicalFormController>(/** */);
 
   @override
   Widget build(BuildContext context) {
@@ -85,8 +86,11 @@ class MedicineIndicationDialog extends StatelessWidget {
                           ],
                         ),
                       ),
-                      const Flexible(
-                        child: FormCard(child: ResultMedicineIndication()),
+                      Flexible(
+                        child: FormCard(
+                            child: ResultMedicineIndication(
+                          tagBuilder: 'MedicalFormScreen.tagBuilder',
+                        )),
                       ),
                     ],
                   ),

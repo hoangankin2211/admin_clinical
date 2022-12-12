@@ -4,7 +4,7 @@ import 'package:admin_clinical/features/form/widgets/form_card.dart';
 import 'package:admin_clinical/features/form/widgets/medicine_indication_widgets/result_medicine_indication.dart';
 import 'package:admin_clinical/features/form/widgets/service_indication_widgets/result_indication.dart';
 import 'package:admin_clinical/features/invoice/controllers/invoice_controller.dart';
-import 'package:admin_clinical/features/invoice/screens/verify_invoice_information_screen.dart';
+import 'package:admin_clinical/features/invoice/screens/make_invoice_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -62,7 +62,9 @@ class ServiceDetailWidget extends StatelessWidget {
                               horizontal: 30, vertical: 25),
                           shape: RoundedRectangleBorder(
                               borderRadius: AppDecoration.primaryRadiusBorder)),
-                      onPressed: () {},
+                      onPressed: () {
+                        invoiceController.changePage(0);
+                      },
                       child: const Text(
                         'Cancel All',
                         style: TextStyle(
@@ -76,8 +78,16 @@ class ServiceDetailWidget extends StatelessWidget {
                 ),
               ),
             ),
-            const Expanded(child: ResultIndication()),
-            const Expanded(child: FormCard(child: ResultMedicineIndication())),
+            Expanded(
+                child: ResultIndication(
+              tagBuilder: MakeInvoiceScreen.tagBuilder,
+            )),
+            Expanded(
+              child: FormCard(
+                child: ResultMedicineIndication(
+                    tagBuilder: MakeInvoiceScreen.tagBuilder),
+              ),
+            ),
           ],
         );
       },

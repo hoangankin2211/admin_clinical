@@ -113,7 +113,7 @@ class TurnoverMainScreen extends StatelessWidget {
                   ),
                 ),
                 const Text(
-                  " Invoice",
+                  "Invoice",
                   style: TextStyle(
                     color: AppColors.primarySecondColor,
                     fontSize: 22.0,
@@ -259,6 +259,10 @@ class TurnoverMainScreen extends StatelessWidget {
                                                     element.hrId];
                                             invoiceController.selectedInvoice
                                                 .value = element;
+                                            print(invoiceController
+                                                .selectedHealthRecord
+                                                .value!
+                                                .patientId);
                                             invoiceController.changePage(1);
                                           } else {
                                             Get.dialog(
