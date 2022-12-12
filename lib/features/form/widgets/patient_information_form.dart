@@ -131,7 +131,10 @@ class DisplayInformationWidget extends StatelessWidget {
             padding: const EdgeInsets.all(8),
             child: Text(
               content,
-              style: Theme.of(context).textTheme.headline4,
+              style: Theme.of(context)
+                  .textTheme
+                  .headline4!
+                  .copyWith(overflow: TextOverflow.ellipsis),
             ),
           ),
         ],

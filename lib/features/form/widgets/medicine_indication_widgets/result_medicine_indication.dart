@@ -17,12 +17,12 @@ class ResultMedicineIndication extends StatelessWidget {
           customRow: [
             {'flex': 2, 'text': 'ID'},
             {'flex': 1, 'text': 'Name'},
-            {'flex': 1, 'text': 'Amount Price'},
-            {'flex': 1, 'text': 'Original Price'},
+            {'flex': 1, 'text': 'Unit'},
+            {'flex': 1, 'text': 'Price Per Unit'},
+            {'flex': 1, 'text': 'Amount'},
             {'flex': 1, 'text': 'Type'},
             {'flex': 1, 'text': 'Description'},
-            {'flex': 1, 'text': 'Unit'},
-            {'flex': 1, 'text': 'Remaining'},
+            // {'flex': 1, 'text': 'Remaining'},
           ],
           width: 48,
         ),
@@ -36,6 +36,7 @@ class ResultMedicineIndication extends StatelessWidget {
               return ListView.builder(
                 itemBuilder: (context, index) {
                   return ResultMedicineTableRow(
+                    amount: 0,
                     deleteMedicineChoice:
                         medicalIndicationController.onChoiceMedicineChange,
                     medicine: medicalIndicationController

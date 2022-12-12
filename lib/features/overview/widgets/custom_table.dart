@@ -510,13 +510,25 @@ class ResultMedicineTableRow extends StatelessWidget {
     required this.color,
     required this.medicine,
     required this.deleteMedicineChoice,
+    required this.amount,
   });
   final Function(bool, String) deleteMedicineChoice;
   final Color color;
   final Medicine medicine;
+  final double amount;
 
   @override
   Widget build(BuildContext context) {
+    Map<String, dynamic> data = {
+      'ID': medicine.id,
+      'thumbnails': medicine.thumbnails,
+      'Name': medicine.name,
+      'Unit': medicine.unit,
+      'Price Per Unit': medicine.price,
+      'Amount': amount,
+      'Type': medicine.type,
+      'Description': medicine.description,
+    };
     return InkWell(
       onTap: color == Colors.white ? () {} : null,
       borderRadius: AppDecoration.primaryRadiusBorder,
@@ -538,13 +550,14 @@ class ResultMedicineTableRow extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             const SizedBox(width: 5),
-            ...medicine.toJson().entries.map(
+            ...data.entries.map(
               (e) {
                 int flex = 1;
                 if (e.key.toString() == 'thumbnails') {
                   return const SizedBox();
                 }
-                if (e.key.toString() == '_id') {
+
+                if (e.key.toString() == 'ID') {
                   flex = 2;
                 }
                 return Expanded(
@@ -568,12 +581,15 @@ class ResultMedicineTableRow extends StatelessWidget {
                             const SizedBox(
                               width: 5,
                             ),
-                            Text(
-                              e.value.toString(),
-                              style: const TextStyle(
-                                  color: Colors.blueGrey,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold),
+                            Expanded(
+                              child: Text(
+                                e.value.toString(),
+                                style: const TextStyle(
+                                    overflow: TextOverflow.ellipsis,
+                                    color: Colors.blueGrey,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold),
+                              ),
                             )
                           ],
                         ),

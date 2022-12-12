@@ -26,6 +26,16 @@ class DataService extends GetxController {
   RxList<Doctor1> listDoctor = <Doctor1>[].obs;
   RxList<Department> listDepartMent = <Department>[].obs;
 
+  String? getNameDoctor(String id) {
+    String? result;
+    listDoctor.forEach((element) {
+      if (element.iDBS == id) {
+        result = element.name!;
+      }
+    });
+    return result;
+  }
+
   fetchAllData() async {
     if (listDoctor.value.isEmpty) {
       fetchAllDoctor((value) {

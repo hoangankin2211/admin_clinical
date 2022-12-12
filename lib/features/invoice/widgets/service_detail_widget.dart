@@ -8,9 +8,11 @@ import 'package:admin_clinical/features/invoice/screens/make_invoice_screen.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../models/patient.dart';
+
 class ServiceDetailWidget extends StatelessWidget {
-  ServiceDetailWidget({super.key, required this.patientName});
-  final String patientName;
+  ServiceDetailWidget({super.key, required this.patient});
+  final Patient patient;
 
   final invoiceController = Get.find<InvoiceController>();
 
@@ -25,8 +27,19 @@ class ServiceDetailWidget extends StatelessWidget {
               child: FormCard(
                 child: Row(
                   children: [
+                    CircleAvatar(
+                      backgroundColor: Colors.grey[100],
+                      backgroundImage:
+                          (patient.avt != null && patient.avt!.isNotEmpty)
+                              ? NetworkImage(
+                                  patient.avt!,
+                                ) as ImageProvider
+                              : const AssetImage('images/user.png'),
+                      radius: 25,
+                    ),
+                    const SizedBox(width: 5),
                     Text(
-                      patientName,
+                      patient.name,
                       style: const TextStyle(
                         color: Colors.black,
                         fontSize: 20,

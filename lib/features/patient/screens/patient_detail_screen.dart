@@ -1,13 +1,23 @@
 import 'package:admin_clinical/constants/app_colors.dart';
 import 'package:admin_clinical/constants/global_widgets/custom_button.dart';
+import 'package:admin_clinical/services/data_service/data_service.dart';
+import 'package:admin_clinical/services/data_service/health_record_service.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../../constants/app_decoration.dart';
 import '../../../constants/global_widgets/comment_card.dart';
+import '../../../models/health_record.dart';
+import '../../../models/patient.dart';
+import '../widgets/edit_patient_dialog.dart';
 
+// ignore: must_be_immutable
 class PatientDetailScreen extends StatelessWidget {
-  const PatientDetailScreen({super.key});
+  PatientDetailScreen({super.key, required this.patient});
+
+  final Patient patient;
+  late final List<String>? healthRecord = patient.healthRecord;
 
   @override
   Widget build(BuildContext context) {
@@ -44,9 +54,9 @@ class PatientDetailScreen extends StatelessWidget {
                           color: Colors.grey),
                       InkWell(
                         onTap: () {},
-                        child: const Text(
-                          ' Nguyen Minh Hung ',
-                          style: TextStyle(
+                        child: Text(
+                          ' ${patient.name} ',
+                          style: const TextStyle(
                             color: Colors.grey,
                             fontWeight: FontWeight.bold,
                             fontSize: 20.0,
@@ -63,7 +73,7 @@ class PatientDetailScreen extends StatelessWidget {
                           flex: 2,
                           child: Column(
                             children: [
-                              _profileFiled(),
+                              _profileFiled(context),
                               _listMedicalField(),
                             ],
                           ),
@@ -105,10 +115,10 @@ class PatientDetailScreen extends StatelessWidget {
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
+                    children: const [
                       Text(
                         'Satisfation Rate: ',
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: AppColors.primaryColor,
                           fontWeight: FontWeight.bold,
                           fontSize: 22.0,
@@ -117,7 +127,7 @@ class PatientDetailScreen extends StatelessWidget {
                       const Icon(Icons.star, color: Colors.amber, size: 20.0),
                       Text(
                         ' 4.8',
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: AppColors.headline1TextColor,
                           fontWeight: FontWeight.bold,
                           fontSize: 18.0,
@@ -333,49 +343,25 @@ class PatientDetailScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(5.0),
                       color: Colors.grey[100],
                     ),
-                    child: Row(
-                      children: [
-                        AnimatedContainer(
-                          alignment: Alignment.center,
-                          duration: const Duration(
-                            milliseconds: 300,
-                          ),
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          width: 300.0,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(5.0),
-                          ),
-                          child: const Text(
-                            'Upcomming Appointmenst',
-                            style: TextStyle(
-                              color: AppColors.primaryColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16.0,
-                            ),
-                          ),
+                    child: AnimatedContainer(
+                      alignment: Alignment.center,
+                      duration: const Duration(
+                        milliseconds: 300,
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      width: 300.0,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                      child: const Text(
+                        'Treatment History',
+                        style: TextStyle(
+                          color: AppColors.primaryColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16.0,
                         ),
-                        AnimatedContainer(
-                          alignment: Alignment.center,
-                          duration: const Duration(
-                            milliseconds: 300,
-                          ),
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          width: 230.0,
-                          decoration: BoxDecoration(
-                            color: Colors.transparent,
-                            borderRadius: BorderRadius.circular(5.0),
-                          ),
-                          child: Text(
-                            'Complete Medical',
-                            style: TextStyle(
-                              color: Colors.grey[400],
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16.0,
-                            ),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
                 ],
@@ -395,7 +381,7 @@ class PatientDetailScreen extends StatelessWidget {
                         child: Row(
                           children: [
                             const Text(
-                              'Root Canal Treatment',
+                              'List Treatment',
                               style: TextStyle(
                                   color: AppColors.headline1TextColor,
                                   fontWeight: FontWeight.bold,
@@ -415,7 +401,7 @@ class PatientDetailScreen extends StatelessWidget {
                                     Icon(Icons.keyboard_arrow_up_rounded,
                                         color: Colors.grey),
                                     Text(
-                                      ' Show Pervious Treatment',
+                                      'Change Year',
                                       style: TextStyle(
                                           color: Colors.grey,
                                           fontWeight: FontWeight.bold,
@@ -431,11 +417,14 @@ class PatientDetailScreen extends StatelessWidget {
                       const Divider(thickness: 1),
                       Expanded(
                           child: ListView(
-                        children: const [
-                          MedicalItem(),
-                          MedicalItem(),
-                          MedicalItem(),
-                        ],
+                        children: healthRecord!.map((e) {
+                          HealthRecord? temp =
+                              HealthRecordService.listHealthRecord[e];
+                          if (temp != null) {
+                            return MedicalItem(healthRecord: temp);
+                          }
+                          return const SizedBox();
+                        }).toList(),
                       ))
                     ],
                   ),
@@ -446,7 +435,7 @@ class PatientDetailScreen extends StatelessWidget {
         ),
       );
 
-  Expanded _profileFiled() => Expanded(
+  Expanded _profileFiled(BuildContext context) => Expanded(
         flex: 5,
         child: Row(
           children: [
@@ -467,24 +456,19 @@ class PatientDetailScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Spacer(),
-                    Container(
-                      height: 120,
-                      width: 120,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(color: Colors.black12, blurRadius: 8.0)
-                        ],
-                        image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: AssetImage('assets/images/doctor2.png'),
-                        ),
-                      ),
+                    CircleAvatar(
+                      backgroundColor: Colors.grey[100],
+                      backgroundImage:
+                          (patient.avt != null && patient.avt!.isNotEmpty)
+                              ? NetworkImage(
+                                  patient.avt!,
+                                ) as ImageProvider
+                              : const AssetImage('images/user.png'),
+                      radius: 70,
                     ),
                     const SizedBox(height: 10.0),
                     Text(
-                      'Nguyen Minh Hung',
+                      ' ${patient.name} ',
                       style: const TextStyle(
                         color: AppColors.headline1TextColor,
                         fontWeight: FontWeight.bold,
@@ -493,7 +477,7 @@ class PatientDetailScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 5.0),
                     Text(
-                      'hungnguyen.201102ak@gmail.com',
+                      patient.email ?? 'hungnguyen.201102ak@gmail.com',
                       style: const TextStyle(
                         color: Colors.grey,
                         fontWeight: FontWeight.w500,
@@ -506,16 +490,16 @@ class PatientDetailScreen extends StatelessWidget {
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
+                            children: const [
                               Text('100',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                       color: AppColors.headline1TextColor,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20.0)),
-                              const SizedBox(height: 5.0),
+                              SizedBox(height: 5.0),
                               Text(
                                 'Medical',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: Colors.grey,
                                   fontWeight: FontWeight.w500,
                                   fontSize: 16.0,
@@ -528,16 +512,16 @@ class PatientDetailScreen extends StatelessWidget {
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
+                            children: const [
                               Text('100',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                       color: AppColors.headline1TextColor,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20.0)),
-                              const SizedBox(height: 5.0),
+                              SizedBox(height: 5.0),
                               Text(
-                                'Upcomming',
-                                style: const TextStyle(
+                                'Upcoming',
+                                style: TextStyle(
                                   color: Colors.grey,
                                   fontWeight: FontWeight.w500,
                                   fontSize: 16.0,
@@ -552,7 +536,18 @@ class PatientDetailScreen extends StatelessWidget {
                     SizedBox(
                       height: 40,
                       width: double.infinity,
-                      child: CustomButton(text: "Edit Profile", onTap: () {}),
+                      child: CustomButton(
+                          text: "Edit Profile",
+                          onTap: () {
+                            Get.dialog(
+                              EditPatientDialog(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.8,
+                                width: MediaQuery.of(context).size.width * 0.6,
+                                patient: patient,
+                              ),
+                            );
+                          }),
                     ),
                   ],
                 ),
@@ -576,18 +571,17 @@ class PatientDetailScreen extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        const ProfileItem(
+                        ProfileItem(
                           header: "Gender",
-                          title: "Male",
+                          title: patient.gender,
                         ),
                         ProfileItem(
                           header: "Birthday",
-                          title:
-                              DateFormat().add_yMMMEd().format(DateTime.now()),
+                          title: patient.dob,
                         ),
-                        const ProfileItem(
+                        ProfileItem(
                           header: "Phone Number",
-                          title: '(81) 555-0108',
+                          title: patient.dob,
                         ),
                       ],
                     ),
@@ -595,16 +589,16 @@ class PatientDetailScreen extends StatelessWidget {
                     const Divider(thickness: 0.5),
                     const SizedBox(height: 10.0),
                     Row(
-                      children: const [
+                      children: [
                         ProfileItem(
                           header: "Street Address",
-                          title: "22, Chu Van An thi xa An Khe Gia Lai",
+                          title: patient.address,
                         ),
-                        ProfileItem(
+                        const ProfileItem(
                           header: "City",
                           title: 'Ho Chi Minh City',
                         ),
-                        ProfileItem(
+                        const ProfileItem(
                           header: "Zip Code",
                           title: '655849',
                         ),
@@ -615,14 +609,19 @@ class PatientDetailScreen extends StatelessWidget {
                     const SizedBox(height: 10.0),
                     Row(
                       children: [
-                        const ProfileItem(
+                        ProfileItem(
                           header: "Member Status",
-                          title: "Active Member",
+                          title: patient.status,
                         ),
                         ProfileItem(
-                          header: "Registerd Date",
-                          title:
-                              DateFormat().add_yMMMEd().format(DateTime.now()),
+                          header: "Registered Date",
+                          title: DateFormat().add_yMMMEd().format(
+                                (healthRecord != null)
+                                    ? (HealthRecordService
+                                        .listHealthRecord[healthRecord!.first]!
+                                        .dateCreate)
+                                    : DateTime.now(),
+                              ),
                         ),
                         const Expanded(child: SizedBox())
                       ],
@@ -639,7 +638,9 @@ class PatientDetailScreen extends StatelessWidget {
 class MedicalItem extends StatelessWidget {
   const MedicalItem({
     Key? key,
+    required this.healthRecord,
   }) : super(key: key);
+  final HealthRecord healthRecord;
 
   @override
   Widget build(BuildContext context) {
@@ -702,9 +703,9 @@ class MedicalItem extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          DateFormat().add_yMMMEd().format(
-                                DateTime.now(),
-                              ),
+                          DateFormat()
+                              .add_yMMMEd()
+                              .format(healthRecord.dateCreate),
                           style: const TextStyle(
                             overflow: TextOverflow.ellipsis,
                             color: AppColors.headline1TextColor,
@@ -714,7 +715,10 @@ class MedicalItem extends StatelessWidget {
                         ),
                         const SizedBox(height: 10.0),
                         Text(
-                          '09:10 - 10:10',
+                          '${DateFormat().add_jm().format(
+                                healthRecord.dateCreate
+                                    .subtract(const Duration(hours: 2)),
+                              )} - ${DateFormat().add_jm().format(healthRecord.dateCreate)}',
                           style: const TextStyle(
                             color: Colors.grey,
                             fontWeight: FontWeight.w500,
@@ -731,10 +735,10 @@ class MedicalItem extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
+                      children: const [
                         Text(
-                          'Treatment',
-                          style: const TextStyle(
+                          'Department',
+                          style: TextStyle(
                             color: Colors.grey,
                             fontWeight: FontWeight.w500,
                             fontSize: 16.0,
@@ -742,8 +746,8 @@ class MedicalItem extends StatelessWidget {
                         ),
                         const SizedBox(height: 10.0),
                         Text(
-                          'Open Access',
-                          style: const TextStyle(
+                          'healthRecord.departmentId',
+                          style: TextStyle(
                             overflow: TextOverflow.ellipsis,
                             color: AppColors.headline1TextColor,
                             fontWeight: FontWeight.bold,
@@ -765,9 +769,9 @@ class MedicalItem extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
+                            const Text(
                               'Doctor',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: Colors.grey,
                                 fontWeight: FontWeight.w500,
                                 fontSize: 16.0,
@@ -775,7 +779,9 @@ class MedicalItem extends StatelessWidget {
                             ),
                             const SizedBox(height: 10.0),
                             Text(
-                              'Nguyen Minh Hung',
+                              DataService.instance
+                                      .getNameDoctor(healthRecord.doctorId) ??
+                                  "Nguyen Minh Hung",
                               style: const TextStyle(
                                 overflow: TextOverflow.ellipsis,
                                 color: AppColors.headline1TextColor,
@@ -794,7 +800,7 @@ class MedicalItem extends StatelessWidget {
                             color: AppColors.primaryColor.withOpacity(0.3),
                           ),
                           child: Text(
-                            '\$300.0',
+                            healthRecord.totalMoney.toString(),
                             style: const TextStyle(
                               color: AppColors.primaryColor,
                               fontWeight: FontWeight.bold,

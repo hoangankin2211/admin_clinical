@@ -56,7 +56,15 @@ class ListPatientScreen extends StatelessWidget {
         ),
       );
     } else if (value == 'Detail') {
-      Get.dialog(const PatientDetailScreen());
+      try {
+        patientPageController.selectedPatient.value = patient.id;
+        Get.dialog(
+          Obx(() => PatientDetailScreen(
+              patient: PatientService.listPatients[patient.id]!)),
+        );
+      } catch (e) {
+        print(e.toString());
+      }
     } else if (value == 'Edit') {
       Get.dialog(
         EditPatientDialog(

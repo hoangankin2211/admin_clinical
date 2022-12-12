@@ -37,7 +37,7 @@ class InvoiceController extends GetxController {
     'count': 0,
   });
   late final PageController pageController =
-      PageController(initialPage: selectedPage.value, keepPage: false);
+      PageController(initialPage: selectedPage.value, keepPage: true);
   late final List<Widget> pages = [
     TurnoverMainScreen(),
     MakeInvoiceScreen(),

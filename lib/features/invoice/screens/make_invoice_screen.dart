@@ -38,12 +38,14 @@ class MakeInvoiceScreen extends StatelessWidget {
                   return Row(
                     children: [
                       Flexible(
+                        flex: 7,
                         child: InvoiceWidget(patient: temp),
                       ),
                       Flexible(
+                        flex: 10,
                         child: FormCard(
                           child: ServiceDetailWidget(
-                            patientName: temp.name,
+                            patient: temp,
                           ),
                         ),
                       )

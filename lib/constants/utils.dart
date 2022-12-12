@@ -177,7 +177,7 @@ class Utils {
       'key': 'temperature',
     },
     {
-      'title': 'Blood Pressure',
+      'title': 'BP',
       'maxLine': 1,
       'icon': Icons.bloodtype_rounded,
       'inputFormatters': [

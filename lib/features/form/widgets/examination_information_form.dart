@@ -46,7 +46,6 @@ class ExaminationInformationForm extends StatelessWidget {
                             textEditingController:
                                 textController[measureField.elementAt(i)['key']]
                                     as TextEditingController,
-                            numberOfLine: 4,
                             keyboardType: TextInputType.number,
                             label: measureField.elementAt(i)['title'] as String,
                             validator: (value) {
@@ -69,7 +68,7 @@ class ExaminationInformationForm extends StatelessWidget {
             ),
           ),
           Container(
-            margin: const EdgeInsets.symmetric(vertical: 10),
+            margin: const EdgeInsets.symmetric(vertical: 5),
             child: Divider(
               color: Colors.blueGrey[400],
               thickness: 0.4,
@@ -138,11 +137,14 @@ class TextFormFieldInformationWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Icon(titleIcon),
+            if (titleIcon != null) Icon(titleIcon),
             const SizedBox(width: 1),
-            Text(
-              label,
-              style: Theme.of(context).textTheme.headline4,
+            Expanded(
+              child: Text(
+                overflow: TextOverflow.ellipsis,
+                label,
+                style: Theme.of(context).textTheme.headline4,
+              ),
             ),
           ],
         ),
@@ -155,6 +157,8 @@ class TextFormFieldInformationWidget extends StatelessWidget {
             maxLines: numberOfLine,
             keyboardType: keyboardType,
             decoration: InputDecoration(
+              suffixIconConstraints:
+                  const BoxConstraints(minWidth: 2, minHeight: 0),
               isDense: isDense,
               contentPadding:
                   const EdgeInsets.only(top: 18, left: 10, right: 10),

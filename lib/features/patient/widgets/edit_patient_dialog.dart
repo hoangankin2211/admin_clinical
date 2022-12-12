@@ -69,17 +69,17 @@ class EditPatientDialog extends StatelessWidget {
 
     final response = await patientPageController.editPatientData(
       Patient(
-        email: emailController.text,
-        id: patient.id,
-        name: fullNameController.text,
-        gender: genderCode.value,
-        address: locationController.text,
-        dob: '22-11-2002',
-        phoneNumber: "${phoneCode.value} ${phoneNumberController.text}",
-        status: statusCode.value,
-        avt: result ?? patient.avt,
-        symptom: symptomController.text,
-      ),
+          email: emailController.text,
+          id: patient.id,
+          name: fullNameController.text,
+          gender: genderCode.value,
+          address: locationController.text,
+          dob: '22-11-2002',
+          phoneNumber: "${phoneCode.value} ${phoneNumberController.text}",
+          status: statusCode.value,
+          avt: result ?? patient.avt,
+          symptom: symptomController.text,
+          healthRecord: patient.healthRecord),
       Get.context ?? context,
     );
     if (response) {
