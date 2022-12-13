@@ -37,15 +37,12 @@ class ServiceDataService {
       );
 
       final Map<String, dynamic> extractedData = jsonDecode(response.body);
-      print(extractedData);
-
       if (extractedData.containsKey('services')) {
         List<dynamic> temp = extractedData['services'];
         for (int i = 0; i < temp.length; i++) {
           Map<String, dynamic> map = temp[i];
           _services.addAll({map['_id']: Service.fromJson(map)});
         }
-        print(_services.length);
         DataService.instance.checkFetchData.value.add(1);
         return true;
       }

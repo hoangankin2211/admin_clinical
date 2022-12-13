@@ -24,13 +24,10 @@ class HealthRecordService {
 
       final decodeResponse = jsonDecode(response.body);
 
-      print(decodeResponse);
-
       if (decodeResponse['isSuccess'] ?? false) {
         listHealthRecord.clear();
 
         List<dynamic> extractedData = decodeResponse['healthRecords'];
-        print("extractedData: $extractedData");
         for (int i = 0; i < extractedData.length; i++) {
           Map<String, dynamic> map = extractedData[i];
           map['id'] = map['_id'];

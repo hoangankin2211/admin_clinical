@@ -25,7 +25,6 @@ class ClinicalRoomService {
         },
       );
       if (res.statusCode == 200) {
-        print(res.body);
         listClinicalRoom.clear();
         for (int i = 0; i < jsonDecode(res.body).length; i++) {
           Map<String, dynamic> map = jsonDecode(res.body)[i];

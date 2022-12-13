@@ -22,8 +22,6 @@ class PatientService {
 
       final decodeResponse = jsonDecode(response.body);
 
-      print(decodeResponse);
-
       if (decodeResponse['isSuccess'] ?? false) {
         listPatients.clear();
 
