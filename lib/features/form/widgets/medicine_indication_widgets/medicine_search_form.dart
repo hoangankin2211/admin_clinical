@@ -142,14 +142,15 @@ class MedicineSearchFormRow extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 5),
       padding: const EdgeInsets.all(6),
       decoration: BoxDecoration(
-          color: Colors.blueGrey[200],
-          borderRadius: AppDecoration.primaryRadiusBorder,
-          boxShadow: [
-            BoxShadow(
-                offset: const Offset(0, 0.5),
-                color: Colors.grey[200]!,
-                blurRadius: 2)
-          ]),
+        color: AppColors.primaryColor,
+        borderRadius: BorderRadius.circular(7.0),
+        // boxShadow: [
+        //   BoxShadow(
+        //       offset: const Offset(0, 0.5),
+        //       color: Colors.grey[200]!,
+        //       blurRadius: 2)
+        // ],
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -160,7 +161,7 @@ class MedicineSearchFormRow extends StatelessWidget {
               child: Text(
                 element['text'],
                 style: const TextStyle(
-                    color: Colors.blueGrey,
+                    color: Colors.white,
                     fontSize: 14,
                     fontWeight: FontWeight.bold),
               ),

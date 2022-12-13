@@ -51,38 +51,4 @@ class AppWidget {
     color: AppColors.primarySecondColor,
     thickness: 0.2,
   );
-  static const List<Map<String, dynamic>> listNavigatorTab = [
-    {
-      'label': 'Overview',
-      'icon': Icons.dashboard_outlined,
-    },
-    {
-      'label': 'Patient',
-      'icon': Icons.person_outline,
-    },
-    {
-      'label': 'Doctor',
-      'icon': Icons.medical_information_outlined,
-    },
-    {
-      'label': 'Payment',
-      'icon': Icons.payment_outlined,
-    },
-    // {
-    //   'label': 'Medical Form',
-    //   'icon': Icons.note_add_outlined,
-    // },
-    {
-      'label': 'Clinical Room',
-      'icon': Icons.medical_services_outlined,
-    },
-    {
-      'label': 'Medicine',
-      'icon': FontAwesome.medkit,
-    },
-    {
-      'label': 'Setting',
-      'icon': Icons.settings_outlined,
-    },
-  ];
 }

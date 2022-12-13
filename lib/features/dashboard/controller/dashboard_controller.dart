@@ -12,11 +12,13 @@ import 'package:admin_clinical/features/patient/screens/patient_main_screen.dart
 import 'package:admin_clinical/features/settings/screen/setting_main_screen.dart';
 import 'package:admin_clinical/services/data_service/data_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:get/get.dart';
 
 import '../../../models/user.dart';
 import '../../../services/auth_service/auth_service.dart';
 import '../../clinical_room/controller/clinical_room_controller.dart';
+import '../../dec_doctor_examination/screens/dec_doctor_examination.dart';
 import '../../decentralization_doctor/controller/doctor_overview_controller.dart';
 import '../../doctor/controller/doctor_main_controller.dart';
 import '../../medicine/controller/medicine_controller.dart';
@@ -31,15 +33,15 @@ class DashboardController extends GetxController {
 
   User? get user => _user.value;
 
-  // @override
-  // void onInit() async {
-  //   _user.listen((user) {
-  //     if (user != null) {
-  //       update(['DashboardScreen']);
-  //     }
-  //   });
-  //   super.onInit();
-  // }
+  @override
+  void onInit() async {
+    // _user.listen((user) {
+    //   if (user != null) {
+    //     update(['DashboardScreen']);
+    //   }
+    // });
+    super.onInit();
+  }
 
   @override
   void onReady() async {
@@ -55,7 +57,9 @@ class DashboardController extends GetxController {
             () => IndexedStack(
               index: pageIndex.value,
               alignment: Alignment.topCenter,
-              children: listPage,
+              children: listPageRole[AuthService.instance.user.type]!
+                  .map((e) => e)
+                  .toList(),
             ),
           ),
         ).then((_) => update(['DashboardScreen']));
@@ -91,7 +95,7 @@ class DashboardController extends GetxController {
   }
 
   late final List<NavigationRailDestination> listTabButton =
-      AppWidget.listNavigatorTab
+      listNavigatorTab[user!.type]!
           .map(
             (e) => NavigationRailDestination(
               icon: Icon(e['icon'] as IconData),
@@ -110,9 +114,77 @@ class DashboardController extends GetxController {
     const MedicineScreen(),
     const SettingMainScreen(),
   ];
+  static const Map<String, List<Map<String, dynamic>>> listNavigatorTab = {
+    'Admin': [
+      {
+        'label': 'Overview',
+        'icon': Icons.dashboard_outlined,
+      },
+      {
+        'label': 'Patient',
+        'icon': Icons.person_outline,
+      },
+      {
+        'label': 'Doctor',
+        'icon': Icons.medical_information_outlined,
+      },
+      {
+        'label': 'Payment',
+        'icon': Icons.payment_outlined,
+      },
+      {
+        'label': 'Clinical Room',
+        'icon': Icons.medical_services_outlined,
+      },
+      {
+        'label': 'Medicine',
+        'icon': FontAwesome.medkit,
+      },
+      {
+        'label': 'Setting',
+        'icon': Icons.settings_outlined,
+      },
+    ],
+    'Doctor': [
+      {
+        'label': 'Overview',
+        'icon': Icons.dashboard_outlined,
+      },
+      {
+        'label': 'Patient',
+        'icon': Icons.person_outline,
+      },
+      {
+        'label': 'Medicine',
+        'icon': FontAwesome.medkit,
+      },
+      {
+        'label': 'Setting',
+        'icon': Icons.settings_outlined,
+      },
+    ]
+  };
+  late final Map<String, List<Widget>> listPageRole = {
+    'Doctor': [
+      DecDoctorExamination(),
+      DoctorDecOverview(),
+      PatientMainScreen(),
+      const MedicineScreen(),
+      const SettingMainScreen(),
+    ],
+    'Admin': [
+      OverviewScreen(),
+      PatientMainScreen(),
+      DoctorMainScreen(),
+      InvoiceView(),
+      ClinicalRoom(),
+      const MedicineScreen(),
+      const SettingMainScreen(),
+    ],
+  };
 
   void switchTab(int index) {
-    if (index >= 0 && index < listPage.length) {
+    if (index >= 0 && index < listPageRole[user!.type]!.length) {
       pageIndex.value = index;
     }
   }

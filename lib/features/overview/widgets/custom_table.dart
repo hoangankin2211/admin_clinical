@@ -15,12 +15,16 @@ class SelectHealthRecord extends StatelessWidget {
     required this.totalMoney,
     required this.doctorInCharge,
     required this.departmentId,
+    required this.deleteCallback,
+    required this.viewCallback,
   });
   final String id;
   final String dateCreated;
   final double totalMoney;
   final String doctorInCharge;
   final String departmentId;
+  final VoidCallback deleteCallback;
+  final VoidCallback viewCallback;
 
   @override
   Widget build(BuildContext context) {
@@ -34,15 +38,18 @@ class SelectHealthRecord extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 5),
       padding: const EdgeInsets.all(6),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: AppDecoration.primaryRadiusBorder,
-          boxShadow: [
-            BoxShadow(
-                offset: const Offset(0, 0.5),
-                color: Colors.grey[200]!,
-                blurRadius: 2)
-          ]),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        border: Border(bottom: BorderSide(width: 0.4, color: Colors.grey)),
+        // borderRadius: BorderRadius.circular(7.0),
+        // boxShadow: const [
+        //   BoxShadow(
+        //     // offset: const Offset(0, 0.5),
+        //     color: Colors.black12,
+        //     blurRadius: 5.0,
+        //   )
+        // ],
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -60,6 +67,22 @@ class SelectHealthRecord extends StatelessWidget {
                 ),
               )
               .toList(),
+          Expanded(
+            child: Row(
+              children: [
+                InkWell(
+                  onTap: deleteCallback,
+                  child: const Icon(Icons.delete, color: Colors.red),
+                ),
+                const SizedBox(width: 5.0),
+                InkWell(
+                  onTap: viewCallback,
+                  child: const Icon(Icons.file_copy,
+                      color: AppColors.primaryColor),
+                ),
+              ],
+            ),
+          ),
           const SizedBox(width: 5),
         ],
       ),

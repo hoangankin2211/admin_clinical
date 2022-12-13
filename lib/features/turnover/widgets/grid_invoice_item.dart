@@ -47,6 +47,7 @@ class GridInvoiceItem extends StatelessWidget {
                   child: Text(
                     e.id,
                     style: const TextStyle(
+                      overflow: TextOverflow.ellipsis,
                       color: AppColors.headline1TextColor,
                       fontWeight: FontWeight.bold,
                       fontSize: 18.0,
