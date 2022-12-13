@@ -36,43 +36,45 @@ class DataService extends GetxController {
     return result;
   }
 
-  fetchAllData() async {
-    if (listDoctor.isEmpty) {
-      fetchAllDoctor((value) {
-        checkFetchData.add(1);
-        listDoctor.value = value;
-      });
-    }
+  Future<bool> fetchAllData() async {
+    // if (listDoctor.isEmpty) {
+    await fetchAllDoctor((value) {
+      checkFetchData.add(1);
+      listDoctor.value = value;
+    });
+    // }
 
-    if (listDepartMent.isEmpty) {
-      fetchAllDeparMent((value) {
-        checkFetchData.add(1);
-        listDepartMent.value = value;
-      });
-    }
+    // if (listDepartMent.isEmpty) {
+    await fetchAllDeparMent((value) {
+      checkFetchData.add(1);
+      listDepartMent.value = value;
+    });
+    // }
 
-    if (PatientService.listPatients.isEmpty) {
-      PatientService.fetchAllPatientData();
-    }
+    // if (PatientService.listPatients.isEmpty) {
+    await PatientService.fetchAllPatientData();
+    // }
 
-    if (MedicineService.instance.listMedicine.isEmpty) {
-      MedicineService.instance.fetchAllMedicineData();
-    }
-    if (HealthRecordService.listHealthRecord.isEmpty) {
-      HealthRecordService.fetchAllHealthRecordData();
-    }
-    if (InvoiceService.instance.listInvoice.isEmpty) {
-      InvoiceService.instance.fetchAllDataInvoice();
-    }
-    if (ServiceDataService.instance.service.isEmpty) {
-      ServiceDataService.instance.fetchAllDataService();
-    }
-    if (ClinicalRoomService.instance.listClinicalRoom.isEmpty) {
-      ClinicalRoomService.instance.fetchAllClinicalRoomData();
-    }
+    // if (MedicineService.instance.listMedicine.isEmpty) {
+    await MedicineService.instance.fetchAllMedicineData();
+    // }
+    // if (HealthRecordService.listHealthRecord.isEmpty) {
+    await HealthRecordService.fetchAllHealthRecordData();
+    // }
+    // if (InvoiceService.instance.listInvoice.isEmpty) {
+    await InvoiceService.instance.fetchAllDataInvoice();
+    // }
+    // if (ServiceDataService.instance.service.isEmpty) {
+    await ServiceDataService.instance.fetchAllDataService();
+    // }
+    // if (ClinicalRoomService.instance.listClinicalRoom.isEmpty) {
+    await ClinicalRoomService.instance.fetchAllClinicalRoomData();
+    // }
+
+    return true;
   }
 
-  void fetchAllDoctor(Function(List<Doctor1>) callBack) async {
+  Future<void> fetchAllDoctor(Function(List<Doctor1>) callBack) async {
     List<Doctor1> listDoctor = [];
     try {
       print('Get all doctor function is called');
@@ -110,7 +112,7 @@ class DataService extends GetxController {
     }
   }
 
-  void fetchAllDeparMent(Function(List<Department>) callBack) async {
+  Future<void> fetchAllDeparMent(Function(List<Department>) callBack) async {
     List<Department> listDepartMent = [];
     try {
       print("Get all departmeent function is called");

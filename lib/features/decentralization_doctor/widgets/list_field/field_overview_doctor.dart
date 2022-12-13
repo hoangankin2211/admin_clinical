@@ -4,8 +4,8 @@ import '../../../../constants/app_colors.dart';
 import '../../../../services/auth_service/auth_service.dart';
 import '../item_one.dart';
 
-class FieldOverivewDoctor extends StatelessWidget {
-  const FieldOverivewDoctor({
+class FieldOverviewDoctor extends StatelessWidget {
+  const FieldOverviewDoctor({
     Key? key,
   }) : super(key: key);
 

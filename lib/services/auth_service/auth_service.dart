@@ -108,10 +108,10 @@ class AuthService extends ChangeNotifier {
         response: res,
         context: context,
         onSuccess: () async {
+          result = true;
           SharedPreferences prefs = await SharedPreferences.getInstance();
           AuthService.instance.setUser(res.body);
           await prefs.setString('x-auth-token', jsonDecode(res.body)['token']);
-          result = true;
           // Get.offAllNamed(PageName.dashBoard);
         },
       );

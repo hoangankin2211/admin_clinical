@@ -26,40 +26,54 @@ import '../../settings/controller/settings_controller.dart';
 
 class DashboardController extends GetxController {
   var pageIndex = 0.obs;
-  late final Widget pages;
+  final Rx<Widget?> pages = Rx<Widget?>(null);
   final Rx<User?> _user = Rx<User?>(AuthService.instance.user);
 
   User? get user => _user.value;
 
+  // @override
+  // void onInit() async {
+  //   _user.listen((user) {
+  //     if (user != null) {
+  //       update(['DashboardScreen']);
+  //     }
+  //   });
+  //   super.onInit();
+  // }
+
   @override
-  void onInit() async {
-    // _user.listen((user) {
-    //   if (user != null) {
-    //     update(['DashboardScreen']);
-    //   }
-    // });
-    await fetchAllBasicData();
-    await setUserIfNeed();
-    await _initializeAllController();
-    pages = Obx(
-      () => IndexedStack(
-        index: pageIndex.value,
-        alignment: Alignment.topCenter,
-        children: listPage,
-      ),
-    );
-    super.onInit();
+  void onReady() async {
+    bool response = await setUserIfNeed();
+    response = await fetchAllBasicData();
+    if (response) {
+      print(response);
+      response = await _initializeAllController();
+      if (response) {
+        print(response);
+        Future(
+          () => pages.value = Obx(
+            () => IndexedStack(
+              index: pageIndex.value,
+              alignment: Alignment.topCenter,
+              children: listPage,
+            ),
+          ),
+        ).then((_) => update(['DashboardScreen']));
+      }
+    }
+
+    super.onReady();
   }
 
-  setUserIfNeed() async {
+  Future<bool> setUserIfNeed() async {
     bool check = await AuthService.instance.getUserData();
     if (check) {
       _user.value = AuthService.instance.user;
     }
-    update(['DashboardScreen']);
+    return true;
   }
 
-  Future<void> _initializeAllController() async {
+  Future<bool> _initializeAllController() async {
     await Get.putAsync(() => Future.value(DoctorOverviewController()));
     await Get.putAsync(() => Future.value(OverviewController()));
     await Get.putAsync(() => Future.value(DoctorMainController()));
@@ -69,10 +83,11 @@ class DashboardController extends GetxController {
     await Get.putAsync(() => Future.value(ClinicalRoomController()));
     await Get.putAsync(() => Future.value(MedicineController()));
     await Get.putAsync(() => Future.value(SettingController()));
+    return true;
   }
 
-  fetchAllBasicData() async {
-    DataService.instance.fetchAllData();
+  Future<bool> fetchAllBasicData() async {
+    return await DataService.instance.fetchAllData();
   }
 
   late final List<NavigationRailDestination> listTabButton =
