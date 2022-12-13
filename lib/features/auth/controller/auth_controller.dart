@@ -1,3 +1,4 @@
+import 'package:admin_clinical/routes/name_route.dart';
 import 'package:admin_clinical/services/auth_service/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,17 +11,19 @@ class AuthController extends GetxController {
 
   signInAndLoading(BuildContext context) async {
     isLoading.value = true;
-    update();
-    AuthService.instance.signIn(
+
+    final response = await AuthService.instance.signIn(
       context: context,
       email: emailController.text,
       password: passwordController.text,
-      updataLoading: () {
-        isLoading.value = false;
-        update();
-      },
     );
+
     isLoading.value = false;
-    update();
+    // if (response == true) {
+    print('here');
+
+    Get.offAllNamed(PageName.dashBoard);
+    // }
+    // update();
   }
 }

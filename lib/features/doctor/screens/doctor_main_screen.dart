@@ -21,7 +21,7 @@ void onButtonTape(int index) {
 class DoctorMainScreen extends StatelessWidget {
   DoctorMainScreen({super.key});
   RxInt checkPage = 0.obs;
-  final controller = Get.put(DoctorMainController());
+  final controller = Get.find<DoctorMainController>();
   @override
   Widget build(BuildContext context) {
     List<Widget> listView = [

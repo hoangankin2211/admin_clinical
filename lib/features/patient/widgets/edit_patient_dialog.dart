@@ -2,11 +2,14 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:admin_clinical/constants/utils.dart';
+import 'package:admin_clinical/features/decentralization_doctor/screen/doctor_dec_overview.dart';
 import 'package:admin_clinical/features/patient/controller/patient_page_controller.dart';
 import 'package:admin_clinical/models/patient.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_decoration.dart';
@@ -40,10 +43,12 @@ class EditPatientDialog extends StatelessWidget {
   TextEditingController emailController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController symptomController = TextEditingController();
+  TextEditingController dateOfBirth = TextEditingController();
   final Rx<Uint8List?> _avt = Rx(null);
   final Rx<ImageProvider> image = Rx(const AssetImage('images/user.png'));
   // final Rx<Uint8List?> newAvt = Rx(null);
   final _isLoading = false.obs;
+  DateTime currentDateTime = DateTime.now();
 
   Future<bool> _fetchDataToField() async {
     fullNameController.text = patient.name;
@@ -57,7 +62,7 @@ class EditPatientDialog extends StatelessWidget {
     phoneCode.value = patient.phoneNumber.split(" ").elementAt(0);
     genderCode.value = patient.gender;
     statusCode.value = patient.status;
-
+    dateOfBirth.text = patient.dob;
     return true;
   }
 
@@ -74,7 +79,7 @@ class EditPatientDialog extends StatelessWidget {
           name: fullNameController.text,
           gender: genderCode.value,
           address: locationController.text,
-          dob: '22-11-2002',
+          dob: dateOfBirth.text,
           phoneNumber: "${phoneCode.value} ${phoneNumberController.text}",
           status: statusCode.value,
           avt: result ?? patient.avt,
@@ -320,7 +325,108 @@ class EditPatientDialog extends StatelessWidget {
                                               }
                                               return null;
                                             },
-                                            controller: null,
+                                            readOnly: true,
+                                            onTap: () {
+                                              DateTime tempDateTime =
+                                                  DateTime.now();
+                                              Get.dialog(
+                                                Dialog(
+                                                  child: ConstrainedBox(
+                                                    constraints: BoxConstraints(
+                                                        maxHeight:
+                                                            MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .height *
+                                                                0.35,
+                                                        maxWidth: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width *
+                                                            0.3),
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        ConstrainedBox(
+                                                          constraints: BoxConstraints(
+                                                              maxHeight: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .height *
+                                                                  0.25),
+                                                          child:
+                                                              CupertinoDatePicker(
+                                                            onDateTimeChanged:
+                                                                (value) {
+                                                              tempDateTime =
+                                                                  value;
+                                                            },
+                                                            initialDateTime:
+                                                                DateTime.now(),
+                                                            maximumDate:
+                                                                DateTime.now(),
+                                                            minimumDate:
+                                                                DateTime(
+                                                                    1950, 1, 1),
+                                                            mode:
+                                                                CupertinoDatePickerMode
+                                                                    .date,
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                            height: 8),
+                                                        TextButton(
+                                                          style: TextButton
+                                                              .styleFrom(
+                                                            backgroundColor:
+                                                                AppColors
+                                                                    .primaryColor,
+                                                            minimumSize: Size(
+                                                              MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width *
+                                                                  0.2,
+                                                              50,
+                                                            ),
+                                                          ),
+                                                          onPressed: () {
+                                                            Get.back(
+                                                                result:
+                                                                    tempDateTime);
+                                                          },
+                                                          child: const Text(
+                                                            'Select',
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 18,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ).then((value) {
+                                                if (value != null) {
+                                                  currentDateTime = value;
+                                                  dateOfBirth.text =
+                                                      DateFormat()
+                                                          .add_yMMMMd()
+                                                          .format(
+                                                              currentDateTime);
+                                                }
+                                              });
+                                            },
+                                            controller: dateOfBirth,
                                             title: 'Date Of Birth',
                                             hint:
                                                 'Enter your your date of birth',

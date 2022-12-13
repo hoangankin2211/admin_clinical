@@ -83,7 +83,7 @@ class OverviewScreen extends StatelessWidget {
   RxInt touchedIndex = (-1).obs;
   RxInt touchedIndex1 = (-1).obs;
 
-  final overviewController = Get.put(OverviewController());
+  final overviewController = Get.find<OverviewController>();
 
   @override
   Widget build(BuildContext context) {

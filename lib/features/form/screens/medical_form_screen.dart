@@ -8,15 +8,13 @@ import 'package:admin_clinical/models/invoice.dart';
 import 'package:admin_clinical/services/data_service/invoice_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
-
 import '../../../models/medicine.dart';
 import '../../../models/patient.dart';
 import 'medical_examination_tab.dart';
 import 'medicine_indication_dialog.dart';
 
 class MedicalFormScreen extends StatelessWidget {
-  MedicalFormScreen({
+  const MedicalFormScreen({
     super.key,
     required this.patient,
     required this.backButton,

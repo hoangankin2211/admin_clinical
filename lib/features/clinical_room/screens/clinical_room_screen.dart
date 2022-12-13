@@ -13,7 +13,7 @@ import '../../auth/widgets/custom_button.dart';
 
 class ClinicalRoom extends StatelessWidget {
   ClinicalRoom({super.key});
-  final controller = Get.put(ClinicalRoomController());
+  final controller = Get.find<ClinicalRoomController>();
 
   @override
   Widget build(BuildContext context) {

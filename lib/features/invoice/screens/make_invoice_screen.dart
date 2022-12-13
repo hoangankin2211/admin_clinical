@@ -19,8 +19,17 @@ class MakeInvoiceScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Patient temp = PatientService
-        .listPatients[invoiceController.selectedHealthRecord.value!.patientId]!;
+    Patient temp = PatientService.listPatients[
+            invoiceController.selectedHealthRecord.value!.patientId] ??
+        Patient(
+          id: 'Null',
+          name: 'Null',
+          gender: 'Null',
+          address: 'Null',
+          dob: 'Null',
+          phoneNumber: 'Null',
+          status: 'Null',
+        );
     return Container(
       decoration: AppDecoration.primaryDecorationContainer,
       child: LayoutBuilder(

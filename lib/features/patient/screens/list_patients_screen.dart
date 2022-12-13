@@ -59,8 +59,10 @@ class ListPatientScreen extends StatelessWidget {
       try {
         patientPageController.selectedPatient.value = patient.id;
         Get.dialog(
-          Obx(() => PatientDetailScreen(
-              patient: PatientService.listPatients[patient.id]!)),
+          Obx(
+            () => PatientDetailScreen(
+                patient: PatientService.listPatients[patient.id]!),
+          ),
         );
       } catch (e) {
         print(e.toString());

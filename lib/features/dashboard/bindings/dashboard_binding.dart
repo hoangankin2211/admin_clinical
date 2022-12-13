@@ -3,7 +3,8 @@ import 'package:get/get.dart';
 
 class DashBoardBinding extends Bindings {
   @override
-  void dependencies() {
-    Get.lazyPut<DashboardController>(() => DashboardController());
+  void dependencies() async {
+    await Get.putAsync(() => Future.value(DashboardController()));
+    // Get.lazyPut<DashboardController>(() => DashboardController());
   }
 }

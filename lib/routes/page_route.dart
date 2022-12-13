@@ -25,7 +25,7 @@ class PagesRoute {
     GetPage(
       name: PageName.dashBoard,
       page: () => DashboardScreen(),
-      binding: DashBoardBinding(),
+      // binding: DashBoardBinding(),
     ),
     GetPage(
       name: PageName.patientDetailScreen,

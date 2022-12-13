@@ -112,7 +112,7 @@ class DashboardHeader extends StatelessWidget {
                                   ],
                                   image: DecorationImage(
                                     fit: BoxFit.cover,
-                                    image: NetworkImage(controller.user.avt),
+                                    image: NetworkImage(controller.user!.avt),
                                   ),
                                 ),
                               ),
@@ -122,7 +122,7 @@ class DashboardHeader extends StatelessWidget {
                         const SizedBox(height: 10.0),
                         Obx(
                           () => Text(
-                            controller.user.name,
+                            controller.user!.name,
                             style: const TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,

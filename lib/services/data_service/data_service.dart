@@ -37,21 +37,24 @@ class DataService extends GetxController {
   }
 
   fetchAllData() async {
-    if (listDoctor.value.isEmpty) {
+    if (listDoctor.isEmpty) {
       fetchAllDoctor((value) {
-        checkFetchData.value.add(1);
+        checkFetchData.add(1);
         listDoctor.value = value;
       });
     }
-    if (listDepartMent.value.isEmpty) {
+
+    if (listDepartMent.isEmpty) {
       fetchAllDeparMent((value) {
-        checkFetchData.value.add(1);
+        checkFetchData.add(1);
         listDepartMent.value = value;
       });
     }
+
     if (PatientService.listPatients.isEmpty) {
       PatientService.fetchAllPatientData();
     }
+
     if (MedicineService.instance.listMedicine.isEmpty) {
       MedicineService.instance.fetchAllMedicineData();
     }
@@ -60,11 +63,10 @@ class DataService extends GetxController {
     }
     if (InvoiceService.instance.listInvoice.isEmpty) {
       InvoiceService.instance.fetchAllDataInvoice();
-      if (ServiceDataService.instance.service.isEmpty) {
-        ServiceDataService.instance.fetchAllDataService();
-      }
     }
-
+    if (ServiceDataService.instance.service.isEmpty) {
+      ServiceDataService.instance.fetchAllDataService();
+    }
     if (ClinicalRoomService.instance.listClinicalRoom.isEmpty) {
       ClinicalRoomService.instance.fetchAllClinicalRoomData();
     }

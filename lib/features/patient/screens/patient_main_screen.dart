@@ -11,8 +11,7 @@ import 'list_patients_screen.dart';
 class PatientMainScreen extends StatelessWidget {
   PatientMainScreen({super.key});
 
-  final patientMainController = Get.put(PatientMainController());
-  final controller = Get.put(MedicalFormController());
+  final patientMainController = Get.find<PatientMainController>();
 
   @override
   Widget build(BuildContext context) {

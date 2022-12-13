@@ -17,7 +17,7 @@ class _SettingMainScreenState extends State<SettingMainScreen>
   late TabController tabController =
       TabController(length: 3, vsync: this, initialIndex: 0);
 
-  final settingController = Get.put(SettingController());
+  final settingController = Get.find<SettingController>();
 
   @override
   Widget build(BuildContext context) {

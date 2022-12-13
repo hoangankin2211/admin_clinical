@@ -17,7 +17,7 @@ class PatientDetailScreen extends StatelessWidget {
   PatientDetailScreen({super.key, required this.patient});
 
   final Patient patient;
-  late final List<String>? healthRecord = patient.healthRecord;
+  late final List<String> healthRecord = patient.healthRecord ?? [];
 
   @override
   Widget build(BuildContext context) {
@@ -416,16 +416,17 @@ class PatientDetailScreen extends StatelessWidget {
                       ),
                       const Divider(thickness: 1),
                       Expanded(
-                          child: ListView(
-                        children: healthRecord!.map((e) {
-                          HealthRecord? temp =
-                              HealthRecordService.listHealthRecord[e];
-                          if (temp != null) {
-                            return MedicalItem(healthRecord: temp);
-                          }
-                          return const SizedBox();
-                        }).toList(),
-                      ))
+                        child: ListView(
+                          children: healthRecord.map((e) {
+                            HealthRecord? temp =
+                                HealthRecordService.listHealthRecord[e];
+                            if (temp != null) {
+                              return MedicalItem(healthRecord: temp);
+                            }
+                            return const SizedBox();
+                          }).toList(),
+                        ),
+                      )
                     ],
                   ),
                 ),
@@ -616,9 +617,9 @@ class PatientDetailScreen extends StatelessWidget {
                         ProfileItem(
                           header: "Registered Date",
                           title: DateFormat().add_yMMMEd().format(
-                                (healthRecord != null)
+                                (healthRecord.isNotEmpty)
                                     ? (HealthRecordService
-                                        .listHealthRecord[healthRecord!.first]!
+                                        .listHealthRecord[healthRecord.first]!
                                         .dateCreate)
                                     : DateTime.now(),
                               ),

@@ -154,10 +154,9 @@ class PatientListRow extends StatelessWidget {
                     (e) => Expanded(
                       child: Text(
                         e.value,
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline4!
-                            .copyWith(color: Colors.blueGrey),
+                        style: Theme.of(context).textTheme.headline4!.copyWith(
+                            overflow: TextOverflow.ellipsis,
+                            color: Colors.blueGrey),
                       ),
                     ),
                   )

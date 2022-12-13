@@ -31,7 +31,7 @@ class MedicineScreen extends StatefulWidget {
 }
 
 class _MedicineScreenState extends State<MedicineScreen> {
-  final controller = Get.put(MedicineController());
+  final controller = Get.find<MedicineController>();
   Uint8List? _image;
   Rx<DateTime> date = DateTime.now().obs;
   void selectedImage() async {

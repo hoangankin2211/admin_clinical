@@ -80,15 +80,16 @@ class AuthService extends ChangeNotifier {
     }
   }
 
-  void signIn(
-      {required BuildContext context,
-      required String email,
-      required String password,
-      required VoidCallback updataLoading}) async {
+  Future<bool> signIn({
+    required BuildContext context,
+    required String email,
+    required String password,
+  }) async {
+    bool result = false;
     try {
       print("sign in function is called");
-      var clinet = http.Client();
-      http.Response res = await clinet.post(
+      var client = http.Client();
+      http.Response res = await client.post(
         Uri.parse(
           '${ApiLink.uri}/api/signin',
         ),
@@ -102,9 +103,7 @@ class AuthService extends ChangeNotifier {
           'Content-Type': 'application/json; charset=UTF-8',
         },
       );
-      if (res.statusCode == 200) {
-        updataLoading();
-      }
+
       httpErrorHandle(
         response: res,
         context: context,
@@ -112,12 +111,14 @@ class AuthService extends ChangeNotifier {
           SharedPreferences prefs = await SharedPreferences.getInstance();
           AuthService.instance.setUser(res.body);
           await prefs.setString('x-auth-token', jsonDecode(res.body)['token']);
-          Get.offAllNamed(PageName.dashBoard);
+          result = true;
+          // Get.offAllNamed(PageName.dashBoard);
         },
       );
     } catch (e) {
-      updataLoading();
+      print('signIn: $e');
     }
+    return result;
   }
 
   Future<Map<String, dynamic>> forgetPassword(
