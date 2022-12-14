@@ -49,50 +49,6 @@ class MedicalFormController extends GetxController {
   ////////////////////////////////////////////////////////////////////////////////
 
   //////////////////////////////////////////////////////////////////////
-  void onPressedCreateButton(BuildContext context, String patientId) async {
-    final isValidated = formKey.currentState!.validate();
-    if (isValidated) {
-      formKey.currentState!.save();
-      isLoading.value = true;
-      final response = await createNewHealthRecord(patientId, context);
-      isLoading.value = false;
-
-      bool result = false;
-
-      if (response['isSuccess']) {
-        try {
-          final updatePatientResponse = await _updatePatientRecord(
-            patientId,
-            response['id'],
-          );
-
-          if (updatePatientResponse) {
-            PatientService.listPatients.update(patientId, (value) {
-              if (value.healthRecord == null) {
-                List<String> temp = [];
-                value.healthRecord = temp;
-              }
-              value.healthRecord?.add(response['id'] as String);
-              return value;
-            });
-            currentHealthRecord.value =
-                HealthRecordService.listHealthRecord[response['id'] ?? ""];
-            result = true;
-          }
-        } catch (e) {
-          print('updatePatientResponse----: $e');
-        }
-      }
-      Utils.notifyHandle(
-        response: result,
-        successTitle: 'Success',
-        successQuestion: 'Create new Health Record Success',
-        errorTitle: 'ERROR',
-        errorQuestion:
-            'Something occurred !!! Please check your internet connection',
-      );
-    }
-  }
 
   Future<bool> _updatePatientRecord(
       String patientId, String newHealthRecord) async {
@@ -261,82 +217,6 @@ class MedicalFormController extends GetxController {
   }
 
 //////////////////////////////////////////////////////////////////////
-  Future<Map<String, dynamic>> createNewHealthRecord(
-      String patientId, BuildContext context) async {
-    try {
-      List<Map<String, dynamic>> serviceFinal = [];
-      List<Map<String, dynamic>> medicineFinal = [];
-
-      await Future(
-        () {
-          for (var element in listServiceIndicatorFINAL) {
-            Map<String, dynamic> serviceFinalTemp = {};
-
-            serviceFinalTemp.addAll({'service': element});
-            serviceFinalTemp.addAll({'provider': 'USA'});
-            serviceFinalTemp.addAll({'quantity': 1});
-            serviceFinalTemp.addAll({'amount': 10.0});
-
-            serviceFinal.add(serviceFinalTemp);
-          }
-          for (var element in listMedicineIndicatorFINAL) {
-            Map<String, dynamic> medicineFinalTemp = {};
-            medicineFinalTemp.addAll({'medicine': element});
-            medicineFinalTemp.addAll({'provider': 'USA'});
-            medicineFinalTemp.addAll({'quantity': 1});
-            medicineFinalTemp.addAll({'amount': 10.0});
-            medicineFinal.add(medicineFinalTemp);
-          }
-        },
-      );
-
-      HealthRecord newRecord = HealthRecord(
-        dateCreate: DateTime.now(),
-        departmentId: 'departmentId',
-        patientId: patientId,
-        doctorId: AuthService.instance.user.id,
-        totalMoney: totalMoney.value,
-        allergy: (textController['allergy'] as TextEditingController).text,
-        bloodPressure: double.parse(
-            (textController['bloodPressure'] as TextEditingController).text),
-        clinicalExamination:
-            (textController['clinicalExamination'] as TextEditingController)
-                .text,
-        conclusionAndTreatment:
-            (textController['conclusionAndTreatment'] as TextEditingController)
-                .text,
-        diagnostic:
-            (textController['diagnostic'] as TextEditingController).text,
-        heartBeat: double.parse(
-            (textController['heartBeat'] as TextEditingController).text),
-        height: double.parse(
-            (textController['height'] as TextEditingController).text),
-        note: (textController['note'] as TextEditingController).text,
-        symptom: (textController['symptom'] as TextEditingController).text,
-        temperature: double.parse(
-            (textController['temperature'] as TextEditingController).text),
-        weight: double.parse(
-            (textController['weight'] as TextEditingController).text),
-        medicines: medicineFinal,
-        services: serviceFinal,
-      );
-      Map<String, dynamic> newRecordMap = newRecord.toMap();
-
-      final response = await HealthRecordService.insertHealthRecord(
-        newRecordMap,
-        Get.context ?? context,
-      );
-      if (response != null) {
-        print(response);
-        newRecord.id = response;
-        HealthRecordService.listHealthRecord.addAll({response: newRecord});
-        return {"isSuccess": true, 'id': response};
-      }
-    } catch (e) {
-      print('createNewHealthRecord: $e');
-    }
-    return {"isSuccess": false};
-  }
 
   Future<bool> editHealthRecordData(Map<String, dynamic> healthRecord) async {
     try {

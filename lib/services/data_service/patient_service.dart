@@ -38,6 +38,30 @@ class PatientService {
     }
   }
 
+  static Future<List<String>> searchPatient(
+      String query, String attribute) async {
+    List<String> result = [];
+    try {
+      final response = await http.get(
+        Uri.parse('${ApiLink.uri}/api/searchPatient/$attribute/$query'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+      if (response.statusCode == 200) {
+        final List<dynamic> extractedData =
+            jsonDecode(response.body)['patient'];
+        for (Map<String, dynamic> element in extractedData) {
+          result.add(element['_id'] as String);
+          print(result.last);
+        }
+      }
+    } catch (e) {
+      print('searchPatient: $e');
+    }
+    return result;
+  }
+
   static Future<Map<String, dynamic>?> insertPatient(
       Patient patient, BuildContext context) async {
     Map<String, dynamic>? result;

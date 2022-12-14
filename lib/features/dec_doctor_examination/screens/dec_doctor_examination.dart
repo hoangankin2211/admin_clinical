@@ -7,17 +7,20 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../../constants/app_colors.dart';
+import '../controller/doctor_examination_controller.dart';
 import '../widgets/examination_item.dart';
 import '../widgets/patient_wait_item.dart';
 import '../widgets/row_examination_tem.dart';
 
+// ignore: must_be_immutable
 class DecDoctorExamination extends StatelessWidget {
   DecDoctorExamination({super.key});
+
   RxInt check = 0.obs;
   RxInt showViewMessIndex = 0.obs;
   RxBool checkAnimation = true.obs;
   final controller = Get.find<DecDoctExaminationController>();
-
+  final doctorExaminationController = Get.find<DoctorExaminationController>();
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
@@ -108,20 +111,27 @@ class DecDoctorExamination extends StatelessWidget {
                           child: Obx(
                             () => ListView(
                               children: [
-                                for (var item in controller.listPatients.values)
-                                  // ignore: unrelated_type_equality_checks
-                                  if (item.status == "Uncompleted")
+                                for (var item in controller.listRecords.values)
+                                  if (item.status == "Waiting Examination")
                                     PatientWaitItem(
-                                      headerTitle: item.id,
-                                      id: item.name,
+                                      examFunction: () {
+                                        doctorExaminationController
+                                            .examinationActionHandle(
+                                                item.patientId,
+                                                healthRecordId: item.id);
+                                      },
+                                      headerTitle: item.patientId,
+                                      id: item.doctorId,
                                       title: "title",
-                                      time: item.dob,
+                                      time: DateFormat()
+                                          .add_yMMMMd()
+                                          .format(item.dateCreate),
                                       index: 1,
                                       groupValue: check.value,
                                       func: (v) {},
                                       press: () {},
                                       check: false,
-                                      thumb: item.avt,
+                                      thumb: '',
                                     ),
                               ],
                             ),

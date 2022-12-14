@@ -6,14 +6,55 @@ import 'package:get/get.dart';
 class PatientPageController extends GetxController {
   final Rx<String?> selectedPatient = Rx(null);
 
+  final Rx<TextEditingController> patientName = TextEditingController().obs;
+  final Rx<TextEditingController> patientId = TextEditingController().obs;
+
   late final Rx<Map<String, Patient>> data;
 
   var isLoading = false.obs;
+  late Worker listenerSearch;
+
+  @override
+  void onClose() {
+    listenerSearch.dispose();
+  }
 
   @override
   void onInit() {
     data = Rx<Map<String, Patient>>(PatientService.listPatients);
+    listenerSearch = everAll(
+      [patientName, patientId],
+      (callback) {
+        print('here');
+        if (patientName.value.text.isEmpty && patientId.value.text.isEmpty) {
+          print('here');
+          data.value = (PatientService.listPatients);
+          numberOfEntries.value = data.value.length;
+          update(['list_patients_screen']);
+        }
+      },
+    );
+
     super.onInit();
+  }
+
+  Future<bool> getPatientAccordingKey(String query, String attribute) async {
+    try {
+      final response = await PatientService.searchPatient(query, attribute);
+      Map<String, Patient> searchingPatient = {};
+      for (var element in response) {
+        Patient? temp = PatientService.listPatients[element];
+        if (temp != null) {
+          searchingPatient.addAll({temp.id: temp});
+        }
+      }
+      data.value = searchingPatient;
+      numberOfEntries.value = data.value.length;
+      update(['list_patients_screen']);
+    } catch (e) {
+      print('getPatientAccordingKey: $e');
+    }
+    return false;
   }
 
   @override

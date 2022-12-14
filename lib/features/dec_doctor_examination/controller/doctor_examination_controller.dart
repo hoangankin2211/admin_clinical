@@ -4,9 +4,9 @@ import 'package:get/get.dart';
 
 import '../../../services/data_service/patient_service.dart';
 import '../../form/screens/medical_form_screen.dart';
-import '../screens/list_patients_screen.dart';
+import '../screens/dec_doctor_examination.dart';
 
-class PatientMainController extends GetxController {
+class DoctorExaminationController extends GetxController {
   Rx<String?> selectedPatient = Rx(null);
   late PageController pageController;
   @override
@@ -19,7 +19,7 @@ class PatientMainController extends GetxController {
   late Rx<MedicalFormScreen?> nextPage = Rx<MedicalFormScreen?>(null);
 
   late final List<Widget> pages = [
-    ListPatientScreen(examinationActionHandle: examinationActionHandle),
+    DecDoctorExamination(),
     Obx(
       () => (selectedPatient.value != null && nextPage.value != null)
           ? nextPage.value!

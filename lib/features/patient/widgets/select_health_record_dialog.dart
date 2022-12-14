@@ -1,24 +1,31 @@
 import 'package:admin_clinical/constants/app_colors.dart';
 import 'package:admin_clinical/constants/app_decoration.dart';
-import 'package:admin_clinical/features/form/widgets/form_card.dart';
 import 'package:admin_clinical/models/health_record.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 import '../../../commons/widgets/custom_icon_button.dart';
+import '../../../services/data_service/patient_service.dart';
 import '../../form/widgets/medicine_indication_widgets/medicine_search_form.dart';
 import '../../overview/widgets/custom_table.dart';
+import 'create_healthRecord_dialog.dart';
 
 class SelectRecordDialog extends StatelessWidget {
   const SelectRecordDialog(
-      {super.key,
-      required this.records,
-      required this.onTapRecord,
-      required this.patientId});
+      {super.key, required this.records, required this.patientId});
   final String patientId;
   final List<HealthRecord> records;
-  final Function(String, {String? healthRecordId}) onTapRecord;
+
+  void onTapRecord(String patientId, BuildContext context) {
+    Get.dialog(
+      CreateHealthRecordDialog(
+        height: MediaQuery.of(context).size.height * 0.6,
+        width: MediaQuery.of(context).size.width * 0.4,
+        patient: PatientService.listPatients[patientId]!,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -52,7 +59,7 @@ class SelectRecordDialog extends StatelessWidget {
                   CustomIconButton(
                     onPressed: () {
                       Get.back();
-                      onTapRecord(patientId);
+                      onTapRecord(patientId, context);
                     },
                     label: const Text(
                       'Add New Record',
@@ -108,9 +115,9 @@ class SelectRecordDialog extends StatelessWidget {
                               viewCallback: () {
                                 Get.back();
                                 onTapRecord(
-                                  patientId,
-                                  healthRecordId: records[index].id,
-                                );
+                                    patientId,
+                                    // healthRecordId: records[index].id,
+                                    context);
                               },
                             );
                           },

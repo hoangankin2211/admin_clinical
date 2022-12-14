@@ -2,8 +2,8 @@ import 'dart:typed_data';
 
 import 'package:admin_clinical/constants/utils.dart';
 import 'package:admin_clinical/features/patient/controller/patient_page_controller.dart';
-import 'package:admin_clinical/main.dart';
 import 'package:admin_clinical/models/patient.dart';
+import 'package:admin_clinical/services/data_service/data_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -26,9 +26,15 @@ class AddPatientDialog extends StatelessWidget {
   List<String> dropDownItem = ['+84', '+86', '+42', '+88', '+14', '+52', '+50'];
   List<String> dropDownItemGender = ["Male", "Female", 'Other'];
   List<String> dropDownItemStatus = ["Uncompleted", "Completed", 'Out-Patient'];
-  late var phoneCode = dropDownItem.first.obs;
-  late var genderCode = dropDownItemGender.first.obs;
-  late var statusCode = dropDownItemStatus.first.obs;
+  List<String> dropDownItemDepartment = [
+    for (var element in DataService.instance.listDepartMent) element.name ?? ""
+  ];
+
+  late final phoneCode = dropDownItem.first.obs;
+  late final genderCode = dropDownItemGender.first.obs;
+  late final statusCode = dropDownItemStatus.first.obs;
+  late final departmentCode = dropDownItemDepartment.first.obs;
+
   final patientPageController = Get.find<PatientPageController>();
 
   TextEditingController fullNameController = TextEditingController();
@@ -209,31 +215,44 @@ class AddPatientDialog extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            CustomTextFormField(
-                              controller: emailController,
-                              width: width * 0.4,
-                              title: 'Patient Email',
-                              hint: 'email@gmail.com',
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return "This Field can not be emptied";
-                                }
-                                return null;
-                              },
+                            Flexible(
+                              flex: 2,
+                              child: CustomTextFormField(
+                                controller: emailController,
+                                // width: width * 0.4,
+                                title: 'Patient Email',
+                                hint: 'email@gmail.com',
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return "This Field can not be emptied";
+                                  }
+                                  return null;
+                                },
+                              ),
                             ),
-                            CustomTextFormField(
-                              controller: phoneNumberController,
-                              prefixWidget: Padding(
-                                padding: const EdgeInsets.only(left: 10),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                ),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                        width: 0.3, color: Colors.blueGrey)),
                                 child: Obx(
                                   () => DropdownButton<String>(
+                                    icon: const Icon(
+                                      Icons.person_rounded,
+                                      color: AppColors.primaryColor,
+                                    ),
                                     underline: const SizedBox(),
-                                    value: phoneCode.value,
-                                    items: dropDownItem
-                                        .map((e) => DropdownMenuItem(
-                                              value: e,
+                                    value: genderCode.value,
+                                    items: dropDownItemGender
+                                        .map((text) => DropdownMenuItem(
+                                              value: text,
                                               child: Text(
-                                                e,
+                                                text,
                                                 style: const TextStyle(
                                                   color: Colors.black,
                                                   fontSize: 15,
@@ -243,20 +262,51 @@ class AddPatientDialog extends StatelessWidget {
                                             ))
                                         .toList(),
                                     onChanged: (value) {
-                                      phoneCode.value = value ?? '';
+                                      genderCode.value = value ?? '';
                                     },
                                   ),
                                 ),
                               ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return "This Field can not be emptied";
-                                }
-                                return null;
-                              },
-                              width: width * 0.4,
-                              title: 'Phone Number',
-                              hint: '123456',
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              flex: 1,
+                              child: CustomTextFormField(
+                                controller: phoneNumberController,
+                                prefixWidget: Padding(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  child: Obx(
+                                    () => DropdownButton<String>(
+                                      underline: const SizedBox(),
+                                      value: phoneCode.value,
+                                      items: dropDownItem
+                                          .map((e) => DropdownMenuItem(
+                                                value: e,
+                                                child: Text(
+                                                  e,
+                                                  style: const TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                              ))
+                                          .toList(),
+                                      onChanged: (value) {
+                                        phoneCode.value = value ?? '';
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return "This Field can not be emptied";
+                                  }
+                                  return null;
+                                },
+                                title: 'Phone Number',
+                                hint: '123456',
+                              ),
                             ),
                           ],
                         ),
@@ -264,9 +314,7 @@ class AddPatientDialog extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Flexible(
-                              flex: 2,
-                              fit: FlexFit.tight,
+                            Expanded(
                               child: CustomTextFormField(
                                 readOnly: true,
                                 validator: (value) {
@@ -357,9 +405,8 @@ class AddPatientDialog extends StatelessWidget {
                                 hint: 'Enter your your date of birth',
                               ),
                             ),
-                            const SizedBox(width: 25),
-                            Flexible(
-                              flex: 1,
+                            const SizedBox(width: 10),
+                            Expanded(
                               child: Container(
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 20,
@@ -371,12 +418,12 @@ class AddPatientDialog extends StatelessWidget {
                                 child: Obx(
                                   () => DropdownButton<String>(
                                     icon: const Icon(
-                                      Icons.person_rounded,
+                                      Icons.text_snippet,
                                       color: AppColors.primaryColor,
                                     ),
                                     underline: const SizedBox(),
-                                    value: genderCode.value,
-                                    items: dropDownItemGender
+                                    value: departmentCode.value,
+                                    items: dropDownItemDepartment
                                         .map((text) => DropdownMenuItem(
                                               value: text,
                                               child: Text(
@@ -390,15 +437,14 @@ class AddPatientDialog extends StatelessWidget {
                                             ))
                                         .toList(),
                                     onChanged: (value) {
-                                      genderCode.value = value ?? '';
+                                      departmentCode.value = value ?? '';
                                     },
                                   ),
                                 ),
                               ),
                             ),
                             const SizedBox(width: 10),
-                            Flexible(
-                              flex: 1,
+                            Expanded(
                               child: Container(
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 20,

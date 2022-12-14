@@ -449,7 +449,7 @@ class ViewAllDoctor extends StatelessWidget {
               backgroundColor: Colors.transparent,
               child: DialogSelectFilter(
                 callBack: (title) {
-                  listFilter.value[0] = title;
+                  listFilter[0] = title;
                 },
               ),
             ),

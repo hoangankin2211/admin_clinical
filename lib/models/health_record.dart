@@ -4,11 +4,12 @@ import 'package:admin_clinical/constants/utils.dart';
 
 class HealthRecord {
   String? id;
-  String? patientId;
+  String patientId;
   String doctorId;
   String departmentId;
   DateTime dateCreate;
   double totalMoney;
+  String status;
   String? note;
   String? clinicalExamination;
   String? symptom;
@@ -35,13 +36,14 @@ class HealthRecord {
     this.heartBeat,
     this.height,
     this.id,
-    this.patientId,
+    required this.patientId,
     this.medicines,
     this.note,
     this.services,
     this.symptom,
     this.temperature,
     required this.totalMoney,
+    required this.status,
     this.weight,
   });
 
@@ -98,27 +100,27 @@ class HealthRecord {
     }
 
     return HealthRecord(
-      id: json['id'].toString(),
-      patientId: json['patientId'] ?? "",
-      dateCreate:
-          DateTime.parse(json['dateCreate'] ?? DateTime.now().toString()),
-      departmentId: json['departmentId'] ?? "",
-      doctorId: json['doctorId'] ?? '',
-      totalMoney: (json['totalMoney'] ?? 0.0) as double,
-      allergy: json['allergy'] ?? "",
-      bloodPressure: (json['bloodPressure'] ?? 0.0) as double,
-      clinicalExamination: json['clinicalExamination'],
-      conclusionAndTreatment: json['conclusionAndTreatment'],
-      diagnostic: json['diagnostic'],
-      heartBeat: (json['heartBeat'] ?? 0.0) as double,
-      symptom: json['symptom'],
-      height: (json['height'] ?? 0.0) as double,
-      medicines: extractedMedicines,
-      services: extractedServices,
-      note: json['note'] ?? "",
-      temperature: (json['temperature'] ?? 0.0) as double,
-      weight: (json['weight'] ?? 0.0) as double,
-    );
+        id: json['id'].toString(),
+        patientId: json['patientId'] ?? "",
+        dateCreate:
+            DateTime.parse(json['dateCreate'] ?? DateTime.now().toString()),
+        departmentId: json['departmentId'] ?? "",
+        doctorId: json['doctorId'] ?? '',
+        totalMoney: (json['totalMoney'] ?? 0.0) as double,
+        allergy: json['allergy'] ?? "",
+        bloodPressure: (json['bloodPressure'] ?? 0.0) as double,
+        clinicalExamination: json['clinicalExamination'],
+        conclusionAndTreatment: json['conclusionAndTreatment'],
+        diagnostic: json['diagnostic'],
+        heartBeat: (json['heartBeat'] ?? 0.0) as double,
+        symptom: json['symptom'],
+        height: (json['height'] ?? 0.0) as double,
+        medicines: extractedMedicines,
+        services: extractedServices,
+        note: json['note'] ?? "",
+        temperature: (json['temperature'] ?? 0.0) as double,
+        weight: (json['weight'] ?? 0.0) as double,
+        status: json['status'] ?? "Waiting Examination");
   }
 
   Map<String, dynamic> toMap() {
@@ -128,6 +130,7 @@ class HealthRecord {
     data['dateCreate'] = dateCreate.toIso8601String();
     data['totalMoney'] = totalMoney;
     data['departmentId'] = departmentId;
+    data['status'] = status;
     data['note'] = note;
     data['doctorId'] = doctorId;
     data['clinicalExamination'] = clinicalExamination;

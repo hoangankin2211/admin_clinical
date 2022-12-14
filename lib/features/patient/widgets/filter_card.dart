@@ -8,11 +8,18 @@ class FilterCategory extends StatelessWidget {
     required this.title,
     required this.hint,
     required this.iconData,
+    this.controller,
+    this.onChanged,
+    this.onSubmit,
+    this.onFieldSubmitted,
   });
+  final TextEditingController? controller;
   final String title;
   final String hint;
   final IconData iconData;
-
+  final Function(String)? onChanged;
+  final Function(String)? onSubmit;
+  final Function(String)? onFieldSubmitted;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -24,6 +31,9 @@ class FilterCategory extends StatelessWidget {
         ),
         const SizedBox(height: 5),
         TextFormField(
+          controller: controller,
+          onChanged: onChanged,
+          onFieldSubmitted: onFieldSubmitted,
           decoration: InputDecoration(
               contentPadding:
                   const EdgeInsets.symmetric(vertical: 10, horizontal: 8),

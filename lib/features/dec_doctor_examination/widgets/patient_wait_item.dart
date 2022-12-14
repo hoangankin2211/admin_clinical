@@ -27,8 +27,10 @@ class PatientWaitItem extends StatelessWidget {
       required this.func,
       required this.press,
       required this.check,
-      required this.thumb});
+      required this.thumb,
+      required this.examFunction});
   RxBool onIt = false.obs;
+  final Function() examFunction;
   @override
   Widget build(BuildContext context) {
     return Obx(
@@ -141,7 +143,7 @@ class PatientWaitItem extends StatelessWidget {
                     SizedBox(
                       width: 100,
                       height: 30.0,
-                      child: CustomButton(text: "Exam", onTap: () {}),
+                      child: CustomButton(text: "Exam", onTap: examFunction),
                     )
                   ],
                 ),

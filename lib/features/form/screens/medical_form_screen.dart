@@ -221,24 +221,12 @@ class MedicalFormScreen extends StatelessWidget {
                             children: [
                               SizedBox(
                                 height: 40,
-                                child: Obx(
-                                  () => CustomButton(
-                                    title: medicalFormController
-                                                .currentHealthRecord.value !=
-                                            null
-                                        ? "Update "
-                                        : "Create",
-                                    onPressed: () => medicalFormController
-                                                .currentHealthRecord.value !=
-                                            null
-                                        ? medicalFormController
-                                            .onPressedUpdateButton(
-                                                context, patient.id)
-                                        : medicalFormController
-                                            .onPressedCreateButton(
-                                            context,
-                                            patient.id,
-                                          ),
+                                child: CustomButton(
+                                  title: "Update ",
+                                  onPressed: () => medicalFormController
+                                      .onPressedUpdateButton(
+                                    context,
+                                    patient.id,
                                   ),
                                 ),
                               ),

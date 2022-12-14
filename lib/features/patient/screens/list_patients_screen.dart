@@ -30,9 +30,8 @@ const Map<String, String> patientListField = {
 };
 
 class ListPatientScreen extends StatelessWidget {
-  ListPatientScreen({super.key, required this.examinationActionHandle});
-  final Function(String, {String? healthRecordId}) examinationActionHandle;
-  final patientPageController = Get.put(PatientPageController());
+  ListPatientScreen({super.key});
+  final patientPageController = Get.find<PatientPageController>();
 
   void _onSelectionAction(
       String value, int index, BuildContext context, Patient patient) async {
@@ -51,7 +50,6 @@ class ListPatientScreen extends StatelessWidget {
       Get.dialog(
         SelectRecordDialog(
           records: listHealthRecord,
-          onTapRecord: examinationActionHandle,
           patientId: patient.id,
         ),
       );
@@ -173,24 +171,41 @@ class ListPatientScreen extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            const Expanded(
+                            Expanded(
                               child: FilterCategory(
-                                title: 'Patient',
-                                hint: 'Patient name, Patient id, etc',
+                                onChanged: (value) {
+                                  if (value.isNotEmpty) {
+                                    patientPageController
+                                        .getPatientAccordingKey(value, 'name');
+                                  }
+                                },
+                                controller:
+                                    patientPageController.patientName.value,
+                                title: 'Patient name',
+                                hint: 'Enter Patient name',
                                 iconData: Icons.search_outlined,
-                              ),
-                            ),
-                            const SizedBox(width: 20),
-                            const Expanded(
-                              child: FilterCategory(
-                                title: 'Category',
-                                hint: 'All Category',
-                                iconData: Icons.category_outlined,
                               ),
                             ),
                             const SizedBox(width: 20),
                             Expanded(
                               child: FilterCategory(
+                                controller:
+                                    patientPageController.patientId.value,
+                                title: 'Patient ID',
+                                hint: 'Enter Patient ID',
+                                iconData: Icons.category_outlined,
+                                onChanged: (value) {
+                                  if (value.isNotEmpty) {
+                                    patientPageController
+                                        .getPatientAccordingKey(value, 'id');
+                                  }
+                                },
+                              ),
+                            ),
+                            const SizedBox(width: 20),
+                            Expanded(
+                              child: FilterCategory(
+                                // onSubmit: (value) {},
                                 title: 'Date of Joining',
                                 hint: DateFormat()
                                     .add_yMd()

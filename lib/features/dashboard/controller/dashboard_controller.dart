@@ -1,4 +1,3 @@
-import 'package:admin_clinical/constants/app_decoration.dart';
 import 'package:admin_clinical/features/clinical_room/screens/clinical_room_screen.dart';
 import 'package:admin_clinical/features/decentralization_doctor/screen/doctor_dec_overview.dart';
 import 'package:admin_clinical/features/doctor/screens/doctor_main_screen.dart';
@@ -7,8 +6,7 @@ import 'package:admin_clinical/features/invoice/screens/invoice_view_screen.dart
 import 'package:admin_clinical/features/medicine/screens/medicine_screen.dart';
 import 'package:admin_clinical/features/overview/screens/overview_screen.dart';
 import 'package:admin_clinical/features/patient/controller/patient_page_controller.dart';
-import 'package:admin_clinical/features/patient/screens/patient_detail_screen.dart';
-import 'package:admin_clinical/features/patient/screens/patient_main_screen.dart';
+import 'package:admin_clinical/features/patient/screens/list_patients_screen.dart';
 import 'package:admin_clinical/features/settings/screen/setting_main_screen.dart';
 import 'package:admin_clinical/services/data_service/data_service.dart';
 import 'package:flutter/material.dart';
@@ -20,12 +18,13 @@ import '../../../models/user.dart';
 import '../../../services/auth_service/auth_service.dart';
 import '../../clinical_room/controller/clinical_room_controller.dart';
 import '../../dec_doctor_examination/controller/dec_doctor_examination_controller.dart';
+import '../../dec_doctor_examination/controller/doctor_examination_controller.dart';
 import '../../dec_doctor_examination/screens/dec_doctor_examination.dart';
+import '../../dec_doctor_examination/screens/doctor_examination_screen.dart';
 import '../../decentralization_doctor/controller/doctor_overview_controller.dart';
 import '../../doctor/controller/doctor_main_controller.dart';
 import '../../medicine/controller/medicine_controller.dart';
 import '../../overview/controller/overview_controller.dart';
-import '../../patient/controller/patient_main_controller.dart';
 import '../../settings/controller/settings_controller.dart';
 
 class DashboardController extends GetxController {
@@ -36,16 +35,6 @@ class DashboardController extends GetxController {
   User? get user => _user.value;
 
   @override
-  void onInit() async {
-    // _user.listen((user) {
-    //   if (user != null) {
-    //     update(['DashboardScreen']);
-    //   }
-    // });
-    super.onInit();
-  }
-
-  @override
   void onReady() async {
     bool response = await setUserIfNeed();
     if (AuthService.instance.user.type == "Doctor") {
@@ -53,10 +42,8 @@ class DashboardController extends GetxController {
     }
     response = await fetchAllBasicData();
     if (response) {
-      print(response);
       response = await _initializeAllController();
       if (response) {
-        print(response);
         Future(
           () => pages.value = Obx(
             () => IndexedStack(
@@ -81,18 +68,12 @@ class DashboardController extends GetxController {
     return true;
   }
 
-  // Future<bool> setDoctorIfType() async{
-  //   bool check
-  // }
-
   Future<bool> _initializeAllController() async {
-    // if (AuthService.instance.user.type == "Doctor") {
     await Get.putAsync(() => Future.value(DoctorOverviewController()));
     await Get.putAsync(() => Future.value(DecDoctExaminationController()));
-    // }
     await Get.putAsync(() => Future.value(OverviewController()));
     await Get.putAsync(() => Future.value(DoctorMainController()));
-    await Get.putAsync(() => Future.value(PatientMainController()));
+    await Get.putAsync(() => Future.value(DoctorExaminationController()));
     await Get.putAsync(() => Future.value(PatientPageController()));
     await Get.putAsync(() => Future.value(InvoiceController()));
     await Get.putAsync(() => Future.value(ClinicalRoomController()));
@@ -118,7 +99,7 @@ class DashboardController extends GetxController {
   late final List<Widget> listPage = [
     DoctorDecOverview(),
     OverviewScreen(),
-    PatientMainScreen(),
+    ListPatientScreen(),
     DoctorMainScreen(),
     InvoiceView(),
     ClinicalRoom(),
@@ -134,6 +115,10 @@ class DashboardController extends GetxController {
       {
         'label': 'Patient',
         'icon': Icons.person_outline,
+      },
+      {
+        'label': 'Patient Wait',
+        'icon': FontAwesomeIcons.file,
       },
       {
         'label': 'Doctor',
@@ -182,14 +167,15 @@ class DashboardController extends GetxController {
   late final Map<String, List<Widget>> listPageRole = {
     'Doctor': [
       DoctorDecOverview(),
-      DecDoctorExamination(),
-      PatientMainScreen(),
+      DoctorExaminationScreen(),
+      ListPatientScreen(),
       const MedicineScreen(),
       const SettingMainScreen(),
     ],
     'Admin': [
       OverviewScreen(),
-      PatientMainScreen(),
+      ListPatientScreen(),
+      DoctorExaminationScreen(),
       DoctorMainScreen(),
       InvoiceView(),
       ClinicalRoom(),
