@@ -3,6 +3,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:admin_clinical/models/health_record.dart';
+import 'package:admin_clinical/services/auth_service/auth_service.dart';
 import 'package:admin_clinical/services/data_service/clinical_room_service.dart';
 import 'package:admin_clinical/services/data_service/health_record_service.dart';
 import 'package:admin_clinical/services/data_service/invoice_service.dart';
@@ -97,6 +98,24 @@ class DataService extends GetxController {
     } finally {
       callBack(listDoctor);
     }
+  }
+
+  Future<bool> getDoctorRole(String id) async {
+    try {
+      final res = await http.get(
+        Uri.parse('${ApiLink.uri}/api/doctors/findByUserId/$id'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+      if (res.statusCode == 200) {
+        AuthService.instance.setDoctor(res.body);
+        return true;
+      }
+    } catch (e) {
+      return false;
+    }
+    return true;
   }
 
   deleteAllHealthRecord() async {

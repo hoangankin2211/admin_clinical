@@ -63,7 +63,7 @@ class ServiceIndicationDialog extends StatelessWidget {
                                                       .value!
                                                       .dateCreate,
                                                 ),
-                                            department: "Nguyen Thi Bich Nga",
+                                            department: "Nguyen Bang Bang",
                                             doctorInCharge:
                                                 AuthService.instance.user.name,
                                             id: medicalFormController

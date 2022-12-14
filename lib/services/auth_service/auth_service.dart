@@ -12,6 +12,7 @@ import 'package:cloudinary_public/cloudinary_public.dart';
 
 import '../../constants/api_link.dart';
 import '../../constants/error_handing.dart';
+import '../../models/doctor.dart';
 import '../../models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -19,7 +20,17 @@ class AuthService extends ChangeNotifier {
   AuthService._privateConstructor();
   static final AuthService instance = AuthService._privateConstructor();
   // ignore: prefer_final_fields
-
+  Doctor1 _doc = Doctor1(
+    name: '',
+    experience: 0,
+    address: '',
+    avt: '',
+    dateBorn: DateTime.now(),
+    departMent: '',
+    description: '',
+    iDBS: '',
+    phoneNumber: '',
+  );
   User _user = User(
     name: '',
     email: '',
@@ -34,9 +45,15 @@ class AuthService extends ChangeNotifier {
     avt: '',
   );
   User get user => _user;
+
   void setUser(String user) {
     _user = User.fromJson(user);
     notifyListeners();
+  }
+
+  void setDoctor(String doc) {
+    _doc = Doctor1.fromJson(jsonDecode(doc));
+    print(_doc.name);
   }
 
   bool get isLogin => user.id == '' ? false : true;

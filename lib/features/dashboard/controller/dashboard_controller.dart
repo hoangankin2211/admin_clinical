@@ -13,11 +13,13 @@ import 'package:admin_clinical/features/settings/screen/setting_main_screen.dart
 import 'package:admin_clinical/services/data_service/data_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 import '../../../models/user.dart';
 import '../../../services/auth_service/auth_service.dart';
 import '../../clinical_room/controller/clinical_room_controller.dart';
+import '../../dec_doctor_examination/controller/dec_doctor_examination_controller.dart';
 import '../../dec_doctor_examination/screens/dec_doctor_examination.dart';
 import '../../decentralization_doctor/controller/doctor_overview_controller.dart';
 import '../../doctor/controller/doctor_main_controller.dart';
@@ -46,6 +48,9 @@ class DashboardController extends GetxController {
   @override
   void onReady() async {
     bool response = await setUserIfNeed();
+    if (AuthService.instance.user.type == "Doctor") {
+      DataService.instance.getDoctorRole(AuthService.instance.user.id);
+    }
     response = await fetchAllBasicData();
     if (response) {
       print(response);
@@ -65,7 +70,6 @@ class DashboardController extends GetxController {
         ).then((_) => update(['DashboardScreen']));
       }
     }
-
     super.onReady();
   }
 
@@ -77,8 +81,15 @@ class DashboardController extends GetxController {
     return true;
   }
 
+  // Future<bool> setDoctorIfType() async{
+  //   bool check
+  // }
+
   Future<bool> _initializeAllController() async {
+    // if (AuthService.instance.user.type == "Doctor") {
     await Get.putAsync(() => Future.value(DoctorOverviewController()));
+    await Get.putAsync(() => Future.value(DecDoctExaminationController()));
+    // }
     await Get.putAsync(() => Future.value(OverviewController()));
     await Get.putAsync(() => Future.value(DoctorMainController()));
     await Get.putAsync(() => Future.value(PatientMainController()));
@@ -151,6 +162,10 @@ class DashboardController extends GetxController {
         'icon': Icons.dashboard_outlined,
       },
       {
+        'label': 'Patient Wait',
+        'icon': FontAwesomeIcons.file,
+      },
+      {
         'label': 'Patient',
         'icon': Icons.person_outline,
       },
@@ -166,8 +181,8 @@ class DashboardController extends GetxController {
   };
   late final Map<String, List<Widget>> listPageRole = {
     'Doctor': [
-      DecDoctorExamination(),
       DoctorDecOverview(),
+      DecDoctorExamination(),
       PatientMainScreen(),
       const MedicineScreen(),
       const SettingMainScreen(),
