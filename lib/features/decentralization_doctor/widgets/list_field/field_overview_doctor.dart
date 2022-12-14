@@ -1,14 +1,17 @@
+import 'package:admin_clinical/features/decentralization_doctor/controller/doctor_overview_controller.dart';
+import 'package:admin_clinical/services/data_service/data_service.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../../constants/app_colors.dart';
 import '../../../../services/auth_service/auth_service.dart';
 import '../item_one.dart';
 
 class FieldOverviewDoctor extends StatelessWidget {
-  const FieldOverviewDoctor({
+  FieldOverviewDoctor({
     Key? key,
   }) : super(key: key);
-
+  final controller = Get.find<DoctorOverviewController>();
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -87,9 +90,9 @@ class FieldOverviewDoctor extends StatelessWidget {
                                       fontSize: 22.0,
                                     ),
                                   ),
-                                  const Text(
-                                    '104',
-                                    style: TextStyle(
+                                  Text(
+                                    controller.listPatient.length.toString(),
+                                    style: const TextStyle(
                                       color: AppColors.headline1TextColor,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 70.0,
@@ -121,19 +124,34 @@ class FieldOverviewDoctor extends StatelessWidget {
                             ),
                           ),
                         ),
-                        Container(
-                          height: double.infinity,
-                          width: constraints.maxHeight - 20,
-                          decoration: BoxDecoration(
-                            color: AppColors.primaryColor,
-                            borderRadius: BorderRadius.circular(20.0),
-                            image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image:
-                                  NetworkImage(AuthService.instance.user.avt),
-                            ),
+                        SizedBox(
+                          height: constraints.maxHeight,
+                          width: constraints.maxHeight / 2,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                height: constraints.maxHeight / 2,
+                                width: constraints.maxHeight / 2,
+                                decoration: BoxDecoration(
+                                  color: AppColors.primaryColor,
+                                  shape: BoxShape.circle,
+                                  boxShadow: const [
+                                    BoxShadow(
+                                        color: Colors.black26, blurRadius: 10.0)
+                                  ],
+                                  image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(
+                                        AuthService.instance.user.avt),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 10.0),
+                            ],
                           ),
                         ),
+                        const SizedBox(width: 40.0),
                       ],
                     ),
                   ),

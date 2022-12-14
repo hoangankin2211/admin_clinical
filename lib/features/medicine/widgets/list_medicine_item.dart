@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/global_widgets/list_item.dart';
 import '../../../models/medicine.dart';
+import '../../../services/auth_service/auth_service.dart';
 
 class ListMedicineItem extends StatelessWidget {
   final Medicine e;
@@ -85,62 +86,64 @@ class ListMedicineItem extends StatelessWidget {
             fontSize: 18.0,
           ),
         ),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              InkWell(
-                onTap: delete,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 10.0, vertical: 5.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: Colors.red.withOpacity(0.6),
-                  ),
-                  child: Row(
-                    children: const [
-                      Icon(Icons.delete, color: Colors.white),
-                      Text(
-                        " Delete",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18.0,
+        AuthService.instance.user.type == "Admin"
+            ? SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    InkWell(
+                      onTap: delete,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10.0, vertical: 5.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: Colors.red.withOpacity(0.6),
+                        ),
+                        child: Row(
+                          children: const [
+                            Icon(Icons.delete, color: Colors.white),
+                            Text(
+                              " Delete",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18.0,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(width: 5.0),
-              InkWell(
-                onTap: select,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 10.0, vertical: 5.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: Colors.blue.withOpacity(0.6),
-                  ),
-                  child: Row(
-                    children: const [
-                      Icon(Icons.add, color: Colors.white),
-                      Text(
-                        " Add",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18.0,
+                    ),
+                    const SizedBox(width: 5.0),
+                    InkWell(
+                      onTap: select,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10.0, vertical: 5.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: Colors.blue.withOpacity(0.6),
+                        ),
+                        child: Row(
+                          children: const [
+                            Icon(Icons.add, color: Colors.white),
+                            Text(
+                              " Add",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18.0,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
+                    )
+                  ],
                 ),
               )
-            ],
-          ),
-        ),
+            : const SizedBox(),
       ],
     );
   }

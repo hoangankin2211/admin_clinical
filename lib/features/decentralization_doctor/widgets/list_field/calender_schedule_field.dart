@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../constants/app_colors.dart';
+import '../../controller/doctor_overview_controller.dart';
 import '../../controller/event.dart';
 import '../../screen/doctor_dec_overview.dart';
 import '../calender_schedule.dart';
@@ -11,6 +12,7 @@ class CalenderScheduleField extends StatelessWidget {
   CalenderScheduleField({
     Key? key,
   }) : super(key: key);
+  final controller = Get.find<DoctorOverviewController>();
 
   late Map<String, List<Event>> selectedEvents = {
     '${now.year}/${now.month}/${now.day}': [

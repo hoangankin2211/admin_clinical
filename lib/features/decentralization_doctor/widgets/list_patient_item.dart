@@ -40,9 +40,12 @@ class ListPatientItem extends StatelessWidget {
                 boxShadow: const [
                   BoxShadow(color: Colors.black12, blurRadius: 7.0)
                 ],
+                color: Colors.white,
                 image: DecorationImage(
                   fit: BoxFit.cover,
-                  image: NetworkImage(image),
+                  image: NetworkImage(image == ''
+                      ? 'https://thumbs.dreamstime.com/b/medical-form-list-results-data-approved-check-mark-vector-flat-cartoon-clinical-checklist-document-checkbox-133036988.jpg'
+                      : image),
                 ),
               ),
             ),

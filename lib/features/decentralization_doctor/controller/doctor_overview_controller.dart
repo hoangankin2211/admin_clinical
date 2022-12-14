@@ -1,54 +1,51 @@
+import 'package:admin_clinical/models/health_record.dart';
+import 'package:admin_clinical/models/patient.dart';
+import 'package:admin_clinical/services/auth_service/auth_service.dart';
+import 'package:admin_clinical/services/data_service/health_record_service.dart';
+import 'package:admin_clinical/services/data_service/patient_service.dart';
 import 'package:get/get.dart';
 
 import '../screen/doctor_dec_overview.dart';
 
 class DoctorOverviewController extends GetxController {
-  DateTime selectedDay = DateTime.now();
-  DateTime focusedDay = DateTime.now();
-  DateTime now = DateTime.now();
+  RxList<Patient> listPatient = <Patient>[].obs;
+  Rx<HealthRecord?> lastHealthRecord = Rx<HealthRecord?>(null);
+  RxInt selectPatinet = 0.obs;
+  @override
+  void onInit() {
+    super.onInit();
 
-  late Map<String, List<Event>> selectedEvents = {
-    '${now.year}/${now.month}/${now.day}': [
-      Event(
-        type: 0,
-        time: DateTime.now(),
-        description:
-            'The final exam will be held at 7:30 am, in room A202 at the School of Natural Sciences',
-        location: '',
-        title: 'Windows Develop Exam',
-      ),
-      Event(
-        type: 1,
-        time: DateTime.now(),
-        description: '',
-        location: '',
-        title: 'Special Day',
-      ),
-      Event(
-        type: 2,
-        time: DateTime.now(),
-        description: '',
-        location: ' Ho Chi Minh City, University of Sciece',
-        title: 'IT Festival ',
-      )
-    ],
-  };
-  List<Event> getEventsfromDay(DateTime date) {
-    String time = '${date.year}/${date.month}/${date.day}';
-    return selectedEvents[time] ?? [];
+    for (var item1 in HealthRecordService.listHealthRecord.values) {
+      int check =
+          listPatient.indexWhere((element) => element.id == item1.doctorId);
+      if (item1.doctorId == AuthService.instance.doc.iDBS && check == -1) {
+        listPatient.add(PatientService.listPatients[item1.patientId]!);
+      }
+    }
+    // selectPatinet.value = (listPatient.isNotEmpty) ? 0 : -1;
+    if (listPatient.isNotEmpty) {
+      selectHealthPatine(0);
+    } else {
+      selectPatinet.value = -1;
+    }
   }
-}
 
-class Event {
-  final String title;
-  final int type;
-  final String description;
-  final String location;
-  final DateTime time;
-  Event(
-      {required this.type,
-      required this.time,
-      required this.description,
-      required this.location,
-      required this.title});
+  void selectHealthPatine(int index) {
+    selectPatinet.value = index;
+    lastHealthRecord.value = null;
+    for (var item in HealthRecordService.listHealthRecord.values) {
+      if (item.patientId == listPatient[index].id &&
+          item.conclusionAndTreatment != null) {
+        // ignore: prefer_conditional_assignment
+        if (lastHealthRecord.value == null) {
+          lastHealthRecord.value = item;
+        } else {
+          if (item.dateCreate.isAfter(lastHealthRecord.value!.dateCreate)) {
+            lastHealthRecord.value = item;
+          }
+        }
+      }
+      // print(lastHealthRecord.value!.conclusionAndTreatment);
+    }
+  }
 }

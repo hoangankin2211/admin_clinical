@@ -1,3 +1,5 @@
+import 'package:admin_clinical/features/decentralization_doctor/controller/doctor_overview_controller.dart';
+import 'package:get/get.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import 'package:flutter/material.dart';
@@ -13,6 +15,7 @@ class DoctorDecOverview extends StatelessWidget {
   DoctorDecOverview({super.key});
 
   CalendarFormat format = CalendarFormat.month;
+  final controller = Get.find<DoctorOverviewController>();
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +25,7 @@ class DoctorDecOverview extends StatelessWidget {
           Expanded(
             flex: 9,
             child: Column(
-              children: const [
+              children: [
                 FieldOverviewDoctor(),
                 ListPatientField(),
               ],
