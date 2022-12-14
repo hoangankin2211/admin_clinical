@@ -45,7 +45,7 @@ class AuthService extends ChangeNotifier {
     avt: '',
   );
   User get user => _user;
-
+  Doctor1 get doc => _doc;
   void setUser(String user) {
     _user = User.fromJson(user);
     notifyListeners();

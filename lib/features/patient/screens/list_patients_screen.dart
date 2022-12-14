@@ -15,6 +15,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../../constants/app_colors.dart';
+import '../../../services/auth_service/auth_service.dart';
 import '../widgets/add_patient_dialog.dart';
 import '../widgets/filter_card.dart';
 import '../widgets/show_entries_widget.dart';
@@ -103,27 +104,29 @@ class ListPatientScreen extends StatelessWidget {
                               'Patient List',
                               style: Theme.of(context).textTheme.headline2,
                             ),
-                            CustomIconButton(
-                              onPressed: () => Get.dialog(
-                                AddPatientDialog(
-                                  height: constraints.maxHeight * 0.8,
-                                  width: constraints.maxWidth * 0.45,
-                                ),
-                              ),
-                              label: const Text(
-                                'Add Patient',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
-                                ),
-                              ),
-                              icon: const Icon(
-                                Icons.add_outlined,
-                                color: Colors.white,
-                                size: 12,
-                              ),
-                            ),
+                            AuthService.instance.user.type == "Admin"
+                                ? CustomIconButton(
+                                    onPressed: () => Get.dialog(
+                                      AddPatientDialog(
+                                        height: constraints.maxHeight * 0.8,
+                                        width: constraints.maxWidth * 0.45,
+                                      ),
+                                    ),
+                                    label: const Text(
+                                      'Add Patient',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                    icon: const Icon(
+                                      Icons.add_outlined,
+                                      color: Colors.white,
+                                      size: 12,
+                                    ),
+                                  )
+                                : const SizedBox(),
                           ],
                         ),
                         const SizedBox(height: 20),

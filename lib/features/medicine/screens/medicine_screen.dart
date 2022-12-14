@@ -6,6 +6,7 @@ import 'package:admin_clinical/constants/global_widgets/rangeDate_picker_dialog.
 import 'package:admin_clinical/features/auth/widgets/custom_button.dart';
 import 'package:admin_clinical/features/medicine/controller/medicine_controller.dart';
 import 'package:admin_clinical/features/medicine/widgets/change_no_data_field.dart';
+import 'package:admin_clinical/services/auth_service/auth_service.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
@@ -274,27 +275,31 @@ class _MedicineScreenState extends State<MedicineScreen> {
                                   ],
                                 ),
                               ),
-                              InkWell(
-                                onTap: () => selectedImage(),
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10, vertical: 5.0),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: Colors.blue.withOpacity(0.7),
-                                  ),
-                                  child: Row(children: const [
-                                    Icon(Icons.camera, color: Colors.white),
-                                    Text(
-                                      " Edit Thumbnails",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
+                              AuthService.instance.user.type == "Admin"
+                                  ? InkWell(
+                                      onTap: () => selectedImage(),
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 5.0),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          color: Colors.blue.withOpacity(0.7),
+                                        ),
+                                        child: Row(children: const [
+                                          Icon(Icons.camera,
+                                              color: Colors.white),
+                                          Text(
+                                            " Edit Thumbnails",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ]),
                                       ),
-                                    ),
-                                  ]),
-                                ),
-                              ),
+                                    )
+                                  : const SizedBox(),
                             ],
                           ),
                           const SizedBox(height: 10.0),
@@ -336,22 +341,24 @@ class _MedicineScreenState extends State<MedicineScreen> {
                 ),
               ),
               const Spacer(),
-              SizedBox(
-                height: 40,
-                child: CustomButton(
-                  title: "Add new Medicine",
-                  onPressed: () async {
-                    controller.fetchAllListType();
-                    await Get.dialog(
-                      DialogAddNewMedicine(),
-                    );
-                  },
-                ),
-              ),
+              AuthService.instance.user.type == "Admin"
+                  ? SizedBox(
+                      height: 40,
+                      child: CustomButton(
+                        title: "Add new Medicine",
+                        onPressed: () async {
+                          controller.fetchAllListType();
+                          await Get.dialog(
+                            DialogAddNewMedicine(),
+                          );
+                        },
+                      ),
+                    )
+                  : const SizedBox(),
             ],
           ),
           const SizedBox(height: 20),
-          HeaderListMedicine(),
+          const HeaderListMedicine(),
           const SizedBox(height: 10),
           Expanded(
             child: Obx(
@@ -790,15 +797,17 @@ class MedicineFormWidget extends StatelessWidget {
           controller: description,
         ),
         const SizedBox(height: 20.0),
-        SizedBox(
-          width: double.infinity,
-          height: 50,
-          child: CustomButton(
-            check: isLoadingEdit,
-            title: "Edit Medicine",
-            onPressed: () => editMedicine(context, image),
-          ),
-        ),
+        AuthService.instance.user.type == "Admin"
+            ? SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: CustomButton(
+                  check: isLoadingEdit,
+                  title: "Edit Medicine",
+                  onPressed: () => editMedicine(context, image),
+                ),
+              )
+            : const SizedBox(),
       ],
     );
   }

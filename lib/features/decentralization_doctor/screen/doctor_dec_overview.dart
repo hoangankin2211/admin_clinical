@@ -16,6 +16,7 @@ class DoctorDecOverview extends StatelessWidget {
 
   final doctorOverviewController = Get.find<DoctorOverviewController>();
   CalendarFormat format = CalendarFormat.month;
+  final controller = Get.find<DoctorOverviewController>();
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +28,7 @@ class DoctorDecOverview extends StatelessWidget {
               Expanded(
                 flex: 9,
                 child: Column(
-                  children: const [
+                  children: [
                     FieldOverviewDoctor(),
                     ListPatientField(),
                   ],

@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../constants/app_colors.dart';
 import '../../../../services/auth_service/auth_service.dart';
+import '../../controller/doctor_overview_controller.dart';
 import '../list_patient_item.dart';
 import '../row_consulation_item.dart';
 
 class ListPatientField extends StatelessWidget {
-  const ListPatientField({
+  ListPatientField({
     Key? key,
   }) : super(key: key);
-
+  final controller = Get.find<DoctorOverviewController>();
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -65,42 +68,30 @@ class ListPatientField extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 20.0),
-                  Expanded(
-                    child: ListView(
-                      children: [
-                        ListPatientItem(
-                            image: AuthService.instance.user.avt,
-                            name: "Nguyen Minh Hung",
-                            time: 9,
-                            press: () {},
-                            check: true),
-                        ListPatientItem(
-                            image: AuthService.instance.user.avt,
-                            name: "Truong Huynh Duc Hoang",
-                            time: 10,
-                            press: () {},
-                            check: false),
-                        ListPatientItem(
-                            image: AuthService.instance.user.avt,
-                            name: "Nguyen Trung Hieu",
-                            time: 20,
-                            press: () {},
-                            check: false),
-                        ListPatientItem(
-                            image: AuthService.instance.user.avt,
-                            name: "Phan Thien Nhan",
-                            time: 12,
-                            press: () {},
-                            check: false),
-                      ],
+                  Obx(
+                    () => Expanded(
+                      child: ListView(
+                        children: [
+                          for (int i = 0;
+                              i < controller.listPatient.length;
+                              i++)
+                            ListPatientItem(
+                                image: controller.listPatient[i].avt!,
+                                name: controller.listPatient[i].name,
+                                time: 2,
+                                check: controller.selectPatinet.value == i,
+                                press: () => controller.selectHealthPatine(i))
+                        ],
+                      ),
                     ),
-                  ),
+                  )
                 ],
               ),
             ),
             const SizedBox(width: 20.0),
             Expanded(
-              child: Column(
+                child: Obx(
+              () => Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
@@ -136,10 +127,23 @@ class ListPatientField extends StatelessWidget {
                                     BoxShadow(
                                         color: Colors.black12, blurRadius: 7.0)
                                   ],
+                                  color: Colors.white,
                                   image: DecorationImage(
                                     fit: BoxFit.cover,
-                                    image: NetworkImage(
-                                        AuthService.instance.user.avt),
+                                    image: NetworkImage((controller
+                                                .selectPatinet.value ==
+                                            -1)
+                                        ? 'https://thumbs.dreamstime.com/b/medical-form-list-results-data-approved-check-mark-vector-flat-cartoon-clinical-checklist-document-checkbox-133036988.jpg'
+                                        : controller
+                                                    .listPatient[controller
+                                                        .selectPatinet.value]
+                                                    .avt ==
+                                                ''
+                                            ? 'https://thumbs.dreamstime.com/b/medical-form-list-results-data-approved-check-mark-vector-flat-cartoon-clinical-checklist-document-checkbox-133036988.jpg'
+                                            : controller
+                                                .listPatient[controller
+                                                    .selectPatinet.value]
+                                                .avt!),
                                   ),
                                 ),
                               ),
@@ -149,7 +153,12 @@ class ListPatientField extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Nguyen Minh Hung',
+                                      (controller.selectPatinet.value == -1)
+                                          ? ''
+                                          : controller
+                                              .listPatient[controller
+                                                  .selectPatinet.value]
+                                              .name,
                                       style: const TextStyle(
                                         color: AppColors.headline1TextColor,
                                         fontWeight: FontWeight.bold,
@@ -157,7 +166,9 @@ class ListPatientField extends StatelessWidget {
                                       ),
                                     ),
                                     Text(
-                                      'Male - 28 years 3 Months',
+                                      (controller.selectPatinet.value == -1)
+                                          ? ''
+                                          : '${controller.listPatient[controller.selectPatinet.value].gender} - ${controller.listPatient[controller.selectPatinet.value].dob}',
                                       style: const TextStyle(
                                         color: Colors.grey,
                                         fontWeight: FontWeight.w500,
@@ -197,9 +208,9 @@ class ListPatientField extends StatelessWidget {
                                       const Color.fromARGB(255, 170, 217, 255),
                                   borderRadius: BorderRadius.circular(15.0),
                                 ),
-                                child: Text(
+                                child: const Text(
                                   'Today 10:00 AM',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     color: AppColors.primaryColor,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 15.0,
@@ -227,20 +238,27 @@ class ListPatientField extends StatelessWidget {
                           const SizedBox(height: 10.0),
                           const Divider(thickness: 1),
                           const SizedBox(height: 10.0),
-                          const RowConsultationItem(
+                          RowConsultationItem(
                             header: 'Last Checked: ',
-                            title:
-                                'Dr Everly on 21 April 2021 Prescription #2J983KTO',
+                            title: controller.lastHealthRecord.value == null
+                                ? ''
+                                : DateFormat().add_yMMMMEEEEd().format(
+                                    controller
+                                        .lastHealthRecord.value!.dateCreate),
                           ),
-                          const RowConsultationItem(
-                            header: 'Observation: ',
-                            title:
-                                'Hight Fever and cough at normal hemoglobin levels',
+                          RowConsultationItem(
+                            header: 'Conclusion And Treatment: ',
+                            title: controller.lastHealthRecord.value == null
+                                ? ''
+                                : controller.lastHealthRecord.value!
+                                    .conclusionAndTreatment!,
                           ),
-                          const RowConsultationItem(
-                            header: 'Prescription: ',
-                            title:
-                                'Pracetamol - 2 times a day, Dizopam - Day and Night before meal Wikory!',
+                          RowConsultationItem(
+                            header: 'Diagnostic: ',
+                            title: controller.lastHealthRecord.value == null
+                                ? ''
+                                : controller
+                                    .lastHealthRecord.value!.diagnostic!,
                           ),
                         ],
                       ),
@@ -248,7 +266,7 @@ class ListPatientField extends StatelessWidget {
                   ),
                 ],
               ),
-            ),
+            )),
           ],
         ),
       ),
