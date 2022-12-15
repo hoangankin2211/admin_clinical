@@ -38,8 +38,8 @@ class ListPatientField extends StatelessWidget {
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
+                    children: const [
+                      Text(
                         'Patient List',
                         style: TextStyle(
                           color: AppColors.headline1TextColor,
@@ -47,23 +47,23 @@ class ListPatientField extends StatelessWidget {
                           fontSize: 20.0,
                         ),
                       ),
-                      InkWell(
-                        onTap: () async {},
-                        child: Row(
-                          children: const [
-                            Text(
-                              "Week ",
-                              style: TextStyle(
-                                color: AppColors.primarySecondColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18.0,
-                              ),
-                            ),
-                            Icon(Icons.arrow_drop_down,
-                                color: AppColors.primarySecondColor),
-                          ],
-                        ),
-                      ),
+                      // InkWell(
+                      //   onTap: () async {},
+                      //   child: Row(
+                      //     children: const [
+                      //       Text(
+                      //         "Week ",
+                      //         style: TextStyle(
+                      //           color: AppColors.primarySecondColor,
+                      //           fontWeight: FontWeight.bold,
+                      //           fontSize: 18.0,
+                      //         ),
+                      //       ),
+                      //       Icon(Icons.arrow_drop_down,
+                      //           color: AppColors.primarySecondColor),
+                      //     ],
+                      //   ),
+                      // ),
                     ],
                   ),
                   const SizedBox(height: 20.0),
@@ -75,11 +75,13 @@ class ListPatientField extends StatelessWidget {
                               i < controller.listPatient.length;
                               i++)
                             ListPatientItem(
-                                image: controller.listPatient[i].avt!,
-                                name: controller.listPatient[i].name,
-                                time: 2,
-                                check: controller.selectPatinet.value == i,
-                                press: () => controller.selectHealthPatine(i))
+                              id: controller.listPatient[i].id,
+                              image: controller.listPatient[i].avt!,
+                              name: controller.listPatient[i].name,
+                              time: 2,
+                              check: controller.selectPatinet.value == i,
+                              press: () => controller.selectHealthPatine(i),
+                            )
                         ],
                       ),
                     ),

@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:admin_clinical/constants/global_widgets/custom_dialog_error/error_dialog.dart';
+import 'package:admin_clinical/constants/global_widgets/custom_dialog_error/success_dialog.dart';
 import 'package:admin_clinical/constants/utils.dart';
 import 'package:admin_clinical/features/patient/controller/patient_page_controller.dart';
 import 'package:admin_clinical/services/data_service/data_service.dart';
@@ -112,43 +114,56 @@ class CreateHealthRecordDialog extends StatelessWidget {
   void onPressedCreateButton(BuildContext context, String patientId) async {
     final isValidated = formKey.currentState!.validate();
     if (isValidated) {
-      formKey.currentState!.save();
-      _isLoading.value = true;
-      final response = await createNewHealthRecord(patientId, context);
-      _isLoading.value = false;
-
-      bool result = false;
-
-      if (response['isSuccess']) {
-        try {
-          final updatePatientResponse = await _updatePatientRecord(
-            patientId,
-            response['id'],
-          );
-
-          if (updatePatientResponse) {
-            PatientService.listPatients.update(patientId, (value) {
-              if (value.healthRecord == null) {
-                List<String> temp = [];
-                value.healthRecord = temp;
-              }
-              value.healthRecord?.add(response['id'] as String);
-              return value;
-            });
-            result = true;
-          }
-        } catch (e) {
-          print('updatePatientResponse----: $e');
+      bool check = false;
+      // HealthRecordService.listHealthRecord.forEach((key, value) {});
+      for (var item in HealthRecordService.listHealthRecord.values) {
+        if (item.patientId == patientId &&
+            item.status == "Waiting Examination") {
+          check = true;
+          break;
         }
       }
-      Utils.notifyHandle(
-        response: result,
-        successTitle: 'Success',
-        successQuestion: 'Create new Health Record Success',
-        errorTitle: 'ERROR',
-        errorQuestion:
-            'Something occurred !!! Please check your internet connection',
-      );
+      if (!check) {
+        formKey.currentState!.save();
+        _isLoading.value = true;
+        final response = await createNewHealthRecord(patientId, context);
+        _isLoading.value = false;
+
+        bool result = false;
+
+        if (response['isSuccess']) {
+          try {
+            final updatePatientResponse = await _updatePatientRecord(
+              patientId,
+              response['id'],
+            );
+            if (updatePatientResponse) {
+              PatientService.listPatients.update(patientId, (value) {
+                if (value.healthRecord == null) {
+                  List<String> temp = [];
+                  value.healthRecord = temp;
+                }
+                value.healthRecord?.add(response['id'] as String);
+                return value;
+              });
+              result = true;
+            }
+          } catch (e) {
+            print('updatePatientResponse----: $e');
+          }
+        }
+        Utils.notifyHandle(
+          response: result,
+          successTitle: 'Success',
+          successQuestion: 'Create new Health Record Success',
+          errorTitle: 'ERROR',
+          errorQuestion:
+              'Something occurred !!! Please check your internet connection',
+        );
+      } else {
+        Get.dialog(const ErrorDialog(
+            question: "Create Health Record", title1: "Wating  Examination"));
+      }
     }
   }
 

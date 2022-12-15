@@ -42,11 +42,7 @@ class PatientWaitItem extends StatelessWidget {
           width: double.infinity,
           padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
           decoration: BoxDecoration(
-            color: check
-                ? AppColors.primaryColor[300]
-                : onIt.value
-                    ? AppColors.primaryColor[300]
-                    : Colors.white,
+            color: onIt.value ? AppColors.primaryColor[300] : Colors.white,
             borderRadius: BorderRadius.circular(15.0),
             boxShadow: [
               BoxShadow(
@@ -80,11 +76,9 @@ class PatientWaitItem extends StatelessWidget {
                   headerTitle,
                   style: TextStyle(
                     overflow: TextOverflow.ellipsis,
-                    color: check
+                    color: onIt.value
                         ? Colors.white
-                        : onIt.value
-                            ? Colors.white
-                            : AppColors.headline1TextColor,
+                        : AppColors.headline1TextColor,
                     fontWeight: FontWeight.bold,
                     fontSize: onIt.value ? 20.0 : 16.0,
                   ),
@@ -96,11 +90,9 @@ class PatientWaitItem extends StatelessWidget {
                   id,
                   style: TextStyle(
                     overflow: TextOverflow.ellipsis,
-                    color: check
+                    color: onIt.value
                         ? Colors.white
-                        : onIt.value
-                            ? Colors.white
-                            : AppColors.headline1TextColor,
+                        : AppColors.headline1TextColor,
                     fontWeight: FontWeight.bold,
                     fontSize: onIt.value ? 20.0 : 16.0,
                   ),
@@ -112,11 +104,9 @@ class PatientWaitItem extends StatelessWidget {
                   time,
                   style: TextStyle(
                     overflow: TextOverflow.ellipsis,
-                    color: check
+                    color: onIt.value
                         ? Colors.white
-                        : onIt.value
-                            ? Colors.white
-                            : AppColors.headline1TextColor,
+                        : AppColors.headline1TextColor,
                     fontWeight: FontWeight.bold,
                     fontSize: onIt.value ? 20.0 : 16.0,
                   ),

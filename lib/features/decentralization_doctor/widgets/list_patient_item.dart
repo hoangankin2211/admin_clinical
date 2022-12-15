@@ -7,6 +7,7 @@ class ListPatientItem extends StatelessWidget {
   final String name;
   final int time;
   final bool check;
+  final String id;
   final Function() press;
   const ListPatientItem({
     Key? key,
@@ -15,6 +16,7 @@ class ListPatientItem extends StatelessWidget {
     required this.time,
     required this.check,
     required this.press,
+    required this.id,
   }) : super(key: key);
 
   @override
@@ -63,9 +65,9 @@ class ListPatientItem extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 2.0),
-                  const Text(
-                    'Up Comming',
-                    style: TextStyle(
+                  Text(
+                    id,
+                    style: const TextStyle(
                       color: AppColors.primaryColor,
                       fontWeight: FontWeight.bold,
                       fontSize: 16.0,

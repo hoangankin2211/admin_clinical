@@ -11,13 +11,14 @@ class ErrorDialog extends StatelessWidget {
 
   final String question;
   final String title1;
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Badge(
         position: BadgePosition.topStart(
-          top: -40,
+          top: -45,
           start: 150 - 45,
         ),
         badgeColor: Colors.white,
@@ -33,44 +34,48 @@ class ErrorDialog extends StatelessWidget {
             width: 35,
           ),
         ),
-        child: Flexible(
-          child: Padding(
-            padding: const EdgeInsets.all(10),
-            child: SizedBox(
-              width: 300,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
+        child: SizedBox(
+          height: 300,
+          width: 300,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(height: 20),
+              const Spacer(),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: Text(
+                  question,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Flexible(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Text(
+                    title1,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: Colors.blueGrey,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+              ),
+              const Spacer(),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 60),
-                  Text(
-                    question,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 30),
-                  Flexible(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Text(
-                        title1,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: Colors.blueGrey,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 30),
                   ElevatedButton(
-                    onPressed: () => Get.back(),
+                    onPressed: () => Get.back(result: true),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red.withOpacity(0.5),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
                       alignment: Alignment.center,
@@ -84,10 +89,11 @@ class ErrorDialog extends StatelessWidget {
                           fontSize: 18,
                           fontWeight: FontWeight.bold),
                     ),
-                  ),
+                  )
                 ],
               ),
-            ),
+              const SizedBox(height: 10),
+            ],
           ),
         ),
       ),

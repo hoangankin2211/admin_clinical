@@ -71,17 +71,17 @@ class DashboardHeader extends StatelessWidget {
                   color: Colors.black,
                 ),
               ),
-              title: const Text(
-                "Stephen Conley",
-                style: TextStyle(
+              title: Text(
+                AuthService.instance.user.name,
+                style: const TextStyle(
                   color: Colors.black,
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              subtitle: const Text(
-                'Staff Admin',
-                style: TextStyle(
+              subtitle: Text(
+                AuthService.instance.user.type,
+                style: const TextStyle(
                   color: Colors.grey,
                   fontSize: 12,
                 ),
@@ -131,9 +131,9 @@ class DashboardHeader extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 3.0),
-                        const Text(
-                          'Admin',
-                          style: TextStyle(
+                        Text(
+                          AuthService.instance.user.type,
+                          style: const TextStyle(
                             color: Colors.grey,
                             fontWeight: FontWeight.bold,
                             fontSize: 16.0,
