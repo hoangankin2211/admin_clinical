@@ -41,6 +41,7 @@ class OverviewController extends GetxController {
       startDate: DateTime.now().obs,
       finishDate: DateTime.now().obs,
       allDateBetWeen: <DateTime>[].obs);
+  RxInt get getLength => listDoctor.length > 3 ? 3.obs : listDoctor.length.obs;
 
   //chart
 

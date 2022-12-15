@@ -761,18 +761,13 @@ class OverviewScreen extends StatelessWidget {
                       width: double.infinity,
                       child: ListView(
                         children: [
-                          TopDoctor2(
-                              image: overviewController.listDoctor[0].avt!,
-                              name: overviewController.listDoctor[0].name!,
-                              price: 100.0),
-                          TopDoctor1(
-                              image: overviewController.listDoctor[1].avt!,
-                              name: overviewController.listDoctor[1].name!,
-                              price: 90.0),
-                          TopDoctor1(
-                              image: overviewController.listDoctor[2].avt!,
-                              name: overviewController.listDoctor[2].name!,
-                              price: 80.0),
+                          for (int i = 0;
+                              i < overviewController.getLength.value;
+                              i++)
+                            TopDoctor2(
+                                image: overviewController.listDoctor[i].avt!,
+                                name: overviewController.listDoctor[i].name!,
+                                price: 100.0),
                         ],
                       ),
                     ),

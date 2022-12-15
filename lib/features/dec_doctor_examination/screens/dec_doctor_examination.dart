@@ -128,31 +128,33 @@ class DecDoctorExamination extends StatelessWidget {
                                 (controller.selectRole.value == 1 &&
                                     item.doctorId ==
                                         AuthService.instance.doc.iDBS))
-                              PatientWaitItem(
-                                examFunction: () {
-                                  doctorExaminationController
-                                      .examinationActionHandle(
-                                          item.patientId, item.id!);
-                                },
-                                headerTitle: controller
-                                    .listPatient[item.patientId]!.name,
-                                id: item.id!,
-                                title: "title",
-                                time: DateFormat()
-                                    .add_yMMMMd()
-                                    .format(item.dateCreate),
-                                index: 1,
-                                groupValue: check.value,
-                                func: (v) {},
-                                press: () {
-                                  controller.selectRecords.value =
-                                      item.patientId;
-                                  controller.selectRecords1.value = item.id!;
-                                },
-                                check: controller.selectRole.value == 1,
-                                thumb:
-                                    controller.listPatient[item.patientId]!.avt,
-                              ),
+                              if (controller.listPatient
+                                  .containsKey(item.patientId))
+                                PatientWaitItem(
+                                  examFunction: () {
+                                    doctorExaminationController
+                                        .examinationActionHandle(
+                                            item.patientId, item.id!);
+                                  },
+                                  headerTitle: controller
+                                      .listPatient[item.patientId]!.name,
+                                  id: item.id!,
+                                  title: "title",
+                                  time: DateFormat()
+                                      .add_yMMMMd()
+                                      .format(item.dateCreate),
+                                  index: 1,
+                                  groupValue: check.value,
+                                  func: (v) {},
+                                  press: () {
+                                    controller.selectRecords.value =
+                                        item.patientId;
+                                    controller.selectRecords1.value = item.id!;
+                                  },
+                                  check: controller.selectRole.value == 1,
+                                  thumb: controller
+                                      .listPatient[item.patientId]!.avt,
+                                ),
                         ],
                       ),
                     ),
@@ -170,7 +172,9 @@ class DecDoctorExamination extends StatelessWidget {
   Widget _examinationDetailField() {
     return Obx(() => Expanded(
           flex: 1,
-          child: controller.selectRecords.value != ""
+          child: controller.selectRecords.value != "" &&
+                  controller.listPatient
+                      .containsKey(controller.selectRecords.value)
               ? Container(
                   padding: const EdgeInsets.all(15.0),
                   margin: const EdgeInsets.all(10.0),

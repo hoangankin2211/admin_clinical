@@ -3,7 +3,9 @@ import 'package:admin_clinical/services/data_service/data_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../../commons/widgets/custom_icon_button.dart';
 import '../../../../constants/app_colors.dart';
+import '../../../../constants/app_decoration.dart';
 import '../../../../services/auth_service/auth_service.dart';
 import '../item_one.dart';
 
@@ -36,6 +38,32 @@ class FieldOverviewDoctor extends StatelessWidget {
                     color: AppColors.primaryColor,
                     fontWeight: FontWeight.bold,
                     fontSize: 24.0),
+              ),
+              const Spacer(),
+              CustomIconButton(
+                onPressed: () async {
+                  controller.fetchAllData();
+                },
+                label: Text(
+                  'Refresh',
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline4!
+                      .copyWith(fontSize: 18),
+                ),
+                icon: const Icon(
+                  Icons.refresh_outlined,
+                  color: Colors.blueGrey,
+                  size: 28,
+                ),
+                style: TextButton.styleFrom(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: AppDecoration.primaryRadiusBorder,
+                    side: const BorderSide(color: Colors.grey, width: 0.3),
+                  ),
+                ),
               ),
             ],
           ),
@@ -83,19 +111,21 @@ class FieldOverviewDoctor extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   const Text(
-                                    'Khach da kham',
+                                    'Patinets',
                                     style: TextStyle(
                                       color: AppColors.headline1TextColor,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 22.0,
                                     ),
                                   ),
-                                  Text(
-                                    controller.listPatient.length.toString(),
-                                    style: const TextStyle(
-                                      color: AppColors.headline1TextColor,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 70.0,
+                                  Obx(
+                                    () => Text(
+                                      controller.listPatient.length.toString(),
+                                      style: const TextStyle(
+                                        color: AppColors.headline1TextColor,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 70.0,
+                                      ),
                                     ),
                                   ),
                                   // const Spacer(),

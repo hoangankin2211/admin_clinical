@@ -43,50 +43,28 @@ class DoctorOverView extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 30.0),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      TopDoctorCard(
-                        name: controller.listDoctor.value[0].name!,
-                        image: controller.listDoctor.value[0].avt!,
-                        description:
-                            controller.listDoctor.value[0].description!,
-                        type: controller
-                            .getDepartMent(
-                                controller.listDoctor.value[0].departMent!,
-                                controller.listDepartMent.value)
-                            .name!,
-                        ratings: 4.8,
-                      ),
-                      TopDoctorCard(
-                        name: controller.listDoctor.value[1].name!,
-                        image: controller.listDoctor.value[1].avt!,
-                        description:
-                            controller.listDoctor.value[1].description!,
-                        type: controller
-                            .getDepartMent(
-                                controller.listDoctor.value[1].departMent!,
-                                controller.listDepartMent.value)
-                            .name!,
-                        ratings: 4.8,
-                      ),
-                      TopDoctorCard(
-                        name: controller.listDoctor.value[2].name!,
-                        image: controller.listDoctor.value[2].avt!,
-                        description:
-                            controller.listDoctor.value[2].description!,
-                        type: controller
-                            .getDepartMent(
-                                controller.listDoctor.value[2].departMent!,
-                                controller.listDepartMent.value)
-                            .name!,
-                        ratings: 4.8,
-                      ),
-                    ],
+                Obx(
+                  () => SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        for (int i = 0; i < controller.getLength.value; i++)
+                          TopDoctorCard(
+                            name: controller.listDoctor[i].name!,
+                            image: controller.listDoctor[i].avt!,
+                            description: controller.listDoctor[i].description!,
+                            type: controller
+                                .getDepartMent(
+                                    controller.listDoctor[i].departMent!,
+                                    controller.listDepartMent)
+                                .name!,
+                            ratings: 4.8,
+                          ),
+                      ],
+                    ),
                   ),
-                ),
+                )
               ],
             ),
           ),
@@ -184,7 +162,7 @@ class DoctorOverView extends StatelessWidget {
               child: Obx(
                 () => Column(
                   children: [
-                    ...controller.listDepartMent.value.map(
+                    ...controller.listDepartMent.map(
                       (e) => Column(
                         children: [
                           ListItem(
@@ -271,7 +249,7 @@ class DoctorOverView extends StatelessWidget {
               child: Obx(
                 () => Column(
                   children: [
-                    ...controller.listDoctor.value.map(
+                    ...controller.listDoctor.map(
                       (e) => Column(
                         children: [
                           ListItem(

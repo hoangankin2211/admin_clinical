@@ -7,7 +7,7 @@ import '../../../models/patient.dart';
 import '../../../services/data_service/patient_service.dart';
 
 class DecDoctExaminationController extends GetxController {
-  late RxMap<String, HealthRecord> listRecords =
+  RxMap<String, HealthRecord> listRecords =
       HealthRecordService.listHealthRecord;
   RxMap<String, Patient> listPatient = PatientService.listPatients;
   RxString selectRecords = "".obs;

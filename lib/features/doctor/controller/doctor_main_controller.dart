@@ -20,7 +20,7 @@ class DoctorMainController extends GetxController {
   RxList<Doctor1> listSearchDoctor = <Doctor1>[].obs;
   RxBool isLoadingInsert = false.obs;
   RxBool isLoadingEdit = false.obs;
-
+  RxInt get getLength => listDoctor.length > 3 ? 3.obs : listDoctor.length.obs;
   @override
   void onInit() {
     super.onInit();

@@ -149,7 +149,7 @@ class DashboardController extends GetxController {
         'icon': Icons.dashboard_outlined,
       },
       {
-        'label': 'Patient Wait',
+        'label': 'Examination',
         'icon': FontAwesomeIcons.file,
       },
       {
