@@ -38,6 +38,12 @@ class PatientPageController extends GetxController {
     super.onInit();
   }
 
+  void onPressedRefreshButton() {
+    data.value = PatientService.listPatients;
+    numberOfEntries.value = data.value.length;
+    update(['list_patients_screen']);
+  }
+
   Future<bool> getPatientAccordingKey(String query, String attribute) async {
     try {
       final response = await PatientService.searchPatient(query, attribute);

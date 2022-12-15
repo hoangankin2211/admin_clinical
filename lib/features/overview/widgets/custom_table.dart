@@ -195,10 +195,10 @@ class PatientListRow extends StatelessWidget {
                           value: 'Delete',
                           child: Text('Delete'),
                         ),
-                        const PopupMenuItem<String>(
-                          value: 'Generate Invoice',
-                          child: Text('Generate Invoice'),
-                        ),
+                        // const PopupMenuItem<String>(
+                        //   value: 'Generate Invoice',
+                        //   child: Text('Generate Invoice'),
+                        // ),
                         const PopupMenuItem<String>(
                           value: 'Examination',
                           child: Text('Examination'),
