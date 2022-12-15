@@ -114,15 +114,8 @@ class VerifyInvoiceInformationScreen extends StatelessWidget {
                         child: FormCard(
                             child: ResultMedicineIndicationView(
                                 medicine: medicines))),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        FormCard(
-                          child:
-                              InvoiceAmountFormWidget(amount: invoice.amount),
-                        ),
-                      ],
-                    ),
+                    FormCard(
+                        child: InvoiceAmountFormWidget(amount: invoice.amount)),
                   ],
                 ),
               ),
