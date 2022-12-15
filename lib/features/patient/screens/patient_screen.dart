@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:admin_clinical/constants/fake_data.dart';
 import 'package:admin_clinical/constants/global_widgets/header_list_item.dart';
 import 'package:admin_clinical/constants/global_widgets/list_item.dart';
@@ -338,9 +340,9 @@ class PatientScreen extends StatelessWidget {
                                 children: [
                                   Expanded(
                                     child: ContainerProcess(
-                                      mainTitle: "Blood Pessure",
+                                      mainTitle: "Blood Pressure",
                                       total: 900,
-                                      data: 400,
+                                      data: Random().nextInt(800) + 100,
                                       color: Colors.red,
                                       backgroundColor:
                                           Colors.red.withOpacity(0.2),
@@ -352,7 +354,7 @@ class PatientScreen extends StatelessWidget {
                                     child: ContainerProcess(
                                       mainTitle: "Body Temperature",
                                       total: 500,
-                                      data: 400,
+                                      data: Random().nextInt(400) + 100,
                                       color: Colors.purple,
                                       backgroundColor:
                                           Colors.purple.withOpacity(0.2),
@@ -368,11 +370,11 @@ class PatientScreen extends StatelessWidget {
                                     child: ContainerProcess(
                                       mainTitle: "Body Height",
                                       total: 1000,
-                                      data: 300,
+                                      data: Random().nextInt(900) + 100,
                                       color: Colors.orange,
                                       backgroundColor:
                                           Colors.orange.withOpacity(0.2),
-                                      des: "5.6\"inc",
+                                      des: "",
                                     ),
                                   ),
                                   const SizedBox(width: 10.0),
@@ -380,7 +382,7 @@ class PatientScreen extends StatelessWidget {
                                     child: ContainerProcess(
                                       mainTitle: "Body Weight",
                                       total: 1000,
-                                      data: 400,
+                                      data: Random().nextInt(900) + 100,
                                       color: Colors.blue,
                                       backgroundColor:
                                           Colors.blue.withOpacity(0.2),
@@ -426,7 +428,7 @@ class ContainerProcess extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 150.0,
+      height: 180.0,
       padding: const EdgeInsets.all(10.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5.0),
@@ -443,12 +445,14 @@ class ContainerProcess extends StatelessWidget {
                 fontSize: 18.0,
                 fontWeight: FontWeight.w600),
           ),
-          const SizedBox(height: 10.0),
-          Text('${(data / total * 100).round()}%',
-              style: const TextStyle(
-                  color: Colors.grey,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 16.0)),
+          Text(
+            des,
+            style: TextStyle(
+              color: color,
+              fontSize: 16.0,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
           const SizedBox(height: 10.0),
           LinearPercentIndicator(
             lineHeight: 5,
@@ -461,13 +465,16 @@ class ContainerProcess extends StatelessWidget {
           ),
           const SizedBox(height: 10.0),
           Text(
-            des,
-            style: TextStyle(
-              color: color,
-              fontSize: 16.0,
-              fontWeight: FontWeight.w600,
-            ),
-          )
+              (data / total) > 0.8
+                  ? 'Dangerous'
+                  : ((data / total) > 0.4
+                      ? "Normal"
+                      : ((data / total) > 0.2 ? "Too low" : "Warning")),
+              style: const TextStyle(
+                  color: Colors.grey,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 16.0)),
+          const SizedBox(height: 10.0),
         ],
       ),
     );

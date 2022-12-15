@@ -10,7 +10,6 @@ import '../../../constants/app_decoration.dart';
 import '../../../models/patient.dart';
 import '../widgets/invoice_widget.dart';
 
-// ignore: must_be_immutable
 class MakeInvoiceScreen extends StatelessWidget {
   MakeInvoiceScreen({super.key});
 
@@ -19,17 +18,27 @@ class MakeInvoiceScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Patient temp = PatientService.listPatients[
-            invoiceController.selectedHealthRecord.value!.patientId] ??
-        Patient(
-          id: 'Null',
-          name: 'Null',
-          gender: 'Null',
-          address: 'Null',
-          dob: 'Null',
-          phoneNumber: 'Null',
-          status: 'Null',
-        );
+    Patient temp = (invoiceController.selectedHealthRecord.value != null)
+        ? (PatientService.listPatients[
+                invoiceController.selectedHealthRecord.value!.patientId] ??
+            Patient(
+              id: 'Null',
+              name: 'Null',
+              gender: 'Null',
+              address: 'Null',
+              dob: 'Null',
+              phoneNumber: 'Null',
+              status: 'Null',
+            ))
+        : Patient(
+            id: 'Null',
+            name: 'Null',
+            gender: 'Null',
+            address: 'Null',
+            dob: 'Null',
+            phoneNumber: 'Null',
+            status: 'Null',
+          );
     return Container(
       decoration: AppDecoration.primaryDecorationContainer,
       child: LayoutBuilder(

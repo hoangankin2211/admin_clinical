@@ -1,5 +1,6 @@
 import 'package:admin_clinical/constants/app_colors.dart';
 import 'package:admin_clinical/constants/global_widgets/custom_button.dart';
+import 'package:admin_clinical/features/patient/widgets/healthrecord_detail.dart';
 import 'package:admin_clinical/services/data_service/data_service.dart';
 import 'package:admin_clinical/services/data_service/health_record_service.dart';
 import 'package:flutter/material.dart';
@@ -124,7 +125,7 @@ class PatientDetailScreen extends StatelessWidget {
                           fontSize: 22.0,
                         ),
                       ),
-                      const Icon(Icons.star, color: Colors.amber, size: 20.0),
+                      Icon(Icons.star, color: Colors.amber, size: 20.0),
                       Text(
                         ' 4.8',
                         style: TextStyle(
@@ -421,7 +422,21 @@ class PatientDetailScreen extends StatelessWidget {
                             HealthRecord? temp =
                                 HealthRecordService.listHealthRecord[e];
                             if (temp != null) {
-                              return MedicalItem(healthRecord: temp);
+                              return Material(
+                                type: MaterialType.card,
+                                child: InkWell(
+                                  onTap: () async {
+                                    await Get.dialog(
+                                      Dialog(
+                                        child: HealthRecordDetail(
+                                            patient: patient,
+                                            healthRecord: temp),
+                                      ),
+                                    );
+                                  },
+                                  child: MedicalItem(healthRecord: temp),
+                                ),
+                              );
                             }
                             return const SizedBox();
                           }).toList(),
@@ -647,7 +662,6 @@ class MedicalItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 130,
-      width: double.infinity,
       child: Row(
         children: [
           SizedBox(

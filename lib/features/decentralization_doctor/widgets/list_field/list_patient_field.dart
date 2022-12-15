@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../constants/app_colors.dart';
-import '../../../../services/auth_service/auth_service.dart';
 import '../../controller/doctor_overview_controller.dart';
 import '../list_patient_item.dart';
 import '../row_consulation_item.dart';

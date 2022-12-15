@@ -3,14 +3,12 @@ import 'package:admin_clinical/features/invoice/screens/verify_invoice_informati
 import 'package:admin_clinical/features/overview/controller/overview_controller.dart';
 import 'package:admin_clinical/features/turnover/screen/turnover_main_screen.dart';
 import 'package:admin_clinical/services/data_service/invoice_service.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../constants/global_widgets/custom_dialog_error/success_dialog.dart';
 import '../../../models/health_record.dart';
 import '../../../models/invoice.dart';
-import '../../../models/patient.dart';
 
 class InvoiceController extends GetxController {
   // Rx<Patient?> selectedPatient = Rx(null);

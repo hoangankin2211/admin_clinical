@@ -195,10 +195,10 @@ class PatientListRow extends StatelessWidget {
                           value: 'Delete',
                           child: Text('Delete'),
                         ),
-                        const PopupMenuItem<String>(
-                          value: 'Generate Invoice',
-                          child: Text('Generate Invoice'),
-                        ),
+                        // const PopupMenuItem<String>(
+                        //   value: 'Generate Invoice',
+                        //   child: Text('Generate Invoice'),
+                        // ),
                         const PopupMenuItem<String>(
                           value: 'Examination',
                           child: Text('Examination'),
@@ -324,9 +324,9 @@ class ResultServiceTableRow extends StatelessWidget {
     super.key,
     required this.color,
     required this.service,
-    required this.deleteServiceChoice,
+    this.deleteServiceChoice,
   });
-  final Function(bool, String) deleteServiceChoice;
+  final Function(bool, String)? deleteServiceChoice;
   final Color color;
   final Service service;
 
@@ -396,15 +396,16 @@ class ResultServiceTableRow extends StatelessWidget {
               },
             ).toList(),
             const SizedBox(width: 5),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primarySecondColor),
-              onPressed: () => deleteServiceChoice(false, service.id ?? " "),
-              child: const Icon(
-                Icons.close_outlined,
-                color: Colors.white,
+            if (deleteServiceChoice != null)
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primarySecondColor),
+                onPressed: () => deleteServiceChoice!(false, service.id ?? " "),
+                child: const Icon(
+                  Icons.close_outlined,
+                  color: Colors.white,
+                ),
               ),
-            ),
             const SizedBox(width: 5),
           ],
         ),
@@ -524,10 +525,10 @@ class ResultMedicineTableRow extends StatelessWidget {
     super.key,
     required this.color,
     required this.medicine,
-    required this.deleteMedicineChoice,
+    this.deleteMedicineChoice,
     required this.amount,
   });
-  final Function(bool, String) deleteMedicineChoice;
+  final Function(bool, String)? deleteMedicineChoice;
   final Color color;
   final Medicine medicine;
   final double amount;
@@ -612,15 +613,16 @@ class ResultMedicineTableRow extends StatelessWidget {
               },
             ).toList(),
             const SizedBox(width: 5),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primarySecondColor),
-              onPressed: () => deleteMedicineChoice(false, medicine.id),
-              child: const Icon(
-                Icons.close_outlined,
-                color: Colors.white,
+            if (deleteMedicineChoice != null)
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primarySecondColor),
+                onPressed: () => deleteMedicineChoice!(false, medicine.id),
+                child: const Icon(
+                  Icons.close_outlined,
+                  color: Colors.white,
+                ),
               ),
-            ),
             const SizedBox(width: 5),
           ],
         ),

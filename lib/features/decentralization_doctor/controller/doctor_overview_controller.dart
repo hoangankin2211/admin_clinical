@@ -6,9 +6,6 @@ import 'package:admin_clinical/services/data_service/health_record_service.dart'
 import 'package:admin_clinical/services/data_service/patient_service.dart';
 import 'package:get/get.dart';
 
-import '../../../services/auth_service/auth_service.dart';
-import '../../../services/auth_service/auth_service.dart';
-
 class DoctorOverviewController extends GetxController {
   RxList<Patient> listPatient = <Patient>[].obs;
   Rx<HealthRecord?> lastHealthRecord = Rx<HealthRecord?>(null);
