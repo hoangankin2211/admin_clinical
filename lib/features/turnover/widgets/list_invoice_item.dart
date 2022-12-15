@@ -11,6 +11,9 @@ class ListInvoiceItem extends StatelessWidget {
   final String name;
   final double amount;
   final int status;
+  final bool check;
+  final Function(bool?) onChange;
+  final Function() deleteCallback;
   final Function(String)? onSelectedAction;
 
   ListInvoiceItem(
@@ -22,7 +25,10 @@ class ListInvoiceItem extends StatelessWidget {
       required this.name,
       required this.amount,
       required this.status,
-      this.onSelectedAction});
+      this.onSelectedAction,
+      required this.deleteCallback,
+      required this.check,
+      required this.onChange});
   RxBool checkBox = false.obs;
   List<Color> lColor1 = [
     Colors.blue.withOpacity(0.2),
@@ -40,26 +46,22 @@ class ListInvoiceItem extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 15.0),
       child: Row(children: [
-        Obx(
-          () => Expanded(
-            flex: 2,
-            child: Row(
-              children: [
-                Checkbox(
-                    value: checkBox.value,
-                    onChanged: (value) => checkBox.value = value!),
-                Expanded(
-                  child: Text(
-                    id,
-                    style: const TextStyle(
-                      color: AppColors.primaryColor,
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.w400,
-                    ),
+        Expanded(
+          flex: 2,
+          child: Row(
+            children: [
+              Checkbox(value: check, onChanged: onChange),
+              Expanded(
+                child: Text(
+                  id,
+                  style: const TextStyle(
+                    color: AppColors.primaryColor,
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
         Expanded(
@@ -171,7 +173,13 @@ class ListInvoiceItem extends StatelessWidget {
                 child: const Icon(
                   Icons.more_vert_outlined,
                 ),
-              )
+              ),
+              const SizedBox(width: 10.0),
+              InkWell(
+                onTap: deleteCallback,
+                child: const Icon(Icons.delete, color: Colors.red),
+              ),
+              const SizedBox(width: 20.0),
             ],
           ),
         ),

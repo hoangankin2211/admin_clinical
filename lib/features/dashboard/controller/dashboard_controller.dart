@@ -118,10 +118,10 @@ class DashboardController extends GetxController {
         'label': 'Patient',
         'icon': Icons.person_outline,
       },
-      {
-        'label': 'Patient Wait',
-        'icon': FontAwesomeIcons.file,
-      },
+      // {
+      //   'label': 'Patient Wait',
+      //   'icon': FontAwesomeIcons.file,
+      // },
       {
         'label': 'Doctor',
         'icon': Icons.medical_information_outlined,
@@ -177,7 +177,7 @@ class DashboardController extends GetxController {
     'Admin': [
       OverviewScreen(),
       ListPatientScreen(),
-      DoctorExaminationScreen(),
+      // DoctorExaminationScreen(),
       DoctorMainScreen(),
       InvoiceView(),
       ClinicalRoom(),

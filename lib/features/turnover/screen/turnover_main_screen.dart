@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:get/get.dart';
 
+import '../../../commons/widgets/custom_icon_button.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/global_widgets/button_mouse_region.dart';
 import '../../auth/widgets/custom_button.dart';
@@ -187,12 +188,55 @@ class TurnoverMainScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ShowEntriesWidget(
-              applyEntries: patientPageController.applyEntries,
-              numberOfEntries: patientPageController.numberOfEntries.value - 1,
-              width: constraints.maxWidth * 0.03,
-              height: constraints.maxHeight * 0.05,
-              maxEntries: patientPageController.data.value.length - 1,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ShowEntriesWidget(
+                  applyEntries: patientPageController.applyEntries,
+                  numberOfEntries:
+                      patientPageController.numberOfEntries.value - 1,
+                  width: constraints.maxWidth * 0.03,
+                  height: constraints.maxHeight * 0.05,
+                  maxEntries: patientPageController.data.value.length - 1,
+                ),
+                CustomIconButton(
+                  onPressed: () => Get.dialog(
+                    AlertDialog(
+                      alignment: Alignment.center,
+                      title: const Text('Are you sure ?'),
+                      content: const Text(
+                          'Do you want to remove the doctor from the list ? '),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            invoiceController.deleteManyInvoice();
+                          },
+                          child: const Text('YES'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Get.back();
+                          },
+                          child: const Text('NO'),
+                        ),
+                      ],
+                    ),
+                  ),
+                  label: const Text(
+                    'Delete Payment',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
+                  ),
+                  icon: const Icon(
+                    Icons.delete,
+                    color: Colors.white,
+                    size: 12,
+                  ),
+                )
+              ],
             ),
             const SizedBox(height: 10.0),
             Obx(
@@ -236,6 +280,19 @@ class TurnoverMainScreen extends StatelessWidget {
                                   children: [
                                     ...invoiceController.getListInvoice.map(
                                       (element) => ListInvoiceItem(
+                                        onChange: (value) {
+                                          if (invoiceController.lInvoiceSelect
+                                              .contains(element.id)) {
+                                            invoiceController.lInvoiceSelect
+                                                .removeWhere(
+                                                    (e) => e == element.id);
+                                          } else {
+                                            invoiceController.lInvoiceSelect
+                                                .add(element.id);
+                                          }
+                                        },
+                                        check: invoiceController.lInvoiceSelect
+                                            .contains(element.id),
                                         id: element.id,
                                         category: element.category,
                                         date: element.createTime,
@@ -243,6 +300,8 @@ class TurnoverMainScreen extends StatelessWidget {
                                         name: element.title,
                                         amount: element.amount,
                                         status: element.status,
+                                        deleteCallback: () => invoiceController
+                                            .deleteInvoice(element.id),
                                         onSelectedAction: (value) {
                                           if (value == 'View Invoice') {
                                             Get.dialog(
@@ -325,7 +384,7 @@ class TurnoverMainScreen extends StatelessWidget {
                           color: AppColors.primarySecondColor.withOpacity(0.6),
                           size: 30.0),
                       Text(
-                        "\$ ${e["status"] == 3 ? invoiceController.cancelled_invoice_amount.value['data'] : e["status"] == 0 ? invoiceController.all_invoice_amount.value['data'] : invoiceController.paid_invoice_amount.value['data']}",
+                        "\$ ${e["status"] == 3 ? invoiceController.cancelled_invoice_amount['data'] : e["status"] == 0 ? invoiceController.all_invoice_amount.value['data'] : invoiceController.paid_invoice_amount.value['data']}",
                         style: const TextStyle(
                           color: AppColors.primaryColor,
                           fontWeight: FontWeight.bold,
@@ -336,7 +395,7 @@ class TurnoverMainScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 10.0),
                   Text(
-                    "${e["title"]}  ${e["status"] == 3 ? invoiceController.cancelled_invoice_amount.value['count'] : e["status"] == 0 ? invoiceController.all_invoice_amount.value['count'] : invoiceController.paid_invoice_amount.value['count']}",
+                    "${e["title"]}  ${e["status"] == 3 ? invoiceController.cancelled_invoice_amount['count'] : e["status"] == 0 ? invoiceController.all_invoice_amount.value['count'] : invoiceController.paid_invoice_amount.value['count']}",
                     style: const TextStyle(
                       color: AppColors.headline1TextColor,
                       fontWeight: FontWeight.bold,

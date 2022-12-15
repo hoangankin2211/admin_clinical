@@ -14,8 +14,8 @@ class InvoiceController extends GetxController {
   // Rx<Patient?> selectedPatient = Rx(null);
   Rx<HealthRecord?> selectedHealthRecord = Rx(null);
   Rx<Invoice?> selectedInvoice = Rx(null);
-
-  // final controller = Get.find<OverviewController>();
+  RxList<String> lInvoiceSelect = <String>[].obs;
+  final controller = Get.find<OverviewController>();
   var selectedPage = 0.obs;
   RxList<Invoice> listInvoice = <Invoice>[].obs;
   List<String> listStatus = ["Cancelled", "Overdue", "Paid"];
@@ -103,6 +103,31 @@ class InvoiceController extends GetxController {
           .value) {
         listInvoiceSearchBy.add((item));
       }
+    }
+  }
+
+  void deleteInvoice(String id) async {
+    bool delete =
+        await InvoiceService.instance.deleteInvoice(Get.context!, id: id);
+    if (delete) {
+      InvoiceService.instance.listInvoice
+          .removeWhere((element) => element.id == id);
+      Get.dialog(
+        const SuccessDialog(question: "Delete Invoice", title1: "Success"),
+      );
+    }
+  }
+
+  void deleteManyInvoice() async {
+    bool delete = await InvoiceService.instance
+        .deleteManyInvoice(Get.context!, listId: lInvoiceSelect);
+    if (delete) {
+      InvoiceService.instance.listInvoice
+          .removeWhere((element) => lInvoiceSelect.contains(element.id));
+      Get.back();
+      Get.dialog(
+        const SuccessDialog(question: "Delete Invoice", title1: "Success"),
+      );
     }
   }
 

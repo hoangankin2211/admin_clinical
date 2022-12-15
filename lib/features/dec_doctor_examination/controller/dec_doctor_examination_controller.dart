@@ -11,7 +11,8 @@ class DecDoctExaminationController extends GetxController {
       HealthRecordService.listHealthRecord;
   RxMap<String, Patient> listPatient = PatientService.listPatients;
   RxString selectRecords = "".obs;
-  RxList<String> lRole = ['UnCompleted', 'Completed'].obs;
+  RxString selectRecords1 = "".obs;
+  RxList<String> lRole = ['Waitting Patient', 'Completed'].obs;
   RxInt selectRole = 0.obs;
 
   // Rx
@@ -24,6 +25,7 @@ class DecDoctExaminationController extends GetxController {
       if (value.status == "Waiting Examination" &&
           value.departmentId == AuthService.instance.doc.departMent) {
         selectRecords.value = value.patientId;
+        selectRecords1.value = value.id!;
       }
     });
   }

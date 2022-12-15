@@ -20,7 +20,7 @@ class DoctorOverviewController extends GetxController {
     if (AuthService.instance.user.type == "Doctor") {
       for (var item1 in HealthRecordService.listHealthRecord.values) {
         int check =
-            listPatient.indexWhere((element) => element.id == item1.doctorId);
+            listPatient.indexWhere((element) => element.id == item1.patientId);
         if (item1.doctorId == AuthService.instance.doc.iDBS && check == -1) {
           listPatient.add(PatientService.listPatients[item1.patientId]!);
         }
@@ -32,6 +32,7 @@ class DoctorOverviewController extends GetxController {
       } else {
         selectPatinet.value = -1;
       }
+      fetchAllEventOfCalender();
     }
   }
 
@@ -44,7 +45,7 @@ class DoctorOverviewController extends GetxController {
         if (lEvent.containsKey(key)) {
           lEvent[key]!.add(
             Event(
-              type: item.conclusionAndTreatment == null ? 0 : 1,
+              type: item.status == "Waiting Examination" ? 0 : 1,
               time: item.dateCreate,
               description: PatientService.listPatients[item.patientId]!.name,
               location: '',
@@ -55,7 +56,7 @@ class DoctorOverviewController extends GetxController {
           lEvent.addAll({
             key: [
               Event(
-                type: item.conclusionAndTreatment == null ? 0 : 1,
+                type: item.status == "Waiting Examination" ? 0 : 1,
                 time: item.dateCreate,
                 description: PatientService.listPatients[item.patientId]!.name,
                 location: '',

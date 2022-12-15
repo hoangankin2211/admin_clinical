@@ -99,6 +99,57 @@ class InvoiceService {
     return result;
   }
 
+  Future<bool> deleteInvoice(BuildContext context, {required String id}) async {
+    print("Delete invoice is called");
+    bool result = false;
+    try {
+      http.Response res = await http.post(
+        Uri.parse('${ApiLink.uri}/api/invoice/delete_invoice'),
+        body: jsonEncode({
+          'id': id,
+        }),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+      httpErrorHandle(
+          response: res,
+          context: context,
+          onSuccess: () {
+            result = true;
+          });
+    } catch (e) {
+      result = false;
+    }
+    return result;
+  }
+
+  Future<bool> deleteManyInvoice(BuildContext context,
+      {required List<String> listId}) async {
+    print("Delete many invoice is called");
+    bool result = false;
+    try {
+      http.Response res = await http.post(
+        Uri.parse('${ApiLink.uri}/api/invoice/delete_many_invoice'),
+        body: jsonEncode({
+          'listId': listId,
+        }),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+      httpErrorHandle(
+          response: res,
+          context: context,
+          onSuccess: () {
+            result = true;
+          });
+    } catch (e) {
+      result = false;
+    }
+    return result;
+  }
+
   Future<Invoice?> addInvoiceMedicine(BuildContext context,
       {required String thumb,
       required double amount,

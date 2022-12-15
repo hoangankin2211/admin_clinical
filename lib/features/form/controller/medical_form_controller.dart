@@ -224,6 +224,10 @@ class MedicalFormController extends GetxController {
         }
         HealthRecordService.listHealthRecord[currentHealthRecord.value!.id!]!
             .status = "Waiting Payment";
+        editHealthRecordData(HealthRecordService
+            .listHealthRecord[currentHealthRecord.value!.id!]!
+            .toMap());
+
         isLoading.value = false;
         backButton();
       }
@@ -249,6 +253,7 @@ class MedicalFormController extends GetxController {
               return value;
             },
           );
+
           List<Map<String, dynamic>> listData = [];
           for (var item in healthRecord['medicines']) {
             print(item['medicine']);

@@ -37,6 +37,14 @@ class DataService extends GetxController {
     return result;
   }
 
+  String? getNameDepartment(String id) {
+    String result = ' ';
+    for (var item in listDepartMent) {
+      if (item.id == id) result = item.name ?? '';
+    }
+    return result;
+  }
+
   String getIdDepartment(String name) {
     String result = ' ';
     for (var element in listDepartMent) {
