@@ -41,7 +41,6 @@ class DoctorDetailController extends GetxController {
 
   selectRecordFunc(String id) {
     selectRecord.value = id;
-    select_patient_record.value =
-        listRecord[selectRecord.value]!.patientId ?? "";
+    select_patient_record.value = listRecord[selectRecord.value]!.patientId;
   }
 }

@@ -82,7 +82,8 @@ class CreateHealthRecordDialog extends StatelessWidget {
 
       HealthRecord newRecord = HealthRecord(
         dateCreate: DateTime.now(),
-        departmentId: 'departmentId',
+        departmentId:
+            DataService.instance.getIdDepartment(departmentCode.value),
         patientId: patientId,
         status: statusCode.value,
         doctorId: AuthService.instance.user.id,

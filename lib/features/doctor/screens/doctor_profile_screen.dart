@@ -229,7 +229,7 @@ class DoctorProfileScreen extends StatelessWidget {
                       id: item.id!,
                       date: item.dateCreate,
                       clinicRoom: "phong 01",
-                      patientName: item.patientId ?? "",
+                      patientName: item.patientId,
                       status: 1,
                     ),
                   )

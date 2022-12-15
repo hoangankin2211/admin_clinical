@@ -4,6 +4,7 @@ import 'package:admin_clinical/models/medicine.dart';
 import 'package:admin_clinical/models/service.dart';
 import 'package:admin_clinical/services/data_service/patient_service.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../../constants/app_decoration.dart';
 
@@ -19,7 +20,7 @@ class SelectHealthRecord extends StatelessWidget {
     required this.viewCallback,
   });
   final String id;
-  final String dateCreated;
+  final DateTime dateCreated;
   final double totalMoney;
   final String doctorInCharge;
   final String departmentId;
@@ -30,7 +31,7 @@ class SelectHealthRecord extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<String> data = [
       id,
-      dateCreated.toString(),
+      DateFormat().add_yMMMMd().format(dateCreated),
       totalMoney.toString(),
       doctorInCharge,
       departmentId,
@@ -41,14 +42,6 @@ class SelectHealthRecord extends StatelessWidget {
       decoration: const BoxDecoration(
         color: Colors.white,
         border: Border(bottom: BorderSide(width: 0.4, color: Colors.grey)),
-        // borderRadius: BorderRadius.circular(7.0),
-        // boxShadow: const [
-        //   BoxShadow(
-        //     // offset: const Offset(0, 0.5),
-        //     color: Colors.black12,
-        //     blurRadius: 5.0,
-        //   )
-        // ],
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,

@@ -1,14 +1,13 @@
 import 'package:admin_clinical/commons/widgets/custom_icon_button.dart';
 import 'package:admin_clinical/constants/app_decoration.dart';
+import 'package:admin_clinical/features/form/controller/medical_form_controller.dart';
 import 'package:admin_clinical/features/overview/widgets/custom_table.dart';
 import 'package:admin_clinical/features/patient/controller/patient_page_controller.dart';
 import 'package:admin_clinical/features/patient/screens/patient_detail_screen.dart';
 import 'package:admin_clinical/features/patient/screens/patient_screen.dart';
 import 'package:admin_clinical/features/patient/widgets/edit_patient_dialog.dart';
 import 'package:admin_clinical/features/patient/widgets/select_health_record_dialog.dart';
-import 'package:admin_clinical/models/health_record.dart';
 import 'package:admin_clinical/models/patient.dart';
-import 'package:admin_clinical/services/data_service/health_record_service.dart';
 import 'package:admin_clinical/services/data_service/patient_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -30,30 +29,22 @@ const Map<String, String> patientListField = {
   'payment': 'Payment',
 };
 
+// ignore: must_be_immutable
 class ListPatientScreen extends StatelessWidget {
   ListPatientScreen({super.key});
   final patientPageController = Get.find<PatientPageController>();
+  var isLoading = false.obs;
 
   void _onSelectionAction(
       String value, int index, BuildContext context, Patient patient) async {
     if (value == 'Examination') {
-      Patient temp = patientPageController.data.value.values.elementAt(index);
-      List<HealthRecord> listHealthRecord = [];
-
-      if (temp.healthRecord != null) {
-        temp.healthRecord?.forEach((element) {
-          if (HealthRecordService.listHealthRecord[element] != null) {
-            listHealthRecord
-                .add(HealthRecordService.listHealthRecord[element]!);
-          }
-        });
-      }
-      Get.dialog(
+      await Get.dialog(
         SelectRecordDialog(
-          records: listHealthRecord,
           patientId: patient.id,
+          deleteButton: Get.find<MedicalFormController>().deleteHealthRecord,
         ),
       );
+      print('here');
     } else if (value == 'Detail') {
       try {
         patientPageController.selectedPatient.value = patient.id;

@@ -37,6 +37,14 @@ class DataService extends GetxController {
     return result;
   }
 
+  String getIdDepartment(String name) {
+    String result = ' ';
+    for (var element in listDepartMent) {
+      if (element.name == name) result = element.id ?? "";
+    }
+    return result;
+  }
+
   Future<bool> fetchAllData() async {
     // if (listDoctor.isEmpty) {
     await fetchAllDoctor((value) {

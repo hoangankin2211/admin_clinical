@@ -154,41 +154,8 @@ class MedicalFormScreen extends StatelessWidget {
                                         vertical: 20, horizontal: 5),
                                     backgroundColor: Colors.green),
                                 onPressed: () async {
-                                  final result = await Get.dialog(
-                                    const CustomNotificationDialog(
-                                      title: 'Payment',
-                                      content:
-                                          'Do you want to export invoice ?',
-                                    ),
-                                  );
-
-                                  if (result != null) {
-                                    if (result as bool) {
-                                      // ignore: use_build_context_synchronously
-                                      Invoice? temp = await InvoiceService
-                                          .instance
-                                          .addInvoiceHealthRecord(
-                                        context,
-                                        thumb:
-                                            'https://www.wellsteps.com/blog/wp-content/uploads/2017/05/benefits-of-wellness.jpg',
-                                        amount: medicalFormController
-                                            .currentHealthRecord
-                                            .value!
-                                            .totalMoney,
-                                        status: 0,
-                                        title: "Make Payment",
-                                        hrId: medicalFormController
-                                            .currentHealthRecord.value!.id!,
-                                        category: "Payment",
-                                      );
-                                      if (temp != null) {
-                                        InvoiceService.instance.listInvoice
-                                            .add(temp);
-                                      }
-                                    }
-                                  } else {
-                                    backButton();
-                                  }
+                                  medicalFormController.onPressedFinishButton(
+                                      context, backButton);
                                 },
                                 icon: const Icon(
                                   Icons.keyboard_double_arrow_right_outlined,
