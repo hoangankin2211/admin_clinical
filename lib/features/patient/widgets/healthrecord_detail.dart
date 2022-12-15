@@ -1,5 +1,4 @@
 import 'package:admin_clinical/features/form/widgets/record_information_form.dart';
-import 'package:admin_clinical/services/data_service/health_record_service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -21,87 +20,131 @@ class HealthRecordDetail extends StatelessWidget {
       {super.key, required this.patient, required this.healthRecord});
   final Patient patient;
   final HealthRecord healthRecord;
+
+  Future<Map<String, dynamic>> fetchDataToList() async {
+    Map<String, dynamic> result = {};
+
+    await Future(
+      () {
+        List<Medicine> medicines = [
+          if (healthRecord.medicines != null)
+            for (var element in healthRecord.medicines!)
+              if (MedicineService.instance
+                      .getMedicine(element['medicine'] as String) !=
+                  null)
+                MedicineService.instance
+                    .getMedicine(element['medicine'] as String)!
+        ];
+
+        List<Service> services = [
+          if (healthRecord.services != null)
+            for (var element in healthRecord.services!)
+              if (ServiceDataService
+                      .instance.service[element['medicine'] as String] !=
+                  null)
+                ServiceDataService
+                    .instance.service[element['medicine'] as String]!
+        ];
+
+        result.addAll({"medicines": medicines, "services": services});
+      },
+    );
+
+    return result;
+  }
+
   @override
   Widget build(BuildContext context) {
-    List<Medicine> medicines = [
-      if (healthRecord.medicines != null)
-        for (var element in healthRecord.medicines!)
-          if (MedicineService.instance
-                  .getMedicine(element['medicine'] as String) !=
-              null)
-            MedicineService.instance.getMedicine(element['medicine'] as String)!
-    ];
-
-    List<Service> services = [
-      if (healthRecord.services != null)
-        for (var element in healthRecord.services!)
-          if (ServiceDataService
-                  .instance.service[element['medicine'] as String] !=
-              null)
-            ServiceDataService.instance.service[element['medicine'] as String]!
-    ];
     return LayoutBuilder(
       builder: (context, constraints) {
-        return Row(
-          children: [
-            Flexible(
-              flex: 7,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Flexible(
-                    child: FormCard(
-                      child: PatientInformationForm(patient: patient),
-                    ),
-                  ),
-                  Flexible(
-                    flex: 1,
-                    child: RecordInformationForm(
-                      dateCreate: DateFormat()
-                          .add_yMMMd()
-                          .format(healthRecord.dateCreate),
-                      department: healthRecord.departmentId,
-                      doctorInCharge: healthRecord.doctorId,
-                      id: healthRecord.id,
-                      note: healthRecord.note,
-                      status: healthRecord.status,
-                      totalMoney: healthRecord.totalMoney,
-                    ),
-                  ),
-                  Flexible(
-                    flex: 2,
-                    child: FormCard(
-                      child: SingleChildScrollView(
-                        child: SizedBox(
-                          height: constraints.maxHeight * 0.6,
-                          child: ExaminationInformationForm(
-                            isReading: true,
-                            examField: Utils.examField,
-                            measureField: Utils.measureField,
+        return FutureBuilder(
+            future: fetchDataToList(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.hasData) {
+                  Map<String, dynamic> data =
+                      snapshot.data ?? {"medicine": [], 'services': []};
+                  return Row(
+                    children: [
+                      Flexible(
+                        flex: 7,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Flexible(
+                              child: FormCard(
+                                child: PatientInformationForm(patient: patient),
+                              ),
+                            ),
+                            Flexible(
+                              flex: 1,
+                              child: FormCard(
+                                child: RecordInformationForm(
+                                  dateCreate: DateFormat()
+                                      .add_yMMMd()
+                                      .format(healthRecord.dateCreate),
+                                  department: healthRecord.departmentId,
+                                  doctorInCharge: healthRecord.doctorId,
+                                  id: healthRecord.id,
+                                  note: healthRecord.note,
+                                  status: healthRecord.status,
+                                  totalMoney: healthRecord.totalMoney,
+                                ),
+                              ),
+                            ),
+                            Flexible(
+                              flex: 2,
+                              child: FormCard(
+                                child: SingleChildScrollView(
+                                  child: SizedBox(
+                                    height: constraints.maxHeight * 0.6,
+                                    child: ExaminationInformationForm(
+                                      healthRecordData: {
+                                        'clinicalExamination':
+                                            healthRecord.clinicalExamination,
+                                        'symptom': healthRecord.symptom,
+                                        'diagnostic': healthRecord.diagnostic,
+                                        'conclusionAndTreatment':
+                                            healthRecord.conclusionAndTreatment,
+                                        'weight': healthRecord.weight,
+                                        'heartBeat': healthRecord.heartBeat,
+                                        'height': healthRecord.heartBeat,
+                                        'temperature': healthRecord.temperature,
+                                        'bloodPressure':
+                                            healthRecord.bloodPressure,
+                                        'allergy': healthRecord.allergy,
+                                        'note': healthRecord.note,
+                                      },
+                                      examField: Utils.examField,
+                                      measureField: Utils.measureField,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Flexible(
+                        flex: 10,
+                        child: Flexible(
+                          flex: 10,
+                          child: FormCard(
+                            child: ServiceMedicineDetail(
+                              patientName: patient.name,
+                              avt: patient.avt,
+                              medicine: data['medicines'],
+                              services: data['services'],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Flexible(
-              flex: 10,
-              child: Flexible(
-                flex: 10,
-                child: FormCard(
-                  child: ServiceMedicineDetail(
-                    patientName: patient.name,
-                    avt: patient.avt,
-                    medicine: medicines,
-                    services: services,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        );
+                    ],
+                  );
+                }
+              }
+              return const Center(child: CircularProgressIndicator());
+            });
       },
     );
   }

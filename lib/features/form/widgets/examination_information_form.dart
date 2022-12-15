@@ -12,10 +12,10 @@ class ExaminationInformationForm extends StatelessWidget {
     this.formKey,
     required this.measureField,
     this.textController,
-    this.isReading,
+    this.healthRecordData,
   });
 
-  final bool? isReading;
+  final Map<String, dynamic>? healthRecordData;
   final List<Map<String, dynamic>> examField;
   final GlobalKey<FormState>? formKey;
   final List<Map<String, dynamic>> measureField;
@@ -40,7 +40,12 @@ class ExaminationInformationForm extends StatelessWidget {
                       for (int i = 0; i < measureField.length; i++) ...[
                         Flexible(
                           child: TextFormFieldInformationWidget(
-                            readOnly: isReading,
+                            initialValue: healthRecordData != null
+                                ? healthRecordData![
+                                        measureField.elementAt(i)['key']]
+                                    .toString()
+                                : null,
+                            readOnly: healthRecordData != null,
                             isDense: true,
                             inputFormatters:
                                 measureField.elementAt(i)['inputFormatters'],
@@ -86,7 +91,11 @@ class ExaminationInformationForm extends StatelessWidget {
                 for (int i = 0; i < Utils.examField.length; i++)
                   Expanded(
                     child: TextFormFieldInformationWidget(
-                      readOnly: isReading,
+                      initialValue: healthRecordData != null
+                          ? healthRecordData![measureField.elementAt(i)['key']]
+                              .toString()
+                          : null,
+                      readOnly: healthRecordData != null,
                       titleIcon: examField.elementAt(i)['icon'],
                       textEditingController: textController != null
                           ? textController![examField.elementAt(i)['key']]
@@ -124,6 +133,7 @@ class TextFormFieldInformationWidget extends StatelessWidget {
     this.inputFormatters,
     this.isDense,
     this.readOnly,
+    this.initialValue,
   });
   final String label;
   final int? numberOfLine;
@@ -135,6 +145,7 @@ class TextFormFieldInformationWidget extends StatelessWidget {
   final List<TextInputFormatter>? inputFormatters;
   final bool? isDense;
   final bool? readOnly;
+  final String? initialValue;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -158,6 +169,7 @@ class TextFormFieldInformationWidget extends StatelessWidget {
         ),
         Expanded(
           child: TextFormField(
+            initialValue: initialValue,
             readOnly: readOnly ?? false,
             inputFormatters: inputFormatters,
             textAlignVertical: TextAlignVertical.center,
