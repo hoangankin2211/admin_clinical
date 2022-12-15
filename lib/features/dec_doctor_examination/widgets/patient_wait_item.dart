@@ -132,12 +132,14 @@ class PatientWaitItem extends StatelessWidget {
                           horizontal: 15.0, vertical: 5.0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15.0),
-                        border: Border.all(width: 1, color: Colors.red),
-                        color: Colors.red[200],
+                        border: Border.all(
+                            width: 1, color: check ? Colors.green : Colors.red),
+                        color: check ? Colors.green[200] : Colors.red[200],
                       ),
-                      child: const Text('Wait',
+                      child: Text(check ? 'Completed' : 'Wait',
                           style: TextStyle(
-                              color: Colors.red, fontWeight: FontWeight.bold)),
+                              color: check ? Colors.green : Colors.red,
+                              fontWeight: FontWeight.bold)),
                     ),
                     const SizedBox(width: 10.0),
                     SizedBox(

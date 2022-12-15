@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../../constants/app_colors.dart';
+import '../../../constants/app_decoration.dart';
 import '../controller/doctor_examination_controller.dart';
 import '../widgets/examination_item.dart';
 import '../widgets/patient_wait_item.dart';
@@ -46,7 +47,7 @@ class DecDoctorExamination extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20.0),
                       color: Colors.white,
                       boxShadow: const [
-                        BoxShadow(color: Colors.black12, blurRadius: 10.0),
+                        BoxShadow(color: Colors.black26, blurRadius: 10.0),
                       ],
                     ),
                     child: Column(
@@ -70,7 +71,7 @@ class DecDoctorExamination extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(10.0),
                                   boxShadow: const [
                                     BoxShadow(
-                                        color: Colors.black12, blurRadius: 7.0)
+                                        color: Colors.black26, blurRadius: 7.0)
                                   ],
                                   color: Colors.white,
                                   border: Border.all(
@@ -84,24 +85,35 @@ class DecDoctorExamination extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(width: 10.0),
-                            InkWell(
-                              onTap: () {},
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10.0, vertical: 5.0),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  border: Border.all(
-                                    width: 1,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                                child: const Text(
-                                  'View All',
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 1.0),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                border: Border.all(
+                                    width: 1, color: AppColors.primaryColor),
+                                borderRadius: AppDecoration.primaryRadiusBorder,
+                              ),
+                              child: Obx(
+                                () => DropdownButton<int>(
+                                  underline: const SizedBox(),
+                                  items: controller.lRole
+                                      .asMap()
+                                      .entries
+                                      .map((e) => DropdownMenuItem<int>(
+                                            value: e.key,
+                                            child: Text(
+                                              e.value,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline4,
+                                            ),
+                                          ))
+                                      .toList(),
+                                  value: controller.selectRole.value,
+                                  onChanged: (value) {
+                                    controller.selectRole.value = value!;
+                                  },
                                 ),
                               ),
                             ),
@@ -115,17 +127,23 @@ class DecDoctorExamination extends StatelessWidget {
                             () => ListView(
                               children: [
                                 for (var item in controller.listRecords.values)
-                                  if (item.status == "Waiting Examination" &&
-                                      item.departmentId ==
-                                          AuthService.instance.doc.departMent)
+                                  if ((item.status == "Waiting Examination" &&
+                                          item.departmentId ==
+                                              AuthService
+                                                  .instance.doc.departMent &&
+                                          controller.selectRole.value == 0) ||
+                                      (controller.selectRole.value == 1 &&
+                                          item.doctorId ==
+                                              AuthService.instance.doc.iDBS))
                                     PatientWaitItem(
                                       examFunction: () {
                                         doctorExaminationController
                                             .examinationActionHandle(
                                                 item.patientId, item.id!);
                                       },
-                                      headerTitle: item.patientId,
-                                      id: item.doctorId,
+                                      headerTitle: controller
+                                          .listPatient[item.patientId]!.name,
+                                      id: item.id!,
                                       title: "title",
                                       time: DateFormat()
                                           .add_yMMMMd()
@@ -133,9 +151,11 @@ class DecDoctorExamination extends StatelessWidget {
                                       index: 1,
                                       groupValue: check.value,
                                       func: (v) {},
-                                      press: () {},
-                                      check: false,
-                                      thumb: '',
+                                      press: () => controller
+                                          .selectRecords.value = item.patientId,
+                                      check: controller.selectRole.value == 1,
+                                      thumb: controller
+                                          .listPatient[item.patientId]!.avt,
                                     ),
                               ],
                             ),
@@ -151,13 +171,12 @@ class DecDoctorExamination extends StatelessWidget {
                     height: checkAnimation.value
                         ? constraints.maxHeight * 2 / 5 - 10
                         : constraints.maxHeight - 140,
-                    padding: const EdgeInsets.all(25.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           children: [
-                            const Text('Your Examination',
+                            const Text('Examination',
                                 style: TextStyle(
                                   color: AppColors.headline1TextColor,
                                   fontWeight: FontWeight.bold,
@@ -191,33 +210,7 @@ class DecDoctorExamination extends StatelessWidget {
                         const SizedBox(height: 10.0),
                         const Divider(thickness: 1),
                         const SizedBox(height: 10.0),
-                        Expanded(
-                          child: checkAnimation.value
-                              ? Row(
-                                  children: const [
-                                    ExaminationItem(),
-                                    ExaminationItem(),
-                                    ExaminationItem(),
-                                    ExaminationItem(),
-                                  ],
-                                )
-                              : ListView(
-                                  children: [
-                                    RowExaminationItem(
-                                        examId: "Examination Id 1",
-                                        patientName: "Nguyen Minh Hung",
-                                        time: DateTime.now()),
-                                    RowExaminationItem(
-                                        examId: "Examination Id 2",
-                                        patientName: "Truong Huynh Duc Hoang",
-                                        time: DateTime.now()),
-                                    RowExaminationItem(
-                                        examId: "Examination Id 3",
-                                        patientName: "Nguyen Trung Hieu",
-                                        time: DateTime.now()),
-                                  ],
-                                ),
-                        ),
+                        _examinationDetailField(),
                       ],
                     ),
                   ),
@@ -228,5 +221,98 @@ class DecDoctorExamination extends StatelessWidget {
         ],
       );
     });
+  }
+
+  Expanded _examinationDetailField() {
+    return Expanded(
+      child: controller.selectRecords.value != ""
+          ? Container(
+              padding: const EdgeInsets.all(15.0),
+              margin: const EdgeInsets.all(10.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20.0),
+                color: Colors.white,
+                boxShadow: const [
+                  BoxShadow(color: Colors.black26, blurRadius: 10.0),
+                ],
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 150.0,
+                    height: 150.0,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(15.0),
+                      border:
+                          Border.all(width: 1, color: AppColors.primaryColor),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 10.0,
+                        ),
+                      ],
+                      image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: NetworkImage(controller
+                                    .listPatient[
+                                        controller.selectRecords.value]!
+                                    .avt !=
+                                ''
+                            ? controller
+                                .listPatient[controller.selectRecords.value]!
+                                .avt!
+                            : 'https://thumbs.dreamstime.com/b/medical-form-list-results-data-approved-check-mark-vector-flat-cartoon-clinical-checklist-document-checkbox-133036988.jpg'),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10.0),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        controller
+                            .listPatient[controller.selectRecords.value]!.name,
+                        style: const TextStyle(
+                          color: AppColors.headline1TextColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 22.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            )
+          : const SizedBox(),
+    );
+  }
+}
+
+class RowInFo extends StatelessWidget {
+  final String header;
+  final String title;
+  const RowInFo({super.key, required this.header, required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Text(
+          header,
+          style: const TextStyle(
+            color: AppColors.headline1TextColor,
+            fontWeight: FontWeight.bold,
+            fontSize: 22.0,
+          ),
+        ),
+        Text(title,
+            style: const TextStyle(
+                color: Colors.grey,
+                fontWeight: FontWeight.bold,
+                fontSize: 20.0)),
+      ],
+    );
   }
 }

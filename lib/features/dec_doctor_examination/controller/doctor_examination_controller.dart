@@ -1,3 +1,4 @@
+import 'package:admin_clinical/models/patient.dart';
 import 'package:admin_clinical/services/data_service/health_record_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -8,6 +9,7 @@ import '../screens/dec_doctor_examination.dart';
 
 class DoctorExaminationController extends GetxController {
   Rx<String?> selectedPatient = Rx(null);
+
   late PageController pageController;
   @override
   void onInit() {
