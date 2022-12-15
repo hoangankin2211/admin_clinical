@@ -48,139 +48,144 @@ class SelectRecordDialog extends StatelessWidget {
           color: Colors.white,
           border: Border.all(width: 2, color: AppColors.primaryColor),
         ),
-        child: Obx(() => isLoading.value
-            ? const Center(child: CircularProgressIndicator())
-            : SizedBox(
-                height: MediaQuery.of(context).size.height * 0.7,
-                width: MediaQuery.of(context).size.width * 0.9,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Row(
+        child: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.7,
+            width: MediaQuery.of(context).size.width * 0.9,
+            child: Obx(
+              () => isLoading.value
+                  ? const Center(child: CircularProgressIndicator())
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.file_copy,
-                            color: AppColors.primaryColor),
-                        const Text(
-                          ' Examination',
-                          style: TextStyle(
-                            color: AppColors.primaryColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18.0,
-                          ),
-                        ),
-                        const Spacer(),
-                        CustomIconButton(
-                          onPressed: () => onTapRecord(patientId, context),
-                          label: const Text(
-                            'Add New Record',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12,
-                            ),
-                          ),
-                          icon: const Icon(
-                            Icons.add_outlined,
-                            color: Colors.white,
-                            size: 12,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10.0),
-                    Expanded(
-                      child: Container(
-                        padding: AppDecoration.primaryPadding,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: AppDecoration.primaryRadiusBorder,
-                          boxShadow: const [
-                            BoxShadow(color: Colors.black26, blurRadius: 7.0)
-                          ],
-                        ),
-                        child: Column(
+                        Row(
                           children: [
-                            const MedicineSearchFormRow(
-                              customRow: [
-                                {'flex': 1, 'text': 'ID'},
-                                {'flex': 1, 'text': 'Date Created'},
-                                {'flex': 1, 'text': 'Total Money'},
-                                {'flex': 1, 'text': 'Doctor In Charge'},
-                                {'flex': 1, 'text': 'Department Id'},
-                                {'flex': 1, 'text': ''},
-                              ],
+                            const Icon(Icons.file_copy,
+                                color: AppColors.primaryColor),
+                            const Text(
+                              ' Examination',
+                              style: TextStyle(
+                                color: AppColors.primaryColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18.0,
+                              ),
                             ),
-                            Expanded(
-                              child: Obx(
-                                () => ListView.builder(
-                                  itemBuilder: (context, index) {
-                                    HealthRecord temp =
-                                        HealthRecordService.listHealthRecord[
-                                            PatientService
-                                                .listPatients[patientId]!
-                                                .healthRecord![index]]!;
-                                    return SelectHealthRecord(
-                                      dateCreated: temp.dateCreate,
-                                      departmentId: temp.departmentId,
-                                      doctorInCharge: temp.doctorId,
-                                      id: temp.id!,
-                                      totalMoney: temp.totalMoney,
-                                      deleteCallback: () async {
-                                        isLoading.value = true;
-
-                                        bool result = await deleteButton(
-                                            temp.id!, context, patientId);
-                                        isLoading.value = false;
-
-                                        await Utils.notifyHandle(
-                                          response: result,
-                                          successTitle: 'Success',
-                                          successQuestion:
-                                              'Delete Health Record Success',
-                                          errorTitle: 'ERROR',
-                                          errorQuestion:
-                                              'Something occurred !!! Please check your internet connection',
-                                        );
-                                      },
-                                      viewCallback: () async {
-                                        await Get.dialog(
-                                          Dialog(
-                                            child: Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.9,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                              ),
-                                              child: HealthRecordDetail(
-                                                healthRecord: temp,
-                                                patient: PatientService
-                                                    .listPatients[patientId]!,
-                                              ),
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    );
-                                  },
-                                  itemCount: PatientService
-                                      .listPatients[patientId]!
-                                      .healthRecord!
-                                      .length,
+                            const Spacer(),
+                            CustomIconButton(
+                              onPressed: () => onTapRecord(patientId, context),
+                              label: const Text(
+                                'Add New Record',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
                                 ),
+                              ),
+                              icon: const Icon(
+                                Icons.add_outlined,
+                                color: Colors.white,
+                                size: 12,
                               ),
                             ),
                           ],
                         ),
-                      ),
+                        const SizedBox(height: 10.0),
+                        Expanded(
+                          child: Container(
+                            padding: AppDecoration.primaryPadding,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: AppDecoration.primaryRadiusBorder,
+                              boxShadow: const [
+                                BoxShadow(
+                                    color: Colors.black26, blurRadius: 7.0)
+                              ],
+                            ),
+                            child: Column(
+                              children: [
+                                const MedicineSearchFormRow(
+                                  customRow: [
+                                    {'flex': 1, 'text': 'ID'},
+                                    {'flex': 1, 'text': 'Date Created'},
+                                    {'flex': 1, 'text': 'Total Money'},
+                                    {'flex': 1, 'text': 'Doctor In Charge'},
+                                    {'flex': 1, 'text': 'Department Id'},
+                                    {'flex': 1, 'text': ''},
+                                  ],
+                                ),
+                                Expanded(
+                                  child: Obx(
+                                    () => ListView.builder(
+                                      itemBuilder: (context, index) {
+                                        HealthRecord temp = HealthRecordService
+                                                .listHealthRecord[
+                                            PatientService
+                                                .listPatients[patientId]!
+                                                .healthRecord![index]]!;
+                                        return SelectHealthRecord(
+                                          dateCreated: temp.dateCreate,
+                                          departmentId: temp.departmentId,
+                                          doctorInCharge: temp.doctorId,
+                                          id: temp.id!,
+                                          totalMoney: temp.totalMoney,
+                                          deleteCallback: () async {
+                                            isLoading.value = true;
+
+                                            bool result = await deleteButton(
+                                                temp.id!, context, patientId);
+                                            isLoading.value = false;
+
+                                            await Utils.notifyHandle(
+                                              isClose: false,
+                                              response: result,
+                                              successTitle: 'Success',
+                                              successQuestion:
+                                                  'Delete Health Record Success',
+                                              errorTitle: 'ERROR',
+                                              errorQuestion:
+                                                  'Something occurred !!! Please check your internet connection',
+                                            );
+                                          },
+                                          viewCallback: () async {
+                                            await Get.dialog(
+                                              Dialog(
+                                                child: Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.9,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20),
+                                                  ),
+                                                  child: HealthRecordDetail(
+                                                    healthRecord: temp,
+                                                    patient: PatientService
+                                                            .listPatients[
+                                                        patientId]!,
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      },
+                                      itemCount: PatientService
+                                          .listPatients[patientId]!
+                                          .healthRecord!
+                                          .length,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              )),
+            )),
       ),
     );
   }

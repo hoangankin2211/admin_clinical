@@ -86,6 +86,7 @@ class Utils {
   }
 
   static Future<bool> notifyHandle({
+    bool? isClose,
     required bool response,
     required String successTitle,
     required String successQuestion,
@@ -107,7 +108,7 @@ class Utils {
         ),
       );
     }
-    Get.back(result: response);
+    if (isClose == null) Get.back(result: response);
     return response;
   }
 
