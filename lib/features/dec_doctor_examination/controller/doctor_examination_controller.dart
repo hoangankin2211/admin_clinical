@@ -27,21 +27,14 @@ class DoctorExaminationController extends GetxController {
     ),
   ];
 
-  void examinationActionHandle(String patientId, {String? healthRecordId}) {
+  void examinationActionHandle(String patientId, String healthRecordId) {
     selectedPatient.value = patientId;
 
-    if (healthRecordId != null) {
-      nextPage.value = MedicalFormScreen(
-        patient: PatientService.listPatients[selectedPatient.value]!,
-        backButton: backButton,
-        healthRecordId: HealthRecordService.listHealthRecord[healthRecordId],
-      );
-    } else {
-      nextPage.value = MedicalFormScreen(
-        patient: PatientService.listPatients[selectedPatient.value!]!,
-        backButton: backButton,
-      );
-    }
+    nextPage.value = MedicalFormScreen(
+      patient: PatientService.listPatients[selectedPatient.value]!,
+      backButton: backButton,
+      healthRecordId: HealthRecordService.listHealthRecord[healthRecordId],
+    );
 
     pageController.animateToPage(1,
         duration: const Duration(milliseconds: 200), curve: Curves.easeIn);

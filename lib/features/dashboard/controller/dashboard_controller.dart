@@ -1,6 +1,7 @@
 import 'package:admin_clinical/features/clinical_room/screens/clinical_room_screen.dart';
 import 'package:admin_clinical/features/decentralization_doctor/screen/doctor_dec_overview.dart';
 import 'package:admin_clinical/features/doctor/screens/doctor_main_screen.dart';
+import 'package:admin_clinical/features/form/controller/medical_form_controller.dart';
 import 'package:admin_clinical/features/invoice/controllers/invoice_controller.dart';
 import 'package:admin_clinical/features/invoice/screens/invoice_view_screen.dart';
 import 'package:admin_clinical/features/medicine/screens/medicine_screen.dart';
@@ -71,6 +72,7 @@ class DashboardController extends GetxController {
   Future<bool> _initializeAllController() async {
     await Get.putAsync(() => Future.value(DoctorOverviewController()));
     await Get.putAsync(() => Future.value(DecDoctExaminationController()));
+    await Get.putAsync(() => Future.value(MedicalFormController()));
     await Get.putAsync(() => Future.value(OverviewController()));
     await Get.putAsync(() => Future.value(DoctorMainController()));
     await Get.putAsync(() => Future.value(DoctorExaminationController()));

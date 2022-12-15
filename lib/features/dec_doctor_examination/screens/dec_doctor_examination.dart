@@ -1,6 +1,8 @@
 import 'package:admin_clinical/constants/global_widgets/custom_button.dart';
 import 'package:admin_clinical/features/dec_doctor_examination/controller/dec_doctor_examination_controller.dart';
 import 'package:admin_clinical/features/patient/screens/list_patients_screen.dart';
+import 'package:admin_clinical/services/auth_service/auth_service.dart';
+import 'package:admin_clinical/services/data_service/health_record_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:get/get.dart';
@@ -23,6 +25,7 @@ class DecDoctorExamination extends StatelessWidget {
   final doctorExaminationController = Get.find<DoctorExaminationController>();
   @override
   Widget build(BuildContext context) {
+    // controller.fetchData(HealthRecordService.listHealthRecord);
     return LayoutBuilder(builder: (context, constraints) {
       return Row(
         children: [
@@ -112,13 +115,14 @@ class DecDoctorExamination extends StatelessWidget {
                             () => ListView(
                               children: [
                                 for (var item in controller.listRecords.values)
-                                  if (item.status == "Waiting Examination")
+                                  if (item.status == "Waiting Examination" &&
+                                      item.departmentId ==
+                                          AuthService.instance.doc.departMent)
                                     PatientWaitItem(
                                       examFunction: () {
                                         doctorExaminationController
                                             .examinationActionHandle(
-                                                item.patientId,
-                                                healthRecordId: item.id);
+                                                item.patientId, item.id!);
                                       },
                                       headerTitle: item.patientId,
                                       id: item.doctorId,

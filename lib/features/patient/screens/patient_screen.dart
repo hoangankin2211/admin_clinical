@@ -463,7 +463,10 @@ class ContainerProcess extends StatelessWidget {
           Text(
             des,
             style: TextStyle(
-                color: color, fontSize: 16.0, fontWeight: FontWeight.w600),
+              color: color,
+              fontSize: 16.0,
+              fontWeight: FontWeight.w600,
+            ),
           )
         ],
       ),

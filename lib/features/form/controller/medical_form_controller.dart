@@ -11,9 +11,12 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../constants/api_link.dart';
+import '../../../constants/global_widgets/notification_dialog.dart';
 import '../../../models/health_record.dart';
+import '../../../models/invoice.dart';
 import '../../../models/medicine.dart';
 import '../../../models/service.dart';
+import '../../../services/data_service/invoice_service.dart';
 
 class MedicalFormController extends GetxController {
   final formKey = GlobalKey<FormState>();
@@ -42,64 +45,11 @@ class MedicalFormController extends GetxController {
     'note': TextEditingController(text: currentHealthRecord.value?.note),
   };
 
-  void updateGetBuilder(List<String> id) {
-    update(id);
-  }
-
-  ////////////////////////////////////////////////////////////////////////////////
-
-  //////////////////////////////////////////////////////////////////////
-
-  Future<bool> _updatePatientRecord(
-      String patientId, String newHealthRecord) async {
-    try {
-      final response = await http.post(
-        Uri.parse('${ApiLink.uri}/api/addPatientRecord/'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode({
-          '_id': patientId,
-          'healthRecord': newHealthRecord,
-        }),
-      );
-
-      final extractedData = jsonDecode(response.body);
-
-      if (extractedData['isSuccess'] != null && extractedData['isSuccess']) {
-        return true;
-      }
-    } catch (e) {
-      print('_updatePatientRecord: ${e.toString()}');
-    }
-    return false;
-  }
-
   Future<void> onPressedDeleteButton(String id, BuildContext context,
       String patientId, Function() backButton) async {
-    isLoading.value = true;
-    bool result = false;
-    final response = await deleteHealthRecordData(id, context);
-    if (response) {
-      try {
-        final deletePatientResponse =
-            await deleteHealthRecordPatient(patientId, id);
-        if (deletePatientResponse) {
-          backButton();
-          PatientService.listPatients.update(patientId, (value) {
-            HealthRecordService.listHealthRecord.remove(id);
-            value.healthRecord ??= [] as List<String>;
-            value.healthRecord?.removeWhere((element) => element == id);
-            return value;
-          });
-          result = false;
-        }
-      } catch (e) {
-        print('updatePatientResponse: $e');
-        result = false;
-      }
-    }
-    isLoading.value = false;
+    bool result = await deleteHealthRecord(id, context, patientId);
+
+    if (result) backButton();
 
     await Utils.notifyHandle(
       response: result,
@@ -109,6 +59,36 @@ class MedicalFormController extends GetxController {
       errorQuestion:
           'Something occurred !!! Please check your internet connection',
     );
+  }
+
+  Future<bool> deleteHealthRecord(
+      String id, BuildContext context, String patientId) async {
+    try {
+      final response = await deleteHealthRecordData(id, context);
+      if (response) {
+        try {
+          final deletePatientResponse =
+              await deleteHealthRecordPatient(patientId, id);
+          if (deletePatientResponse) {
+            HealthRecordService.listHealthRecord.remove(id);
+            PatientService.listPatients.update(patientId, (value) {
+              if (value.healthRecord == null) {
+                value.healthRecord = [] as List<String>;
+              } else {
+                value.healthRecord!.removeWhere((element) => element == id);
+              }
+              return value;
+            });
+            return true;
+          }
+        } catch (e) {
+          print('updatePatientResponse: $e');
+        }
+      }
+    } catch (e) {
+      print('deleteHealthRecord: $e');
+    }
+    return false;
   }
 
   Future<bool> deleteHealthRecordPatient(
@@ -169,10 +149,11 @@ class MedicalFormController extends GetxController {
         'id': currentHealthRecord.value!.id,
         'patientId': patientId,
         'dateCreate': currentHealthRecord.value!.dateCreate.toIso8601String(),
-        'departmentId': 'departmentId',
-        'doctorId': AuthService.instance.user.id,
+        'departmentId': currentHealthRecord.value!.departmentId,
+        'doctorId': AuthService.instance.doc.iDBS,
         'totalMoney': totalMoney.value,
         'allergy': (textController['allergy'] as TextEditingController).text,
+        'status': currentHealthRecord.value!.status,
         'bloodPressure': double.parse(
             (textController['bloodPressure'] as TextEditingController).text),
         'clinicalExamination':
@@ -214,6 +195,39 @@ class MedicalFormController extends GetxController {
 
   void onPressedClearButton() async {
     textController.forEach((key, value) => value.clear());
+  }
+
+  void onPressedFinishButton(
+      BuildContext context, Function() backButton) async {
+    final result = await Get.dialog(
+      const CustomNotificationDialog(
+        title: 'Finish',
+        content: 'Are you sure to finish the examination session ?',
+      ),
+    );
+
+    if (result != null) {
+      if (result as bool) {
+        isLoading.value = true;
+        Invoice? temp = await InvoiceService.instance.addInvoiceHealthRecord(
+          Get.context ?? context,
+          thumb:
+              'https://www.wellsteps.com/blog/wp-content/uploads/2017/05/benefits-of-wellness.jpg',
+          amount: currentHealthRecord.value!.totalMoney,
+          status: 0,
+          title: "Make Payment",
+          hrId: currentHealthRecord.value!.id!,
+          category: "Payment",
+        );
+        if (temp != null) {
+          InvoiceService.instance.listInvoice.add(temp);
+        }
+        HealthRecordService.listHealthRecord[currentHealthRecord.value!.id!]!
+            .status = "Waiting Payment";
+        isLoading.value = false;
+        backButton();
+      }
+    }
   }
 
 //////////////////////////////////////////////////////////////////////
