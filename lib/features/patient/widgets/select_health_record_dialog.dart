@@ -1,5 +1,7 @@
 import 'package:admin_clinical/constants/app_colors.dart';
 import 'package:admin_clinical/constants/app_decoration.dart';
+import 'package:admin_clinical/features/invoice/screens/make_invoice_screen.dart';
+import 'package:admin_clinical/features/patient/widgets/healthrecord_detail.dart';
 import 'package:admin_clinical/models/health_record.dart';
 import 'package:admin_clinical/services/data_service/health_record_service.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +11,7 @@ import '../../../commons/widgets/custom_icon_button.dart';
 import '../../../constants/utils.dart';
 import '../../../services/data_service/patient_service.dart';
 import '../../form/widgets/medicine_indication_widgets/medicine_search_form.dart';
+import '../../invoice/controllers/invoice_controller.dart';
 import '../../overview/widgets/custom_table.dart';
 import 'create_healthRecord_dialog.dart';
 
@@ -143,7 +146,31 @@ class SelectRecordDialog extends StatelessWidget {
                                               'Something occurred !!! Please check your internet connection',
                                         );
                                       },
-                                      viewCallback: () {},
+                                      viewCallback: () {
+                                        Get.dialog(
+                                          Dialog(
+                                            child: Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.9,
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.8,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                              ),
+                                              child: HealthRecordDetail(
+                                                healthRecord: temp,
+                                                patient: PatientService
+                                                    .listPatients[patientId]!,
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
                                     );
                                   },
                                   itemCount: PatientService

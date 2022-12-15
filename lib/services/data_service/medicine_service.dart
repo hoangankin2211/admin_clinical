@@ -14,6 +14,13 @@ class MedicineService {
   static final MedicineService instance = MedicineService._privateConstructor();
   RxList<Medicine> listMedicine = <Medicine>[].obs;
 
+  Medicine? getMedicine(String id) {
+    for (var element in listMedicine) {
+      if (element.id == id) return element;
+    }
+    return null;
+  }
+
   Future<void> fetchAllMedicineData() async {
     print('fetch all medicine data is called');
     try {

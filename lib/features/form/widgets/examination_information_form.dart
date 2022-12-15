@@ -9,15 +9,17 @@ class ExaminationInformationForm extends StatelessWidget {
   const ExaminationInformationForm({
     super.key,
     required this.examField,
-    required this.formKey,
+    this.formKey,
     required this.measureField,
-    required this.textController,
+    this.textController,
+    this.isReading,
   });
 
+  final bool? isReading;
   final List<Map<String, dynamic>> examField;
-  final GlobalKey<FormState> formKey;
+  final GlobalKey<FormState>? formKey;
   final List<Map<String, dynamic>> measureField;
-  final Map<String, TextEditingController> textController;
+  final Map<String, TextEditingController>? textController;
 
   @override
   Widget build(BuildContext context) {
@@ -38,14 +40,17 @@ class ExaminationInformationForm extends StatelessWidget {
                       for (int i = 0; i < measureField.length; i++) ...[
                         Flexible(
                           child: TextFormFieldInformationWidget(
+                            readOnly: isReading,
                             isDense: true,
                             inputFormatters:
                                 measureField.elementAt(i)['inputFormatters'],
                             suffixIcon: Icon(
                                 measureField.elementAt(i)['icon'] as IconData),
-                            textEditingController:
-                                textController[measureField.elementAt(i)['key']]
-                                    as TextEditingController,
+                            textEditingController: textController != null
+                                ? textController![
+                                        measureField.elementAt(i)['key']]
+                                    as TextEditingController
+                                : null,
                             keyboardType: TextInputType.number,
                             label: measureField.elementAt(i)['title'] as String,
                             validator: (value) {
@@ -81,10 +86,12 @@ class ExaminationInformationForm extends StatelessWidget {
                 for (int i = 0; i < Utils.examField.length; i++)
                   Expanded(
                     child: TextFormFieldInformationWidget(
+                      readOnly: isReading,
                       titleIcon: examField.elementAt(i)['icon'],
-                      textEditingController:
-                          textController[examField.elementAt(i)['key']]
-                              as TextEditingController,
+                      textEditingController: textController != null
+                          ? textController![examField.elementAt(i)['key']]
+                              as TextEditingController
+                          : null,
                       numberOfLine: examField.elementAt(i)['maxLine'] as int,
                       label: examField.elementAt(i)['title'] as String,
                       validator: (value) {
@@ -116,6 +123,7 @@ class TextFormFieldInformationWidget extends StatelessWidget {
     this.titleIcon,
     this.inputFormatters,
     this.isDense,
+    this.readOnly,
   });
   final String label;
   final int? numberOfLine;
@@ -126,7 +134,7 @@ class TextFormFieldInformationWidget extends StatelessWidget {
   final IconData? titleIcon;
   final List<TextInputFormatter>? inputFormatters;
   final bool? isDense;
-
+  final bool? readOnly;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -150,6 +158,7 @@ class TextFormFieldInformationWidget extends StatelessWidget {
         ),
         Expanded(
           child: TextFormField(
+            readOnly: readOnly ?? false,
             inputFormatters: inputFormatters,
             textAlignVertical: TextAlignVertical.center,
             controller: textEditingController,

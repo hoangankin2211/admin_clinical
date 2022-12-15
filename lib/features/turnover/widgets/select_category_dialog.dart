@@ -7,12 +7,11 @@ import '../../../constants/global_widgets/custom_button.dart';
 import '../../patient/widgets/custom_text_form_field.dart';
 
 class SelectCategoryDialog extends StatelessWidget {
-  SelectCategoryDialog({
-    Key? key,
-  }) : super(key: key);
+  SelectCategoryDialog({Key? key}) : super(key: key);
+
+  final controller = Get.find<InvoiceController>();
 
   @override
-  final controller = Get.find<InvoiceController>();
   Widget build(BuildContext context) {
     return Container(
       height: 400,
