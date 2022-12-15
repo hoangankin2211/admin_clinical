@@ -1,4 +1,5 @@
 import 'package:admin_clinical/features/form/widgets/record_information_form.dart';
+import 'package:admin_clinical/features/form/widgets/service_indication_widgets/result_indication.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -16,8 +17,11 @@ import '../../form/widgets/patient_information_form.dart';
 import '../../overview/widgets/custom_table.dart';
 
 class HealthRecordDetail extends StatelessWidget {
-  const HealthRecordDetail(
-      {super.key, required this.patient, required this.healthRecord});
+  const HealthRecordDetail({
+    super.key,
+    required this.patient,
+    required this.healthRecord,
+  });
   final Patient patient;
   final HealthRecord healthRecord;
 
@@ -40,10 +44,10 @@ class HealthRecordDetail extends StatelessWidget {
           if (healthRecord.services != null)
             for (var element in healthRecord.services!)
               if (ServiceDataService
-                      .instance.service[element['medicine'] as String] !=
+                      .instance.service[element['service'] as String] !=
                   null)
                 ServiceDataService
-                    .instance.service[element['medicine'] as String]!
+                    .instance.service[element['service'] as String]!
         ];
 
         result.addAll({"medicines": medicines, "services": services});
@@ -62,8 +66,11 @@ class HealthRecordDetail extends StatelessWidget {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 if (snapshot.hasData) {
-                  Map<String, dynamic> data =
-                      snapshot.data ?? {"medicine": [], 'services': []};
+                  Map<String, dynamic> data = snapshot.data ??
+                      {
+                        "medicine": [] as List<Medicine>,
+                        'services': [] as List<Service>
+                      };
                   return Row(
                     children: [
                       Flexible(
@@ -127,15 +134,12 @@ class HealthRecordDetail extends StatelessWidget {
                       ),
                       Flexible(
                         flex: 10,
-                        child: Flexible(
-                          flex: 10,
-                          child: FormCard(
-                            child: ServiceMedicineDetail(
-                              patientName: patient.name,
-                              avt: patient.avt,
-                              medicine: data['medicines'],
-                              services: data['services'],
-                            ),
+                        child: FormCard(
+                          child: ServiceMedicineDetail(
+                            patientName: patient.name,
+                            avt: patient.avt,
+                            medicine: data['medicines'],
+                            services: data['services'],
                           ),
                         ),
                       ),
@@ -197,67 +201,89 @@ class ServiceMedicineDetail extends StatelessWidget {
             ),
             Expanded(
               child: FormCard(
-                child: Column(
-                  children: [
-                    const MedicineSearchFormRow(
-                      customRow: [
-                        {'flex': 2, 'text': 'ID'},
-                        {'flex': 1, 'text': 'Name'},
-                        {'flex': 1, 'text': 'Department ID'},
-                        {'flex': 1, 'text': 'Price'},
-                        {'flex': 1, 'text': 'Description'},
-                      ],
-                      width: 48,
-                    ),
-                    Expanded(
-                      child: ListView.builder(
-                        itemBuilder: (context, index) {
-                          return ResultServiceTableRow(
-                            color: Colors.white,
-                            service: services.elementAt(index),
-                          );
-                        },
-                        itemCount: services.length,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+                  child: ResultServiceIndicationView(services: services)),
             ),
             Expanded(
               child: FormCard(
-                child: Column(
-                  children: [
-                    const MedicineSearchFormRow(
-                      customRow: [
-                        {'flex': 2, 'text': 'ID'},
-                        {'flex': 1, 'text': 'Name'},
-                        {'flex': 1, 'text': 'Unit'},
-                        {'flex': 1, 'text': 'Price Per Unit'},
-                        {'flex': 1, 'text': 'Amount'},
-                        {'flex': 1, 'text': 'Type'},
-                        {'flex': 1, 'text': 'Description'},
-                      ],
-                      width: 48,
-                    ),
-                    Expanded(
-                        child: ListView.builder(
-                      itemBuilder: (context, index) {
-                        return ResultMedicineTableRow(
-                          amount: 0,
-                          medicine: medicine.elementAt(index),
-                          color: Colors.white,
-                        );
-                      },
-                      itemCount: medicine.length,
-                    )),
-                  ],
-                ),
-              ),
+                  child: ResultMedicineIndicationView(medicine: medicine)),
             ),
           ],
         );
       },
+    );
+  }
+}
+
+class ResultMedicineIndicationView extends StatelessWidget {
+  const ResultMedicineIndicationView({super.key, required this.medicine});
+
+  final List<Medicine> medicine;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const MedicineSearchFormRow(
+          customRow: [
+            {'flex': 2, 'text': 'ID'},
+            {'flex': 1, 'text': 'Name'},
+            {'flex': 1, 'text': 'Unit'},
+            {'flex': 1, 'text': 'Price Per Unit'},
+            {'flex': 1, 'text': 'Amount'},
+            {'flex': 1, 'text': 'Type'},
+            {'flex': 1, 'text': 'Description'},
+          ],
+          width: 48,
+        ),
+        Expanded(
+            child: ListView.builder(
+          itemBuilder: (context, index) {
+            return ResultMedicineTableRow(
+              amount: 0,
+              medicine: medicine.elementAt(index),
+              color: Colors.white,
+            );
+          },
+          itemCount: medicine.length,
+        )),
+      ],
+    );
+  }
+}
+
+class ResultServiceIndicationView extends StatelessWidget {
+  const ResultServiceIndicationView({super.key, required this.services});
+
+  final List<Service> services;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const MedicineSearchFormRow(
+          customRow: [
+            {'flex': 2, 'text': 'ID'},
+            {'flex': 1, 'text': 'Name'},
+            {'flex': 1, 'text': 'Unit'},
+            {'flex': 1, 'text': 'Price Per Unit'},
+            {'flex': 1, 'text': 'Amount'},
+            {'flex': 1, 'text': 'Type'},
+            {'flex': 1, 'text': 'Description'},
+          ],
+          width: 48,
+        ),
+        Expanded(
+          child: ListView.builder(
+            itemBuilder: (context, index) {
+              return ResultServiceTableRow(
+                color: Colors.white,
+                service: services.elementAt(index),
+              );
+            },
+            itemCount: services.length,
+          ),
+        ),
+      ],
     );
   }
 }

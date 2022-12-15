@@ -74,10 +74,10 @@ class DashboardController extends GetxController {
     await Get.putAsync(() => Future.value(DecDoctExaminationController()));
     await Get.putAsync(() => Future.value(MedicalFormController()));
     await Get.putAsync(() => Future.value(OverviewController()));
+    await Get.putAsync(() => Future.value(InvoiceController()));
     await Get.putAsync(() => Future.value(DoctorMainController()));
     await Get.putAsync(() => Future.value(DoctorExaminationController()));
     await Get.putAsync(() => Future.value(PatientPageController()));
-    await Get.putAsync(() => Future.value(InvoiceController()));
     await Get.putAsync(() => Future.value(ClinicalRoomController()));
     await Get.putAsync(() => Future.value(MedicineController()));
     await Get.putAsync(() => Future.value(SettingController()));

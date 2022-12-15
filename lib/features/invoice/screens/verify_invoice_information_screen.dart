@@ -1,17 +1,28 @@
 import 'package:admin_clinical/features/form/widgets/form_card.dart';
 import 'package:admin_clinical/features/invoice/controllers/invoice_controller.dart';
-import 'package:admin_clinical/features/invoice/screens/make_invoice_screen.dart';
+import 'package:admin_clinical/features/patient/widgets/health_record_detail.dart';
+import 'package:admin_clinical/models/invoice.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_decoration.dart';
-import '../../form/widgets/medicine_indication_widgets/result_medicine_indication.dart';
-import '../../form/widgets/service_indication_widgets/result_indication.dart';
+import '../../../models/medicine.dart';
+import '../../../models/patient.dart';
+import '../../../models/service.dart';
 
 class VerifyInvoiceInformationScreen extends StatelessWidget {
-  VerifyInvoiceInformationScreen({super.key});
-
+  VerifyInvoiceInformationScreen({
+    super.key,
+    required this.patient,
+    required this.medicines,
+    required this.services,
+    required this.invoice,
+  });
+  final Invoice invoice;
+  final Patient patient;
+  final List<Medicine> medicines;
+  final List<Service> services;
   final invoiceController = Get.find<InvoiceController>();
 
   @override
@@ -85,148 +96,30 @@ class VerifyInvoiceInformationScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 10),
-                    const ClinicInvoiceInformation(),
+                    ClinicInvoiceInformation(invoiceId: invoice.id),
                     AppWidget.primaryDivider,
-                    const PatientInvoiceInformation(),
+                    PatientInvoiceInformation(
+                      address: patient.address,
+                      patientName: patient.name,
+                    ),
                     AppWidget.primaryDivider,
                     const SizedBox(height: 5),
                     const DateTimeInfoField(),
-                    // SizedBox(
-                    //     height: constraints.maxHeight * 0.3,
-                    //     child: const ResultIndication()),
-                    // AppWidget.primaryDivider,
-                    // SizedBox(
-                    //     height: constraints.maxHeight * 0.3,
-                    //     child:
-                    //         const FormCard(child: ResultMedicineIndication())),
+                    SizedBox(
+                        height: constraints.maxHeight * 0.3,
+                        child: ResultServiceIndicationView(services: services)),
+                    AppWidget.primaryDivider,
+                    SizedBox(
+                        height: constraints.maxHeight * 0.3,
+                        child: FormCard(
+                            child: ResultMedicineIndicationView(
+                                medicine: medicines))),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         FormCard(
-                          child: Container(
-                            width: constraints.maxWidth * 0.28,
-                            height: constraints.maxHeight * 0.3,
-                            color: Colors.white,
-                            margin: const EdgeInsets.only(top: 30),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    const SizedBox(width: 5),
-                                    Text(
-                                      'Taxable',
-                                      style:
-                                          Theme.of(context).textTheme.headline5,
-                                    ),
-                                    const Spacer(),
-                                    Text(
-                                      '\$6,660.00',
-                                      style: TextStyle(
-                                        color: Colors.blueGrey[400],
-                                        fontSize: 13.5,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 5),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    const SizedBox(width: 5),
-                                    Text(
-                                      'Additional Charges',
-                                      style:
-                                          Theme.of(context).textTheme.headline5,
-                                    ),
-                                    const Spacer(),
-                                    Text(
-                                      '\$6,660.00',
-                                      style: TextStyle(
-                                        color: Colors.blueGrey[400],
-                                        fontSize: 13.5,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 5),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    const SizedBox(width: 5),
-                                    Text(
-                                      'Discount',
-                                      style:
-                                          Theme.of(context).textTheme.headline5,
-                                    ),
-                                    const Spacer(),
-                                    Text(
-                                      '\$6,660.00',
-                                      style: TextStyle(
-                                        color: Colors.blueGrey[400],
-                                        fontSize: 13.5,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 5),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    const SizedBox(width: 5),
-                                    Text(
-                                      'Sub total',
-                                      style:
-                                          Theme.of(context).textTheme.headline5,
-                                    ),
-                                    const Spacer(),
-                                    Text(
-                                      '\$6,660.00',
-                                      style: TextStyle(
-                                        color: Colors.blueGrey[400],
-                                        fontSize: 13.5,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 5),
-                                  ],
-                                ),
-                                AppWidget.primaryDivider,
-                                Row(
-                                  children: [
-                                    const SizedBox(width: 5),
-                                    Text(
-                                      'Total Amount',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline2!
-                                          .copyWith(
-                                              color: AppColors.primaryColor),
-                                    ),
-                                    const Spacer(),
-                                    Text(
-                                      '\$6,660.00',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline2!
-                                          .copyWith(
-                                              color: AppColors.primaryColor),
-                                    ),
-                                    const SizedBox(width: 5),
-                                  ],
-                                ),
-                                Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Image.asset(
-                                    'images/signature.png',
-                                    height: 50,
-                                    width: 100,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                          child:
+                              InvoiceAmountFormWidget(amount: invoice.amount),
                         ),
                       ],
                     ),
@@ -242,7 +135,8 @@ class VerifyInvoiceInformationScreen extends StatelessWidget {
 }
 
 class ClinicInvoiceInformation extends StatelessWidget {
-  const ClinicInvoiceInformation({super.key});
+  const ClinicInvoiceInformation({super.key, required this.invoiceId});
+  final String invoiceId;
 
   @override
   Widget build(BuildContext context) {
@@ -268,7 +162,7 @@ class ClinicInvoiceInformation extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               Text(
-                "Invoice ID: 32142134",
+                "Invoice ID: $invoiceId",
                 style: Theme.of(context)
                     .textTheme
                     .headline2!
@@ -287,7 +181,7 @@ class ClinicInvoiceInformation extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Text(
-              'Clinic Name: Thien Nhan va nhung nguoi ban',
+              'Clinic Name: Gia Lai Clinic',
               style: Theme.of(context)
                   .textTheme
                   .headline2!
@@ -309,8 +203,13 @@ class ClinicInvoiceInformation extends StatelessWidget {
 }
 
 class PatientInvoiceInformation extends StatelessWidget {
-  const PatientInvoiceInformation({super.key});
-
+  const PatientInvoiceInformation({
+    super.key,
+    required this.patientName,
+    required this.address,
+  });
+  final String patientName;
+  final String address;
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -326,7 +225,7 @@ class PatientInvoiceInformation extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               Text(
-                'Loz Hung',
+                patientName,
                 style: Theme.of(context)
                     .textTheme
                     .headline2!
@@ -334,7 +233,7 @@ class PatientInvoiceInformation extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               Text(
-                "123, Le Thanh Ton, TP Pleiku, GiaLai Province",
+                address,
                 style: Theme.of(context)
                     .textTheme
                     .headline2!
@@ -421,6 +320,139 @@ class DateTimeInfoField extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           )
+        ],
+      ),
+    );
+  }
+}
+
+class InvoiceAmountFormWidget extends StatelessWidget {
+  const InvoiceAmountFormWidget({super.key, required this.amount});
+
+  final double amount;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(15.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15.0),
+        color: AppColors.backgroundColor,
+        boxShadow: const [
+          BoxShadow(color: Colors.black12, blurRadius: 10.0),
+        ],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              const SizedBox(width: 5),
+              Text(
+                'Tax',
+                style: Theme.of(context).textTheme.headline5,
+              ),
+              const Spacer(),
+              Text(
+                '10%',
+                style: TextStyle(
+                  color: Colors.blueGrey[400],
+                  fontSize: 13.5,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(width: 5),
+            ],
+          ),
+          Row(
+            children: [
+              const SizedBox(width: 5),
+              Text(
+                'Additional Charges',
+                style: Theme.of(context).textTheme.headline5,
+              ),
+              const Spacer(),
+              Text(
+                '\$100',
+                style: TextStyle(
+                  color: Colors.blueGrey[400],
+                  fontSize: 13.5,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(width: 5),
+            ],
+          ),
+          Row(
+            children: [
+              const SizedBox(width: 5),
+              Text(
+                'Discount',
+                style: Theme.of(context).textTheme.headline5,
+              ),
+              const Spacer(),
+              Text(
+                '10%',
+                style: TextStyle(
+                  color: Colors.blueGrey[400],
+                  fontSize: 13.5,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(width: 5),
+            ],
+          ),
+          Row(
+            children: [
+              const SizedBox(width: 5),
+              Text(
+                'Sub total',
+                style: Theme.of(context).textTheme.headline5,
+              ),
+              const Spacer(),
+              Text(
+                amount > 25 ? (amount - 20).toString() : (amount).toString(),
+                style: TextStyle(
+                  color: Colors.blueGrey[400],
+                  fontSize: 13.5,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(width: 5),
+            ],
+          ),
+          AppWidget.primaryDivider,
+          Row(
+            children: [
+              const SizedBox(width: 5),
+              Text(
+                'Total Amount',
+                style: Theme.of(context)
+                    .textTheme
+                    .headline2!
+                    .copyWith(color: AppColors.primaryColor),
+              ),
+              const Spacer(),
+              Text(
+                amount.toString(),
+                style: Theme.of(context)
+                    .textTheme
+                    .headline2!
+                    .copyWith(color: AppColors.primaryColor),
+              ),
+              const SizedBox(width: 5),
+            ],
+          ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: Image.asset(
+              'images/signature.png',
+              height: 50,
+              width: 100,
+              fit: BoxFit.cover,
+            ),
+          ),
         ],
       ),
     );

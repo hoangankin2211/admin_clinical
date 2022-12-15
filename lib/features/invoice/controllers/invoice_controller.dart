@@ -15,7 +15,7 @@ class InvoiceController extends GetxController {
   Rx<HealthRecord?> selectedHealthRecord = Rx(null);
   Rx<Invoice?> selectedInvoice = Rx(null);
 
-  final controller = Get.find<OverviewController>();
+  // final controller = Get.find<OverviewController>();
   var selectedPage = 0.obs;
   RxList<Invoice> listInvoice = <Invoice>[].obs;
   List<String> listStatus = ["Cancelled", "Overdue", "Paid"];
@@ -39,8 +39,10 @@ class InvoiceController extends GetxController {
   late final List<Widget> pages = [
     TurnoverMainScreen(),
     MakeInvoiceScreen(),
-    VerifyInvoiceInformationScreen(),
+    Obx(() => verifiedPage.value)
   ];
+
+  Rx<Widget> verifiedPage = Rx<Widget>(const SizedBox());
 
   void changePage(int value) {
     if (value >= 0 && value < pages.length) {
