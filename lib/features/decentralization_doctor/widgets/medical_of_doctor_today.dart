@@ -25,7 +25,7 @@ class MedicalOfDoctorToday extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 10.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15.0),
-        color: Color.fromARGB(255, 198, 229, 255),
+        color: const Color.fromARGB(255, 198, 229, 255),
       ),
       child: Row(
         children: [

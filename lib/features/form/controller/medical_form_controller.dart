@@ -170,7 +170,7 @@ class MedicalFormController extends GetxController {
         'patientId': patientId,
         'dateCreate': currentHealthRecord.value!.dateCreate.toIso8601String(),
         'departmentId': 'departmentId',
-        'doctorId': AuthService.instance.user.id,
+        'doctorId': AuthService.instance.doc.iDBS,
         'totalMoney': totalMoney.value,
         'allergy': (textController['allergy'] as TextEditingController).text,
         'bloodPressure': double.parse(
