@@ -33,22 +33,6 @@ class DoctorOverviewController extends GetxController {
         selectPatinet.value = -1;
       }
     }
-    if (AuthService.instance.user.type == "Doctor") {
-      for (var item1 in HealthRecordService.listHealthRecord.values) {
-        int check =
-            listPatient.indexWhere((element) => element.id == item1.patientId);
-        if (item1.doctorId == AuthService.instance.doc.iDBS && check == -1) {
-          listPatient.add(PatientService.listPatients[item1.patientId]!);
-        }
-      }
-      // selectPatinet.value = (listPatient.isNotEmpty) ? 0 : -1;
-      if (listPatient.isNotEmpty) {
-        selectHealthPatine(0);
-      } else {
-        selectPatinet.value = -1;
-      }
-      fetchAllEventOfCalender();
-    }
   }
 
   void fetchAllEventOfCalender() {
