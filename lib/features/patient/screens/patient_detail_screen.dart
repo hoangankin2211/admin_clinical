@@ -1,22 +1,23 @@
 import 'package:admin_clinical/constants/app_colors.dart';
 import 'package:admin_clinical/constants/global_widgets/custom_button.dart';
-import 'package:admin_clinical/features/patient/widgets/healthrecord_detail.dart';
+import 'package:admin_clinical/features/patient/widgets/health_record_detail.dart';
 import 'package:admin_clinical/services/data_service/data_service.dart';
 import 'package:admin_clinical/services/data_service/health_record_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-import '../../../constants/app_decoration.dart';
 import '../../../constants/global_widgets/comment_card.dart';
 import '../../../models/health_record.dart';
 import '../../../models/patient.dart';
+import '../../invoice/screens/verify_invoice_information_screen.dart';
 import '../widgets/edit_patient_dialog.dart';
 
 // ignore: must_be_immutable
 class PatientDetailScreen extends StatelessWidget {
   PatientDetailScreen({super.key, required this.patient});
 
+  var amount = 0.0.obs;
   final Patient patient;
   late final List<String> healthRecord = patient.healthRecord ?? [];
 
@@ -191,129 +192,7 @@ class PatientDetailScreen extends StatelessWidget {
           ),
           Expanded(
             flex: 6,
-            child: Container(
-              margin: const EdgeInsets.all(10.0),
-              padding: const EdgeInsets.all(15.0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15.0),
-                color: AppColors.backgroundColor,
-                boxShadow: const [
-                  BoxShadow(color: Colors.black12, blurRadius: 10.0),
-                ],
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      const SizedBox(width: 5),
-                      Text(
-                        'Taxable',
-                        style: Theme.of(context).textTheme.headline5,
-                      ),
-                      const Spacer(),
-                      Text(
-                        '\$6,660.00',
-                        style: TextStyle(
-                          color: Colors.blueGrey[400],
-                          fontSize: 13.5,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      const SizedBox(width: 5),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      const SizedBox(width: 5),
-                      Text(
-                        'Additional Charges',
-                        style: Theme.of(context).textTheme.headline5,
-                      ),
-                      const Spacer(),
-                      Text(
-                        '\$6,660.00',
-                        style: TextStyle(
-                          color: Colors.blueGrey[400],
-                          fontSize: 13.5,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      const SizedBox(width: 5),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      const SizedBox(width: 5),
-                      Text(
-                        'Discount',
-                        style: Theme.of(context).textTheme.headline5,
-                      ),
-                      const Spacer(),
-                      Text(
-                        '\$6,660.00',
-                        style: TextStyle(
-                          color: Colors.blueGrey[400],
-                          fontSize: 13.5,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      const SizedBox(width: 5),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      const SizedBox(width: 5),
-                      Text(
-                        'Sub total',
-                        style: Theme.of(context).textTheme.headline5,
-                      ),
-                      const Spacer(),
-                      Text(
-                        '\$6,660.00',
-                        style: TextStyle(
-                          color: Colors.blueGrey[400],
-                          fontSize: 13.5,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      const SizedBox(width: 5),
-                    ],
-                  ),
-                  AppWidget.primaryDivider,
-                  Row(
-                    children: [
-                      const SizedBox(width: 5),
-                      Text(
-                        'Total Amount',
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline2!
-                            .copyWith(color: AppColors.primaryColor),
-                      ),
-                      const Spacer(),
-                      Text(
-                        '\$6,660.00',
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline2!
-                            .copyWith(color: AppColors.primaryColor),
-                      ),
-                      const SizedBox(width: 5),
-                    ],
-                  ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Image.asset(
-                      'images/signature.png',
-                      height: 50,
-                      width: 100,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            child: Obx(() => InvoiceAmountFormWidget(amount: amount.value)),
           ),
         ],
       ),
@@ -384,9 +263,10 @@ class PatientDetailScreen extends StatelessWidget {
                             const Text(
                               'List Treatment',
                               style: TextStyle(
-                                  color: AppColors.headline1TextColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18.0),
+                                color: AppColors.headline1TextColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18.0,
+                              ),
                             ),
                             const Spacer(),
                             InkWell(
@@ -426,15 +306,36 @@ class PatientDetailScreen extends StatelessWidget {
                                 type: MaterialType.card,
                                 child: InkWell(
                                   onTap: () async {
-                                    await Get.dialog(
-                                      Dialog(
-                                        child: HealthRecordDetail(
-                                            patient: patient,
-                                            healthRecord: temp),
-                                      ),
-                                    );
+                                    double result = 0;
+                                    if (temp.medicines != null) {
+                                      for (var element in temp.medicines!) {
+                                        result += element['amount'] ?? 0.0;
+                                      }
+                                    }
+                                    if (temp.services != null) {
+                                      for (var element in temp.services!) {
+                                        result += element['amount'] ?? 0.0;
+                                      }
+                                    }
+                                    amount.value = result;
                                   },
-                                  child: MedicalItem(healthRecord: temp),
+                                  child: MedicalItem(
+                                    healthRecord: temp,
+                                    onPressedDetailButton: () async {
+                                      await Get.dialog(
+                                        Dialog(
+                                          child: SizedBox(
+                                            height: Get.height * 0.9,
+                                            width: Get.width * 0.8,
+                                            child: HealthRecordDetail(
+                                              patient: patient,
+                                              healthRecord: temp,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
                                 ),
                               );
                             }
@@ -655,8 +556,10 @@ class MedicalItem extends StatelessWidget {
   const MedicalItem({
     Key? key,
     required this.healthRecord,
+    required this.onPressedDetailButton,
   }) : super(key: key);
   final HealthRecord healthRecord;
+  final Function() onPressedDetailButton;
 
   @override
   Widget build(BuildContext context) {
@@ -807,21 +710,37 @@ class MedicalItem extends StatelessWidget {
                             const SizedBox(height: 10.0),
                           ],
                         ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10.0, vertical: 5.0),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5.0),
-                            color: AppColors.primaryColor.withOpacity(0.3),
-                          ),
-                          child: Text(
-                            healthRecord.totalMoney.toString(),
-                            style: const TextStyle(
-                              color: AppColors.primaryColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18.0,
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            TextButton(
+                              onPressed: onPressedDetailButton,
+                              child: Text(
+                                'Detail',
+                                style: TextStyle(
+                                  color: Colors.blueGrey[600],
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
-                          ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10.0, vertical: 5.0),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5.0),
+                                color: Colors.blue[100],
+                              ),
+                              child: Text(
+                                '\$${healthRecord.totalMoney}',
+                                style: TextStyle(
+                                  color: Colors.blue[700],
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18.0,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),

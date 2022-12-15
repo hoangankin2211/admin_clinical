@@ -39,8 +39,10 @@ class InvoiceController extends GetxController {
   late final List<Widget> pages = [
     TurnoverMainScreen(),
     MakeInvoiceScreen(),
-    VerifyInvoiceInformationScreen(),
+    Obx(() => verifiedPage.value)
   ];
+
+  Rx<Widget> verifiedPage = Rx<Widget>(const SizedBox());
 
   void changePage(int value) {
     if (value >= 0 && value < pages.length) {

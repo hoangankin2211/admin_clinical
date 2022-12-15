@@ -1,6 +1,6 @@
 import 'package:admin_clinical/constants/app_colors.dart';
 import 'package:admin_clinical/constants/app_decoration.dart';
-import 'package:admin_clinical/features/patient/widgets/healthrecord_detail.dart';
+import 'package:admin_clinical/features/patient/widgets/health_record_detail.dart';
 import 'package:admin_clinical/models/health_record.dart';
 import 'package:admin_clinical/services/data_service/health_record_service.dart';
 import 'package:flutter/material.dart';

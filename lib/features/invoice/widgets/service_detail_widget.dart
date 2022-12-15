@@ -5,10 +5,16 @@ import 'package:admin_clinical/features/form/widgets/medicine_indication_widgets
 import 'package:admin_clinical/features/form/widgets/service_indication_widgets/result_indication.dart';
 import 'package:admin_clinical/features/invoice/controllers/invoice_controller.dart';
 import 'package:admin_clinical/features/invoice/screens/make_invoice_screen.dart';
+import 'package:admin_clinical/features/invoice/screens/verify_invoice_information_screen.dart';
+import 'package:admin_clinical/models/health_record.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../models/medicine.dart';
 import '../../../models/patient.dart';
+import '../../../models/service.dart';
+import '../../../services/data_service/medicine_service.dart';
+import '../../../services/data_service/service_data_service.dart';
 
 class ServiceDetailWidget extends StatelessWidget {
   ServiceDetailWidget({super.key, required this.patient});
@@ -55,8 +61,45 @@ class ServiceDetailWidget extends StatelessWidget {
                           shape: RoundedRectangleBorder(
                               borderRadius: AppDecoration.primaryRadiusBorder)),
                       onPressed: () {
-                        invoiceController.changePage(
-                            invoiceController.selectedPage.value + 1);
+                        Future(
+                          () {
+                            print(invoiceController
+                                .selectedHealthRecord.value!.id);
+                            print(invoiceController
+                                .selectedHealthRecord.value!.services!.length);
+                            print(invoiceController
+                                .selectedHealthRecord.value!.medicines!.length);
+                            HealthRecord healthRecord =
+                                invoiceController.selectedHealthRecord.value!;
+                            List<Medicine> medicines = [
+                              if (healthRecord.medicines != null)
+                                for (var element in healthRecord.medicines!)
+                                  if (MedicineService.instance.getMedicine(
+                                          element['medicine'] as String) !=
+                                      null)
+                                    MedicineService.instance.getMedicine(
+                                        element['medicine'] as String)!
+                            ];
+
+                            List<Service> services = [
+                              if (healthRecord.services != null)
+                                for (var element in healthRecord.services!)
+                                  if (ServiceDataService.instance.service[
+                                          element['service'] as String] !=
+                                      null)
+                                    ServiceDataService.instance
+                                        .service[element['service'] as String]!
+                            ];
+                            invoiceController.verifiedPage.value =
+                                VerifyInvoiceInformationScreen(
+                              invoice: invoiceController.selectedInvoice.value!,
+                              medicines: medicines,
+                              services: services,
+                              patient: patient,
+                            );
+                          },
+                        ).then((value) => invoiceController.changePage(
+                            invoiceController.selectedPage.value + 1));
                       },
                       child: const Text(
                         'Approve All',

@@ -31,7 +31,7 @@ List<String> headerTitle = [
 // ignore: must_be_immutable
 class TurnoverMainScreen extends StatelessWidget {
   TurnoverMainScreen({super.key});
-  final patientPageController = Get.put(PatientPageController());
+  final patientPageController = Get.find<PatientPageController>();
   final invoiceController = Get.find<InvoiceController>();
   List<Widget> listHeader = [
     ...headerTitle.map(

@@ -233,7 +233,6 @@ class ListPatientScreen extends StatelessWidget {
                               const SizedBox(width: 20),
                               Expanded(
                                 child: FilterCategory(
-                                  // onSubmit: (value) {},
                                   title: 'Date of Joining',
                                   hint: DateFormat()
                                       .add_yMd()
