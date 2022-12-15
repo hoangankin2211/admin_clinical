@@ -1,3 +1,4 @@
+import 'package:admin_clinical/services/auth_service/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -13,38 +14,11 @@ class CalenderScheduleField extends StatelessWidget {
     Key? key,
   }) : super(key: key);
   final controller = Get.find<DoctorOverviewController>();
-
-  late Map<String, List<Event>> selectedEvents = {
-    '${now.year}/${now.month}/${now.day}': [
-      Event(
-        type: 0,
-        time: DateTime.now(),
-        description:
-            'The final exam will be held at 7:30 am, in room A202 at the School of Natural Sciences',
-        location: '',
-        title: 'Windows Develop Exam',
-      ),
-      Event(
-        type: 1,
-        time: DateTime.now(),
-        description: '',
-        location: '',
-        title: 'Special Day',
-      ),
-      Event(
-        type: 2,
-        time: DateTime.now(),
-        description: '',
-        location: ' Ho Chi Minh City, University of Sciece',
-        title: 'IT Festival ',
-      )
-    ],
-  };
   Rx<DateTime> selectedDay = DateTime.now().obs;
   DateTime focusedDay = DateTime.now();
   List<Event> getEventsfromDay(DateTime date) {
     String time = '${date.year}/${date.month}/${date.day}';
-    return selectedEvents[time] ?? [];
+    return controller.lEvent[time] ?? [];
   }
 
   @override
@@ -80,6 +54,9 @@ class CalenderScheduleField extends StatelessWidget {
                 selectedDay: selectedDay.value,
                 lEvent: getEventsfromDay,
                 onDaySelected: (selectDay, focusDay) {
+                  String time =
+                      '${selectDay.year}/${selectDay.month}/${selectDay.day}';
+                  controller.sEvent.value = controller.lEvent[time] ?? [];
                   selectedDay.value = selectDay;
                 },
               ),
@@ -111,36 +88,23 @@ class CalenderScheduleField extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 15.0),
-            Expanded(
-              child: ListView(
-                children: [
-                  MedicalOfDoctorToday(
-                      image: "assets/images/doctor1.png",
-                      patientName: "Nguyen Minhh Hung",
-                      doctorName: "Dr.Truong Huynh Duc Hoang",
-                      time: DateTime.now(),
-                      status: 0),
-                  MedicalOfDoctorToday(
-                      image: "assets/images/doctor2.png",
-                      patientName: "Nguyen Trung Hieu",
-                      doctorName: "Dr.Truong Huynh  Hoang",
-                      time: DateTime.now(),
-                      status: 1),
-                  MedicalOfDoctorToday(
-                      image: "assets/images/doctor3.png",
-                      patientName: "Truong Huynh Duc Hoang",
-                      doctorName: "Dr.Truong Huynh Duc ",
-                      time: DateTime.now(),
-                      status: 1),
-                  MedicalOfDoctorToday(
-                      image: "assets/images/fake_avatar.jpg",
-                      patientName: "Nguyen Minhh Hung",
-                      doctorName: "Dr.Truong Huynh Duc Hoang",
-                      time: DateTime.now(),
-                      status: 0),
-                ],
+            Obx(
+              () => Expanded(
+                child: ListView(
+                  children: [
+                    ...controller.sEvent.map(
+                      (e) => MedicalOfDoctorToday(
+                        image: "assets/images/doctor1.png",
+                        patientName: e.description,
+                        doctorName: AuthService.instance.user.name,
+                        time: e.time,
+                        status: e.type,
+                      ),
+                    )
+                  ],
+                ),
               ),
-            ),
+            )
           ],
         ),
       ),
