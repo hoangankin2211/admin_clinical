@@ -2,6 +2,7 @@ import 'package:admin_clinical/features/auth/bindings/auth_binding.dart';
 import 'package:admin_clinical/features/auth/screens/login_screen.dart';
 import 'package:admin_clinical/features/dashboard/bindings/dashboard_binding.dart';
 import 'package:admin_clinical/features/dashboard/screens/dashboard_screen.dart';
+import 'package:admin_clinical/features/dec_patient/screen/dp_home_screen.dart';
 import 'package:admin_clinical/features/doctor/binding/doctor_detail_binding.dart';
 import 'package:admin_clinical/features/doctor/screens/doctor_profile_screen.dart';
 import 'package:admin_clinical/features/patient/screens/patient_screen.dart';
@@ -35,6 +36,10 @@ class PagesRoute {
       name: PageName.doctorDetailScreen,
       page: () => DoctorProfileScreen(),
       binding: DoctorDetailBinding(),
+    ),
+    GetPage(
+      name: PageName.dpHomeScreen,
+      page: () => DpHomeScreen(),
     ),
   ];
 }

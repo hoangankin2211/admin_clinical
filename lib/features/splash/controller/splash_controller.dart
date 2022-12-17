@@ -16,7 +16,7 @@ class SplashController extends GetxController {
     if (check) {
       // bool check1 = await DataService.instance.fetchAllData();
       // if (check1) {
-      Get.offAllNamed(PageName.dashBoard);
+      Get.offAllNamed(PageName.dpHomeScreen);
       // }
     } else {
       Get.offAllNamed(PageName.loginScreen);

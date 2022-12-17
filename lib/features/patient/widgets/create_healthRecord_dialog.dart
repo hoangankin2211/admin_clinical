@@ -76,11 +76,12 @@ class CreateHealthRecordDialog extends StatelessWidget {
     return false;
   }
 
+  
+
+
   Future<Map<String, dynamic>> createNewHealthRecord(
       String patientId, BuildContext context) async {
     try {
-      List<Map<String, dynamic>> serviceFinal = [];
-      List<Map<String, dynamic>> medicineFinal = [];
 
       HealthRecord newRecord = HealthRecord(
         dateCreate: DateTime.now(),
