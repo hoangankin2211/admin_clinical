@@ -63,7 +63,7 @@ class _SettingMainScreenState extends State<SettingMainScreen>
                   Tab(
                     height: 40,
                     child: Text(
-                      'Notification Settings',
+                      'Principle Settings',
                       style: TextStyle(
                         color: Colors.blueGrey,
                         fontSize: 14,

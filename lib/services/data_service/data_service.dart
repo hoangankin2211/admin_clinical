@@ -3,6 +3,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:admin_clinical/models/health_record.dart';
+import 'package:admin_clinical/models/regulation.dart';
 import 'package:admin_clinical/services/auth_service/auth_service.dart';
 import 'package:admin_clinical/services/data_service/clinical_room_service.dart';
 import 'package:admin_clinical/services/data_service/health_record_service.dart';
@@ -26,6 +27,8 @@ class DataService extends GetxController {
 
   RxList<Doctor1> listDoctor = <Doctor1>[].obs;
   RxList<Department> listDepartMent = <Department>[].obs;
+  Rx<Regulation> regulation =
+      Regulation(id: '', examinationFee: 0, maxPatientPerDay: 0).obs;
 
   String? getNameDoctor(String id) {
     String? result;
@@ -88,7 +91,58 @@ class DataService extends GetxController {
     await ClinicalRoomService.instance.fetchAllClinicalRoomData();
     // }
 
+    await fetchRegulationData();
+
     return true;
+  }
+
+  Future<void> fetchRegulationData() async {
+    try {
+      http.Response res = await http.get(
+        Uri.parse('${ApiLink.uri}/api/regulation/get'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+      print(res.body);
+      if (res.statusCode == 200) {
+        print(jsonDecode(res.body)[0]);
+        regulation.value = Regulation.fromJson(jsonDecode(res.body)[0]);
+      }
+    } catch (e) {
+      regulation.value =
+          Regulation(id: '', examinationFee: 0, maxPatientPerDay: 0);
+    } finally {}
+  }
+
+  Future<bool> editRegulation(BuildContext context,
+      {required int examinationFee, required int maxPatientPerDay}) async {
+    bool result = false;
+    try {
+      http.Response res = await http.post(
+        Uri.parse('${ApiLink.uri}/api/regulation/edit'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode({
+          'id': regulation.value.id,
+          'examinationFee': examinationFee,
+          'maxPatientPerDay': maxPatientPerDay,
+        }),
+      );
+      httpErrorHandle(
+          response: res,
+          context: context,
+          onSuccess: () {
+            regulation.value = Regulation.fromJson(jsonDecode(res.body));
+            result = true;
+          });
+    } catch (e) {
+      result = false;
+      regulation.value =
+          Regulation(id: '', examinationFee: 0, maxPatientPerDay: 0);
+    }
+    return result;
   }
 
   Future<void> fetchAllDoctor(Function(List<Doctor1>) callBack) async {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../../../constants/app_decoration.dart';
@@ -19,6 +20,7 @@ class CustomTextFormField extends StatefulWidget {
     this.validator,
     this.onTap,
     this.readOnly,
+    this.checkFormat = true,
   });
   final String? title;
   final double? width;
@@ -33,6 +35,7 @@ class CustomTextFormField extends StatefulWidget {
   final TextEditingController? controller;
   final String? Function(String?)? validator;
   final bool? readOnly;
+  final bool checkFormat;
   @override
   State<CustomTextFormField> createState() => _CustomTextFormFieldState();
 }
@@ -50,6 +53,12 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         controller: widget.controller,
         obscureText: isObscure,
         maxLines: widget.maxLine,
+        inputFormatters: !widget.checkFormat
+            ? [
+                FilteringTextInputFormatter.allow(
+                    RegExp(r'[0-9]+[,.]{0,1}[0-9]*'))
+              ]
+            : [],
         decoration: InputDecoration(
           contentPadding:
               const EdgeInsets.symmetric(vertical: 10, horizontal: 15),

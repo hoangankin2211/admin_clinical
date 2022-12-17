@@ -48,23 +48,37 @@ class HealthRecordService {
     String? result;
 
     try {
-      final response = await http.post(
-        Uri.parse('${ApiLink.uri}/api/addHealthRecord/'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(healthRecord),
-      );
+      DateTime now = DateTime.now();
+      int noHealthRecordToday = 0;
+      for (var item in listHealthRecord.values) {
+        if (item.dateCreate.day == now.day &&
+            item.dateCreate.month == now.month &&
+            item.dateCreate.year == now.year) {
+          noHealthRecordToday += 1;
+        }
+      }
+      if (noHealthRecordToday <
+          DataService.instance.regulation.value.maxPatientPerDay!) {
+        final response = await http.post(
+          Uri.parse('${ApiLink.uri}/api/addHealthRecord/'),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(healthRecord),
+        );
 
-      httpErrorHandle(
-        response: response,
-        context: context,
-        onSuccess: () {
-          final decodeResponse = jsonDecode(response.body);
-          print(decodeResponse);
-          result = decodeResponse['id'];
-        },
-      );
+        httpErrorHandle(
+          response: response,
+          context: context,
+          onSuccess: () {
+            final decodeResponse = jsonDecode(response.body);
+            print(decodeResponse);
+            result = decodeResponse['id'];
+          },
+        );
+      } else {
+        result = null;
+      }
     } catch (e) {
       result = null;
       print('insertHealthRecord:$e');

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:admin_clinical/constants/utils.dart';
 import 'package:admin_clinical/services/auth_service/auth_service.dart';
+import 'package:admin_clinical/services/data_service/data_service.dart';
 import 'package:admin_clinical/services/data_service/health_record_service.dart';
 import 'package:admin_clinical/services/data_service/medicine_service.dart';
 import 'package:admin_clinical/services/data_service/patient_service.dart';
@@ -151,7 +152,8 @@ class MedicalFormController extends GetxController {
         'dateCreate': currentHealthRecord.value!.dateCreate.toIso8601String(),
         'departmentId': currentHealthRecord.value!.departmentId,
         'doctorId': AuthService.instance.doc.iDBS,
-        'totalMoney': totalMoney.value,
+        'totalMoney': totalMoney.value +
+            DataService.instance.regulation.value.examinationFee!,
         'allergy': (textController['allergy'] as TextEditingController).text,
         'status': currentHealthRecord.value!.status,
         'bloodPressure': double.parse(
@@ -259,7 +261,10 @@ class MedicalFormController extends GetxController {
             print(item['medicine']);
             Map<String, dynamic> temp = {};
             temp.addAll({'id': item['medicine']});
-            temp.addAll({'price': item['amount']});
+            temp.addAll({
+              'price': item['amount'] +
+                  DataService.instance.regulation.value.examinationFee
+            });
             temp.addAll({'quantity': item['quantity']});
             listData.add(temp);
           }
