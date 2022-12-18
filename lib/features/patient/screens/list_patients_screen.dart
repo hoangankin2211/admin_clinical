@@ -36,6 +36,8 @@ class ListPatientScreen extends StatelessWidget {
   ListPatientScreen({super.key});
   final patientPageController = Get.find<PatientPageController>();
 
+  Rx<DateTime> _currentDateTime = DateTime.now().obs;
+
   void _onSelectionAction(
       String value, int index, BuildContext context, Patient patient) async {
     if (value == 'Examination') {
@@ -232,14 +234,48 @@ class ListPatientScreen extends StatelessWidget {
                               ),
                               const SizedBox(width: 20),
                               Expanded(
-                                child: FilterCategory(
-                                  title: 'Date of Joining',
-                                  hint: DateFormat()
-                                      .add_yMd()
-                                      .format(DateTime.now())
-                                      .toString(),
-                                  iconData: Icons.calendar_month_outlined,
-                                ),
+                                child: Obx(() => FilterCategory(
+                                      readOnly: true,
+                                      onTapIcon: () async {
+                                        final choice = await showDatePicker(
+                                          context: context,
+                                          firstDate: DateTime(2010),
+                                          lastDate: DateTime(2030),
+                                          initialDate: DateTime.now(),
+                                          builder: (context, child) {
+                                            return Center(
+                                                child: SizedBox(
+                                              width: 1000.0,
+                                              height: 1100.0,
+                                              child: child,
+                                            ));
+                                          },
+                                        );
+                                        if (choice != null) {
+                                          _currentDateTime.value = choice;
+                                          patientPageController
+                                              .getPatientAccordingKey(
+                                                  DateFormat()
+                                                      .add_yMMMMd()
+                                                      .format(_currentDateTime
+                                                          .value),
+                                                  'dateTime');
+                                        }
+                                      },
+                                      onSubmit: (value) {
+                                        if (value.isNotEmpty) {}
+                                      },
+                                      controller: TextEditingController(
+                                          text: DateFormat()
+                                              .add_yMMMMd()
+                                              .format(_currentDateTime.value)),
+                                      title: 'Date of Joining',
+                                      hint: DateFormat()
+                                          .add_yMd()
+                                          .format(DateTime.now())
+                                          .toString(),
+                                      iconData: Icons.calendar_month_outlined,
+                                    )),
                               ),
                             ],
                           ),

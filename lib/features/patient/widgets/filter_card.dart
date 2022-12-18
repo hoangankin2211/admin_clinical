@@ -12,6 +12,8 @@ class FilterCategory extends StatelessWidget {
     this.onChanged,
     this.onSubmit,
     this.onFieldSubmitted,
+    this.onTapIcon,
+    this.readOnly,
   });
   final TextEditingController? controller;
   final String title;
@@ -20,6 +22,8 @@ class FilterCategory extends StatelessWidget {
   final Function(String)? onChanged;
   final Function(String)? onSubmit;
   final Function(String)? onFieldSubmitted;
+  final Function()? onTapIcon;
+  final bool? readOnly;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -31,6 +35,7 @@ class FilterCategory extends StatelessWidget {
         ),
         const SizedBox(height: 5),
         TextFormField(
+          readOnly: readOnly ?? false,
           controller: controller,
           onChanged: onChanged,
           onFieldSubmitted: onFieldSubmitted,
@@ -47,7 +52,7 @@ class FilterCategory extends StatelessWidget {
                   width: 0.05,
                 ),
               ),
-              suffixIcon: Icon(iconData)),
+              suffixIcon: InkWell(onTap: onTapIcon, child: Icon(iconData))),
         ),
       ],
     );
