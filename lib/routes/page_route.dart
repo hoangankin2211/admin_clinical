@@ -2,6 +2,8 @@ import 'package:admin_clinical/features/auth/bindings/auth_binding.dart';
 import 'package:admin_clinical/features/auth/screens/login_screen.dart';
 import 'package:admin_clinical/features/dashboard/bindings/dashboard_binding.dart';
 import 'package:admin_clinical/features/dashboard/screens/dashboard_screen.dart';
+import 'package:admin_clinical/features/dec_patient/binding/dp_patinet_binding.dart';
+import 'package:admin_clinical/features/dec_patient/screen/booking_medical_screen.dart';
 import 'package:admin_clinical/features/dec_patient/screen/dp_home_screen.dart';
 import 'package:admin_clinical/features/doctor/binding/doctor_detail_binding.dart';
 import 'package:admin_clinical/features/doctor/screens/doctor_profile_screen.dart';
@@ -41,5 +43,10 @@ class PagesRoute {
       name: PageName.dpHomeScreen,
       page: () => DpHomeScreen(),
     ),
+    // GetPage(
+    //   name: PageName.bookingMedicalScreen,
+    //   page: () => BookingMedicalScreen(),
+    //   // binding: DpPatientBinding(),
   ];
+  // ),
 }

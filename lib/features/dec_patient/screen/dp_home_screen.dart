@@ -1,12 +1,23 @@
 import 'package:admin_clinical/constants/app_colors.dart';
 import 'package:admin_clinical/features/auth/widgets/custom_button.dart';
+import 'package:admin_clinical/features/dec_patient/controller/dp_patinet_contnrolller.dart';
+import 'package:admin_clinical/features/dec_patient/screen/booking_medical_screen.dart';
+import 'package:admin_clinical/features/dec_patient/widgets/dp_app_bar.dart';
+import 'package:admin_clinical/routes/name_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 class DpHomeScreen extends StatelessWidget {
-  const DpHomeScreen({super.key});
+  DpHomeScreen({super.key});
+  final controller = Get.put(DpPatinetController());
+  PageController? pageController = PageController();
+  // final controller = Get.put()
+  void switchPage(int index) {
+    pageController!.animateToPage(index,
+        duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,83 +33,36 @@ class DpHomeScreen extends StatelessWidget {
         toolbarHeight: 100,
         backgroundColor: Colors.transparent,
         title: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Row(
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    'assets/images/doctor1.png',
-                    fit: BoxFit.cover,
-                    height: 50.0,
-                    width: 50.0,
-                  ),
-                  const Text(
-                    ' Clinical App',
-                    style: TextStyle(
-                      color: AppColors.primaryColor,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24.0,
-                    ),
-                  ),
-                ],
-              ),
-              const Spacer(),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    InkWell(
-                      onTap: () {},
-                      child: const Text(
-                        'Home',
-                        style: TextStyle(
-                          color: Color.fromARGB(255, 53, 72, 78),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18.0,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 90),
-                    InkWell(
-                      onTap: () {},
-                      child: const Text(
-                        'Book an appointment',
-                        style: TextStyle(
-                          color: Color.fromARGB(255, 53, 72, 78),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18.0,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 90),
-                    InkWell(
-                      onTap: () {},
-                      child: const Text(
-                        'Find a Doctor',
-                        style: TextStyle(
-                          color: Color.fromARGB(255, 53, 72, 78),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18.0,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 70),
-                    SizedBox(
-                      width: 250.0,
-                      height: 50,
-                      child: CustomButton1(title: "Book now", onPressed: () {}),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+          padding: EdgeInsets.all(20.0),
+          child: DpApBar(
+            switchPage: switchPage,
           ),
         ),
       ),
-      body: ListView(children: [
+      body: PageView(
+        controller: pageController,
+        children: [
+          HomePage(swithcPage: switchPage),
+          BookingMedicalScreen(switchPage: switchPage),
+        ],
+      ),
+    );
+  }
+}
+
+class HomePage extends StatelessWidget {
+  final Function(int) swithcPage;
+  const HomePage({
+    Key? key,
+    required this.swithcPage,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      height: double.infinity,
+      child: ListView(children: [
         SizedBox(
           width: Get.width,
           height: Get.height,
@@ -109,7 +73,7 @@ class DpHomeScreen extends StatelessWidget {
             ],
           ),
         ),
-        _aboutUsField(),
+        AboutField(),
         SizedBox(
           width: Get.width,
           height: Get.height,
@@ -117,8 +81,15 @@ class DpHomeScreen extends StatelessWidget {
       ]),
     );
   }
+}
 
-  Container _aboutUsField() {
+class AboutField extends StatelessWidget {
+  const AboutField({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       width: Get.width,
       height: Get.height,
