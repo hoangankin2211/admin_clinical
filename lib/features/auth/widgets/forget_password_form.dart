@@ -1,11 +1,7 @@
-import 'dart:convert';
-
 import 'package:admin_clinical/constants/global_widgets/custom_dialog_error/success_dialog.dart';
 import 'package:admin_clinical/services/auth_service/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
-import '../../../constants/api_link.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_decoration.dart';
 import '../../../services/socket_service.dart';
@@ -76,7 +72,6 @@ class _ForgetPasswordFormState extends State<ForgetPasswordForm> {
   }
 }
 
-// ignore: must_be_immutable
 class EnterEmailPage extends StatelessWidget {
   EnterEmailPage(
       {super.key,
@@ -199,12 +194,13 @@ class VerifiedAnnouncementScreen extends StatelessWidget {
   bool isVerified = false;
 
   @override
-  @override
   Widget build(BuildContext context) {
     SocketService.socket.on('verify', (jsonData) {
       print(jsonData);
       Future.delayed(
-          const Duration(seconds: 2), () => nextPage(currentPage + 1));
+        const Duration(seconds: 2),
+        () => nextPage(currentPage + 1),
+      );
     });
 
     return Padding(

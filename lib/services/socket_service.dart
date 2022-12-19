@@ -17,6 +17,7 @@ class SocketService {
       print(data);
       socket.emit('/test', 'test');
     });
+
     socket.onConnectError((data) => print(data));
     socket.onDisconnect((data) => print('disconnect,$data'));
   }

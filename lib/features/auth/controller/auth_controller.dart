@@ -20,9 +20,7 @@ class AuthController extends GetxController {
 
     isLoading.value = false;
     if (response == true) {
-      print('here');
       Get.offAllNamed(PageName.dashBoard);
     }
-    // update();
   }
 }

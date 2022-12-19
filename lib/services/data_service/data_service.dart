@@ -18,6 +18,7 @@ import '../../constants/api_link.dart';
 import '../../constants/error_handing.dart';
 import '../../models/department.dart';
 import '../../models/doctor.dart';
+import '../socket_service.dart';
 
 class DataService extends GetxController {
   DataService._privateConstructor();
