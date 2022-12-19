@@ -65,6 +65,7 @@ class AddPatientDialog extends StatelessWidget {
         status: statusCode.value,
         avt: result,
         symptom: symptomController.text,
+        healthRecord: [],
       ),
       Get.context ?? context,
     );

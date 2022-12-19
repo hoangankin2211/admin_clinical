@@ -118,64 +118,78 @@ class SelectRecordDialog extends StatelessWidget {
                                   child: Obx(
                                     () => ListView.builder(
                                       itemBuilder: (context, index) {
-                                        HealthRecord temp = HealthRecordService
+                                        HealthRecord? temp = HealthRecordService
                                                 .listHealthRecord[
                                             PatientService
                                                 .listPatients[patientId]!
-                                                .healthRecord![index]]!;
-                                        return SelectHealthRecord(
-                                          dateCreated: temp.dateCreate,
-                                          departmentId: temp.departmentId,
-                                          doctorInCharge: temp.doctorId,
-                                          id: temp.id!,
-                                          totalMoney: temp.totalMoney,
-                                          deleteCallback: () async {
-                                            isLoading.value = true;
+                                                .healthRecord![index]];
 
-                                            bool result = await deleteButton(
-                                                temp.id!, context, patientId);
-                                            isLoading.value = false;
+                                        return temp != null
+                                            ? SelectHealthRecord(
+                                                dateCreated: temp.dateCreate,
+                                                departmentId: temp.departmentId,
+                                                doctorInCharge: temp.doctorId,
+                                                id: temp.id!,
+                                                totalMoney: temp.totalMoney,
+                                                deleteCallback: () async {
+                                                  isLoading.value = true;
 
-                                            await Utils.notifyHandle(
-                                              isClose: false,
-                                              response: result,
-                                              successTitle: 'Success',
-                                              successQuestion:
-                                                  'Delete Health Record Success',
-                                              errorTitle: 'ERROR',
-                                              errorQuestion:
-                                                  'Something occurred !!! Please check your internet connection',
-                                            );
-                                          },
-                                          viewCallback: () async {
-                                            await Get.dialog(
-                                              Dialog(
-                                                child: Container(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      0.9,
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20),
-                                                  ),
-                                                  child: HealthRecordDetail(
-                                                    healthRecord: temp,
-                                                    patient: PatientService
-                                                            .listPatients[
-                                                        patientId]!,
-                                                  ),
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        );
+                                                  bool result =
+                                                      await deleteButton(
+                                                          temp.id!,
+                                                          context,
+                                                          patientId);
+                                                  isLoading.value = false;
+
+                                                  await Utils.notifyHandle(
+                                                    isClose: false,
+                                                    response: result,
+                                                    successTitle: 'Success',
+                                                    successQuestion:
+                                                        'Delete Health Record Success',
+                                                    errorTitle: 'ERROR',
+                                                    errorQuestion:
+                                                        'Something occurred !!! Please check your internet connection',
+                                                  );
+                                                },
+                                                viewCallback: () async {
+                                                  await Get.dialog(
+                                                    Dialog(
+                                                      child: Container(
+                                                        width: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width *
+                                                            0.9,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(20),
+                                                        ),
+                                                        child:
+                                                            HealthRecordDetail(
+                                                          healthRecord: temp,
+                                                          patient: PatientService
+                                                                  .listPatients[
+                                                              patientId]!,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                              )
+                                            : const SizedBox();
                                       },
                                       itemCount: PatientService
-                                          .listPatients[patientId]!
-                                          .healthRecord!
-                                          .length,
+                                                  .listPatients[patientId]!
+                                                  .healthRecord !=
+                                              null
+                                          ? PatientService
+                                              .listPatients[patientId]!
+                                              .healthRecord!
+                                              .length
+                                          : 0,
                                     ),
                                   ),
                                 ),
