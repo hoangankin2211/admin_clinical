@@ -92,6 +92,28 @@ class PatientService {
     return result;
   }
 
+  static Future<Patient?> searchPatientById(BuildContext context,
+      {required String id}) async {
+    Patient? result;
+    try {
+      final res = await http.get(
+        Uri.parse('${ApiLink.uri}/api/searchPatientById/$id'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+      httpErrorHandle(
+          response: res,
+          context: context,
+          onSuccess: () {
+            result = Patient.fromJson(jsonDecode(res.body));
+          });
+    } catch (e) {
+      result = null;
+    }
+    return result;
+  }
+
   static Future<Map<String, dynamic>?> editPatient(
       Patient patient, BuildContext context) async {
     Map<String, dynamic>? result;
