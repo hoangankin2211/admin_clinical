@@ -20,6 +20,7 @@ class SocketService {
   IO.Socket? _socket;
 
   IO.Socket get socket {
+    print('initsocket');
     if (_socket == null) {
       _initSocket();
     }
@@ -33,8 +34,10 @@ class SocketService {
           .setTransports(['websocket'])
           .setQuery({
             'uniqueKey': UniqueKey().toString(),
-            'userType': AuthService.instance.user.type
+            'userType': AuthService.instance.user.type,
+            'userId': AuthService.instance.user.id,
           })
+          .disableReconnection()
           .enableForceNewConnection() // necessary because otherwise it would reuse old connection
           .disableAutoConnect()
           .build(),
@@ -87,7 +90,7 @@ class SocketService {
       NotificationModel? temp = await NotificationService.instance
           .getNotificationById(newNotificationId);
       if (temp != null) {
-        NotificationService.instance.listNotificatiion.add(temp);
+        NotificationService.instance.listNotification.add(temp);
       } else {
         print("Notification not existts");
       }
@@ -131,6 +134,7 @@ class SocketService {
         String newHealthRecordId = jsonData['healthRecord'];
         if (HealthRecordService.listHealthRecord
             .containsKey(newHealthRecordId)) {
+          print('here');
           return;
         }
         Map<String, dynamic>? healthRecordMap =
@@ -140,15 +144,13 @@ class SocketService {
           if (PatientService.listPatients[newHealthRecord.patientId] != null) {
             HealthRecordService.listHealthRecord
                 .addAll({newHealthRecordId: newHealthRecord});
-            if (PatientService
-                    .listPatients[newHealthRecord.patientId]!.healthRecord ==
-                null) {
-              PatientService.listPatients[newHealthRecord.patientId]!
-                  .healthRecord = [] as List<String>;
-            }
-            PatientService
-                .listPatients[newHealthRecord.patientId]!.healthRecord!
-                .add(newHealthRecordId);
+
+            PatientService.listPatients.update(newHealthRecord.patientId,
+                (value) {
+              value.healthRecord ??= [];
+              value.healthRecord!.add(newHealthRecordId);
+              return value;
+            });
           }
         } else {
           print("Health Record dose not exists");
@@ -193,6 +195,7 @@ class SocketService {
             newHealthRecord.id!,
             (value) => value = newHealthRecord,
           );
+          PatientService.listPatients.refresh();
         } else {
           print("Health Record dose not exists");
         }
@@ -226,8 +229,8 @@ class SocketService {
       'disconnect socket',
       {"msg": 'disconnect'},
     );
+    _socket!.disconnect();
     _socket!.destroy();
-    // _socket!.disconnect();
     _socket = null;
   }
 }

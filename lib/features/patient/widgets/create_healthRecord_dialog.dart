@@ -76,20 +76,16 @@ class CreateHealthRecordDialog extends StatelessWidget {
     return false;
   }
 
-  
-
-
   Future<Map<String, dynamic>> createNewHealthRecord(
       String patientId, BuildContext context) async {
     try {
-
       HealthRecord newRecord = HealthRecord(
         dateCreate: DateTime.now(),
         departmentId:
             DataService.instance.getIdDepartment(departmentCode.value),
         patientId: patientId,
         status: statusCode.value,
-        doctorId: AuthService.instance.user.id,
+        doctorId: '',
         totalMoney: 0,
         services: [],
         medicines: [],
@@ -144,7 +140,9 @@ class CreateHealthRecordDialog extends StatelessWidget {
                   List<String> temp = [];
                   value.healthRecord = temp;
                 }
-                value.healthRecord?.add(response['id'] as String);
+                if (!(value.healthRecord!.contains(response['id']))) {
+                  value.healthRecord?.add(response['id'] as String);
+                }
                 return value;
               });
               result = true;

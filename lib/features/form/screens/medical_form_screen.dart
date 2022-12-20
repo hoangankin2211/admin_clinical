@@ -34,6 +34,7 @@ class MedicalFormScreen extends StatelessWidget {
           init: MedicalFormController(),
           tag: tagBuilder,
           builder: (medicalFormController) {
+            print(healthRecordId?.doctorId);
             medicalFormController.currentHealthRecord.value = healthRecordId;
             medicalFormController.fetchIndicatorData();
 
@@ -148,27 +149,45 @@ class MedicalFormScreen extends StatelessWidget {
                               const SizedBox(width: 20),
                               ...listServiceChoice,
                               const Spacer(),
-                              TextButton.icon(
-                                style: ElevatedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 20, horizontal: 5),
-                                    backgroundColor: Colors.green),
-                                onPressed: () async {
-                                  medicalFormController.onPressedFinishButton(
-                                      context, backButton);
+                              Obx(
+                                () {
+                                  print(
+                                    medicalFormController
+                                        .currentHealthRecord.value!.doctorId,
+                                  );
+                                  return medicalFormController
+                                          .currentHealthRecord
+                                          .value!
+                                          .doctorId
+                                          .isNotEmpty
+                                      ? TextButton.icon(
+                                          style: ElevatedButton.styleFrom(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 20,
+                                                      horizontal: 5),
+                                              backgroundColor: Colors.green),
+                                          onPressed: () async {
+                                            medicalFormController
+                                                .onPressedFinishButton(
+                                                    context, backButton);
+                                          },
+                                          icon: const Icon(
+                                            Icons
+                                                .keyboard_double_arrow_right_outlined,
+                                            color: Colors.white,
+                                          ),
+                                          label: const Text(
+                                            'Finish Examination',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        )
+                                      : const SizedBox();
                                 },
-                                icon: const Icon(
-                                  Icons.keyboard_double_arrow_right_outlined,
-                                  color: Colors.white,
-                                ),
-                                label: const Text(
-                                  'Finish Examination',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
                               )
                             ],
                           ),

@@ -10,7 +10,7 @@ class NotificationService {
   NotificationService._privateConstructor();
   static final NotificationService instance =
       NotificationService._privateConstructor();
-  RxList<NotificationModel> listNotificatiion = RxList<NotificationModel>([]);
+  RxList<NotificationModel> listNotification = RxList<NotificationModel>([]);
 
   Future<NotificationModel?> getNotificationById(String id) async {
     NotificationModel? result;
@@ -61,9 +61,9 @@ class NotificationService {
         },
       );
       if (res.statusCode == 200) {
-        listNotificatiion.clear();
+        listNotification.clear();
         for (int i = 0; i < jsonDecode(res.body).length; i++) {
-          listNotificatiion
+          listNotification
               .add(NotificationModel.fromMap(jsonDecode(res.body)[i]));
         }
       }

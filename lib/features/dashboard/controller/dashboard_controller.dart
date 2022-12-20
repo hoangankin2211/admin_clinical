@@ -202,8 +202,15 @@ class DashboardController extends GetxController {
   }
 
   @override
+  // TODO: implement onDelete
+  InternalFinalCallback<void> get onDelete {
+    SocketService.instance.disconnect();
+    return super.onDelete;
+  }
+
+  @override
   void dispose() {
-    // TODO: implement dispose
+    print("Dashboard controller dispose");
     SocketService.instance.disconnect();
     super.dispose();
   }

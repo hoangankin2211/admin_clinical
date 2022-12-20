@@ -47,7 +47,7 @@ class DashboardHeader extends StatelessWidget {
               child: Badge(
                 elevation: 1,
                 badgeContent: Text(
-                  NotificationService.instance.listNotificatiion.length
+                  NotificationService.instance.listNotification.length
                       .toString(),
                   style: const TextStyle(
                       color: Colors.white, fontWeight: FontWeight.bold),
@@ -63,7 +63,7 @@ class DashboardHeader extends StatelessWidget {
                   // Callback that sets the selected popup menu item.
                   onSelected: (Menu item) {},
                   itemBuilder: (BuildContext context) => <PopupMenuEntry<Menu>>[
-                    ...NotificationService.instance.listNotificatiion.map(
+                    ...NotificationService.instance.listNotification.map(
                       (element) => PopupMenuItem<Menu>(
                         value: Menu.itemFour,
                         child: NotificationItem(
