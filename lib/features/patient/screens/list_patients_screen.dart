@@ -36,7 +36,7 @@ class ListPatientScreen extends StatelessWidget {
   ListPatientScreen({super.key});
   final patientPageController = Get.find<PatientPageController>();
 
-  Rx<DateTime> _currentDateTime = DateTime.now().obs;
+  final Rx<DateTime> _currentDateTime = DateTime.now().obs;
 
   void _onSelectionAction(
       String value, int index, BuildContext context, Patient patient) async {
@@ -299,8 +299,10 @@ class ListPatientScreen extends StatelessWidget {
                               builder: (controller) => Obx(
                                 () => ListView.builder(
                                   itemExtent: 60,
-                                  itemCount: patientPageController
-                                      .numberOfEntries.value,
+                                  itemCount:
+                                      patientPageController.data.value.length -
+                                          patientPageController
+                                              .numberOfEntries.value,
                                   itemBuilder: (context, index) {
                                     Patient tempPatient = patientPageController
                                         .data.value.values
@@ -309,10 +311,9 @@ class ListPatientScreen extends StatelessWidget {
                                       onClick: () => patientPageController
                                           .selectedPatient
                                           .value = tempPatient.id,
-                                      onSelectedAction: (value) {
-                                        _onSelectionAction(
-                                            value, index, context, tempPatient);
-                                      },
+                                      onSelectedAction: (value) =>
+                                          _onSelectionAction(value, index,
+                                              context, tempPatient),
                                       removeEntries:
                                           patientPageController.removeEntries,
                                       name: tempPatient.name,

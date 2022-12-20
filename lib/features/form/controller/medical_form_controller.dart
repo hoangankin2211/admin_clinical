@@ -224,15 +224,50 @@ class MedicalFormController extends GetxController {
         if (temp != null) {
           InvoiceService.instance.listInvoice.add(temp);
         }
-        HealthRecordService.listHealthRecord[currentHealthRecord.value!.id!]!
-            .status = "Waiting Payment";
-        editHealthRecordData(HealthRecordService
-            .listHealthRecord[currentHealthRecord.value!.id!]!
-            .toMap());
+
+        await editStatusHealthRecord(
+          currentHealthRecord.value!.id!,
+          "Waiting  ",
+        );
 
         isLoading.value = false;
         backButton();
       }
+    }
+  }
+
+  Future<void> editStatusHealthRecord(String id, String status) async {
+    try {
+      isLoading.value = true;
+      final response = await http.post(
+        Uri.parse('${ApiLink.uri}/api/updateHealthRecordStatus'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(
+          {
+            'id': id,
+            'status': status,
+          },
+        ),
+      );
+      isLoading.value = false;
+      final extractData = jsonDecode(response.body);
+      if (extractData != null) {
+        if (extractData['isSuccess'] != null &&
+            extractData['isSuccess'] == true &&
+            extractData['id'] != null) {
+          HealthRecordService.listHealthRecord.update(
+            id,
+            (value) {
+              value.status = status;
+              return value;
+            },
+          );
+        }
+      }
+    } catch (e) {
+      print(e.toString());
     }
   }
 

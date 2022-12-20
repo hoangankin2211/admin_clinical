@@ -29,7 +29,7 @@ class PatientPageController extends GetxController {
         if (patientName.value.text.isEmpty && patientId.value.text.isEmpty) {
           print('here');
           data.value = (PatientService.listPatients);
-          numberOfEntries.value = data.value.length;
+          numberOfEntries.value = 0;
           update(['list_patients_screen']);
         }
       },
@@ -40,7 +40,7 @@ class PatientPageController extends GetxController {
 
   void onPressedRefreshButton() {
     data.value = PatientService.listPatients;
-    numberOfEntries.value = data.value.length;
+    numberOfEntries.value = 0;
     update(['list_patients_screen']);
   }
 
@@ -55,7 +55,7 @@ class PatientPageController extends GetxController {
         }
       }
       data.value = searchingPatient;
-      numberOfEntries.value = data.value.length;
+      numberOfEntries.value = 0;
       update(['list_patients_screen']);
     } catch (e) {
       print('getPatientAccordingKey: $e');
@@ -67,9 +67,6 @@ class PatientPageController extends GetxController {
   void onReady() {
     PatientService.listPatients.listen((newData) {
       data.value = (newData);
-      if (numberOfEntries.value == data.value.length - 1) {
-        numberOfEntries.value++;
-      }
       update(['list_patients_screen']);
     });
     super.onReady();
@@ -77,20 +74,20 @@ class PatientPageController extends GetxController {
 
   void applyEntries(int value) {
     if (value >= 0 && value <= data.value.length) {
-      numberOfEntries.value = value;
+      numberOfEntries.value = data.value.length - value;
     }
   }
 
   void removeEntries(String id) {
-    PatientService.listPatients.removeWhere((key, value) => key == id);
-    numberOfEntries.value--;
+    PatientService.listPatients.remove(id);
+    // numberOfEntries.value--;
   }
 
   void addEntries(Map<String, Patient> newPatient) {
     PatientService.listPatients.addAll(newPatient);
   }
 
-  late var numberOfEntries = (data.value.length).obs;
+  late var numberOfEntries = 0.obs;
 
   Future<bool> addPatientToDataBase(
       Patient patient, BuildContext context) async {

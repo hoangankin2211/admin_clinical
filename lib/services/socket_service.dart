@@ -55,13 +55,21 @@ class SocketService {
 
   void _setUpServerListenerEvent() async {
     Future(
-      () => _socket!.on(
+      () => _socket?.on(
         'serverNotify',
         (jsonData) async {
           if (jsonData['msg'] == 'newPatient') {
             _newPatientHandle(jsonData);
           } else if (jsonData['msg'] == 'newHealthRecord') {
             _newHealthRecordHandle(jsonData);
+          } else if (jsonData['msg'] == 'deleteHealthRecord') {
+            _deleteHealthRecordHandle(jsonData);
+          } else if (jsonData['msg'] == 'deletePatient') {
+            _deletePatientHandle(jsonData);
+          } else if (jsonData['msg'] == 'editHealthRecord') {
+            _editHealthRecord(jsonData);
+          } else if (jsonData['msg'] == 'updateHealthRecordStatus') {
+            _updateStatusHealthRecordHandle(jsonData);
           }
         },
       ),
@@ -87,6 +95,18 @@ class SocketService {
     );
   }
 
+  void _deletePatientHandle(jsonData) async {
+    Future(
+      () {
+        print('here _deletePatientHandle');
+        String patientId = jsonData['patient'];
+        if (PatientService.listPatients.containsKey(patientId)) {
+          PatientService.listPatients.remove(patientId);
+        }
+      },
+    );
+  }
+
   void _newHealthRecordHandle(jsonData) async {
     Future(
       () async {
@@ -99,11 +119,86 @@ class SocketService {
             await HealthRecordService.getHealthRecordById(newHealthRecordId);
         if (healthRecordMap != null) {
           HealthRecord newHealthRecord = HealthRecord.fromJson(healthRecordMap);
-          HealthRecordService.listHealthRecord
-              .addAll({newHealthRecordId: newHealthRecord});
+          if (PatientService.listPatients[newHealthRecord.patientId] != null) {
+            HealthRecordService.listHealthRecord
+                .addAll({newHealthRecordId: newHealthRecord});
+            if (PatientService
+                    .listPatients[newHealthRecord.patientId]!.healthRecord ==
+                null) {
+              PatientService.listPatients[newHealthRecord.patientId]!
+                  .healthRecord = [] as List<String>;
+            }
+            PatientService
+                .listPatients[newHealthRecord.patientId]!.healthRecord!
+                .add(newHealthRecordId);
+          }
         } else {
           print("Health Record dose not exists");
         }
+      },
+    );
+  }
+
+  void _deleteHealthRecordHandle(jsonData) async {
+    Future(
+      () {
+        print('here _deleteHealthRecordHandle');
+        String removeRecordId = jsonData['id'];
+        String patientId = jsonData['patientId'];
+        HealthRecordService.listHealthRecord.remove(removeRecordId);
+        PatientService.listPatients.update(patientId, (value) {
+          if (value.healthRecord == null) {
+            value.healthRecord = [] as List<String>;
+          } else {
+            value.healthRecord?.remove(removeRecordId);
+          }
+          return value;
+        });
+      },
+    );
+  }
+
+  void _editHealthRecord(jsonData) async {
+    Future(
+      () async {
+        print('here _editHealthRecord');
+        String newHealthRecordId = jsonData['healthRecord'];
+        if (!HealthRecordService.listHealthRecord
+            .containsKey(newHealthRecordId)) {
+          return;
+        }
+        Map<String, dynamic>? healthRecordMap =
+            await HealthRecordService.getHealthRecordById(newHealthRecordId);
+        if (healthRecordMap != null) {
+          HealthRecord newHealthRecord = HealthRecord.fromJson(healthRecordMap);
+          HealthRecordService.listHealthRecord.update(
+            newHealthRecord.id!,
+            (value) => value = newHealthRecord,
+          );
+        } else {
+          print("Health Record dose not exists");
+        }
+      },
+    );
+  }
+
+  void _updateStatusHealthRecordHandle(jsonData) {
+    Future(
+      () async {
+        print('here _updateStatusHealthRecordHandle');
+        String newHealthRecordId = jsonData['healthRecord'];
+        String newStatus = jsonData['status'];
+        if (!HealthRecordService.listHealthRecord
+            .containsKey(newHealthRecordId)) {
+          return;
+        }
+        HealthRecordService.listHealthRecord.update(
+          newHealthRecordId,
+          (value) {
+            value.status = newStatus;
+            return value;
+          },
+        );
       },
     );
   }
