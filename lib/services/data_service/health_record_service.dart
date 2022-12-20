@@ -7,7 +7,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 import '../../constants/api_link.dart';
-import '../../models/patient.dart';
 import 'package:http/http.dart' as http;
 
 class HealthRecordService {
@@ -39,6 +38,30 @@ class HealthRecordService {
       print('fetchAllHealthRecordData:::::${e.toString()}');
       rethrow;
     }
+  }
+
+  static Future<Map<String, dynamic>?> getHealthRecordById(String id) async {
+    Map<String, dynamic>? healthRecordMap;
+
+    try {
+      final response = await http.get(
+        Uri.parse("${ApiLink.uri}/api/getHealthRecordById"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'id': id,
+        },
+      ).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        final extractData = jsonDecode(response.body);
+        print(extractData);
+        healthRecordMap = extractData['healthRecord'];
+      }
+    } catch (e) {
+      print("getHealthRecordById:  $e");
+    }
+
+    return healthRecordMap;
   }
 
   static Future<String?> insertHealthRecord(

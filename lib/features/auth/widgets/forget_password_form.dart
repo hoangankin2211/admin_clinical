@@ -149,7 +149,7 @@ class EnterEmailPage extends StatelessWidget {
                             _isLoading.value = true;
                             final response = await AuthService.instance
                                 .forgetPassword(context, textController.text,
-                                    SocketService.socket)
+                                    SocketService.instance.socket)
                                 .timeout(const Duration(seconds: 10));
                             if (response['isSentLink'] as bool) {
                               _isLoading.value = false;
@@ -195,7 +195,7 @@ class VerifiedAnnouncementScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SocketService.socket.on('verify', (jsonData) {
+    SocketService.instance.socket.on('verify', (jsonData) {
       print(jsonData);
       Future.delayed(
         const Duration(seconds: 2),

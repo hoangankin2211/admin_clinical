@@ -30,7 +30,7 @@ class LoginForm extends StatelessWidget {
           children: [
             GestureDetector(
               onTap: () => print(
-                  "SocketService.socket.connected:${SocketService.socket.connected}"),
+                  "SocketService.socket.connected:${SocketService.instance.socket.connected}"),
               child: Text(
                 'Login',
                 style: Theme.of(context).textTheme.headline1,
