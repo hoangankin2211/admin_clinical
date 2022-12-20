@@ -64,6 +64,34 @@ class HealthRecordService {
     return healthRecordMap;
   }
 
+  static Future<String?> addHealthRecord(
+      Map<String, dynamic> healthRecord, BuildContext context) async {
+    String? result;
+    try {
+      final response = await http.post(
+        Uri.parse('${ApiLink.uri}/api/addHealthRecord/'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(healthRecord),
+      );
+      print(response.body);
+      httpErrorHandle(
+        response: response,
+        context: context,
+        onSuccess: () {
+          final decodeResponse = jsonDecode(response.body);
+          print(decodeResponse);
+          result = decodeResponse['id'];
+        },
+      );
+    } catch (e) {
+      result = null;
+      print('insertHealthRecord:$e');
+    }
+    return result;
+  }
+
   static Future<String?> insertHealthRecord(
     Map<String, dynamic> healthRecord,
     BuildContext context,
@@ -89,7 +117,7 @@ class HealthRecordService {
           },
           body: jsonEncode(healthRecord),
         );
-
+        print(response.body);
         httpErrorHandle(
           response: response,
           context: context,

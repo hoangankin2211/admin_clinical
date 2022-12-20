@@ -1,9 +1,11 @@
 import 'package:admin_clinical/features/dashboard/controller/dashboard_controller.dart';
 import 'package:admin_clinical/features/dashboard/widgets/setting_popup_item.dart';
 import 'package:admin_clinical/services/auth_service/auth_service.dart';
+import 'package:admin_clinical/services/data_service/notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:badges/badges.dart';
 
 import 'notification_item.dart';
 
@@ -39,23 +41,43 @@ class DashboardHeader extends StatelessWidget {
               ),
             ),
           ),
-          PopupMenuButton<Menu>(
-              tooltip: "Notification",
-              child:
-                  const Icon(Icons.notifications_outlined, color: Colors.black),
-              // Callback that sets the selected popup menu item.
-              onSelected: (Menu item) {},
-              itemBuilder: (BuildContext context) => <PopupMenuEntry<Menu>>[
-                    for (int i = 0; i < 5; i++)
-                      PopupMenuItem<Menu>(
+          Obx(() {
+            return Align(
+              alignment: Alignment.topRight,
+              child: Badge(
+                elevation: 1,
+                badgeContent: Text(
+                  NotificationService.instance.listNotificatiion.length
+                      .toString(),
+                  style: const TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+                badgeColor: Colors.red,
+                child: PopupMenuButton<Menu>(
+                  tooltip: "Notification",
+                  child: const Icon(
+                    Icons.notifications_outlined,
+                    color: Colors.black,
+                    size: 24,
+                  ),
+                  // Callback that sets the selected popup menu item.
+                  onSelected: (Menu item) {},
+                  itemBuilder: (BuildContext context) => <PopupMenuEntry<Menu>>[
+                    ...NotificationService.instance.listNotificatiion.map(
+                      (element) => PopupMenuItem<Menu>(
                         value: Menu.itemFour,
                         child: NotificationItem(
-                          mainTitle: 'You have new notification about patient',
-                          time: DateTime.now(),
+                          mainTitle: element.title!,
+                          time: element.time!,
                           type: 9,
                         ),
                       ),
-                  ]),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }),
           SizedBox(
             width: width,
             child: ListTile(

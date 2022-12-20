@@ -1,12 +1,14 @@
 import 'dart:convert';
 
 import 'package:admin_clinical/services/data_service/health_record_service.dart';
+import 'package:admin_clinical/services/data_service/notification_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import '../constants/api_link.dart';
 import '../models/health_record.dart';
+import '../models/notification.dart';
 import '../models/patient.dart';
 import 'auth_service/auth_service.dart';
 import 'data_service/patient_service.dart';
@@ -70,10 +72,26 @@ class SocketService {
             _editHealthRecord(jsonData);
           } else if (jsonData['msg'] == 'updateHealthRecordStatus') {
             _updateStatusHealthRecordHandle(jsonData);
+          } else if (jsonData['msg'] == 'newNotification') {
+            _newNotificationHandle(jsonData);
           }
         },
       ),
     );
+  }
+
+  void _newNotificationHandle(jsonData) async {
+    print("notification update is called");
+    Future(() async {
+      String newNotificationId = jsonData['notification'];
+      NotificationModel? temp = await NotificationService.instance
+          .getNotificationById(newNotificationId);
+      if (temp != null) {
+        NotificationService.instance.listNotificatiion.add(temp);
+      } else {
+        print("Notification not existts");
+      }
+    });
   }
 
   void _newPatientHandle(jsonData) async {
