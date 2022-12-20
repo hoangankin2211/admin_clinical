@@ -9,6 +9,7 @@ import 'package:admin_clinical/features/overview/screens/overview_screen.dart';
 import 'package:admin_clinical/features/patient/controller/patient_page_controller.dart';
 import 'package:admin_clinical/features/patient/screens/list_patients_screen.dart';
 import 'package:admin_clinical/features/settings/screen/setting_main_screen.dart';
+import 'package:admin_clinical/models/service.dart';
 import 'package:admin_clinical/services/data_service/data_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
@@ -17,6 +18,7 @@ import 'package:get/get.dart';
 
 import '../../../models/user.dart';
 import '../../../services/auth_service/auth_service.dart';
+import '../../../services/socket_service.dart';
 import '../../clinical_room/controller/clinical_room_controller.dart';
 import '../../dec_doctor_examination/controller/dec_doctor_examination_controller.dart';
 import '../../dec_doctor_examination/controller/doctor_examination_controller.dart';
@@ -38,6 +40,9 @@ class DashboardController extends GetxController {
   @override
   void onReady() async {
     bool response = await setUserIfNeed();
+
+    SocketService.instance.connectSocket();
+
     if (AuthService.instance.user.type == "Doctor") {
       DataService.instance.getDoctorRole(AuthService.instance.user.id);
     }
@@ -190,5 +195,12 @@ class DashboardController extends GetxController {
     if (index >= 0 && index < listPageRole[user!.type]!.length) {
       pageIndex.value = index;
     }
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    SocketService.instance.disconnect();
+    super.dispose();
   }
 }

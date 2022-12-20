@@ -12,7 +12,7 @@ class DecDoctExaminationController extends GetxController {
   RxMap<String, Patient> listPatient = PatientService.listPatients;
   RxString selectRecords = "".obs;
   RxString selectRecords1 = "".obs;
-  RxList<String> lRole = ['Waitting Patient', 'Completed'].obs;
+  RxList<String> lRole = ['Waiting Patient', 'Completed'].obs;
   RxInt selectRole = 0.obs;
 
   // Rx

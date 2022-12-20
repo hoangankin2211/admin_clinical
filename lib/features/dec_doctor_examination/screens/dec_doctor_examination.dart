@@ -1,20 +1,15 @@
 import 'package:admin_clinical/constants/global_widgets/custom_button.dart';
 import 'package:admin_clinical/features/dec_doctor_examination/controller/dec_doctor_examination_controller.dart';
-import 'package:admin_clinical/features/patient/screens/list_patients_screen.dart';
 import 'package:admin_clinical/services/auth_service/auth_service.dart';
 import 'package:admin_clinical/services/data_service/data_service.dart';
-import 'package:admin_clinical/services/data_service/health_record_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_decoration.dart';
 import '../controller/doctor_examination_controller.dart';
-import '../widgets/examination_item.dart';
 import '../widgets/patient_wait_item.dart';
-import '../widgets/row_examination_tem.dart';
 
 // ignore: must_be_immutable
 class DecDoctorExamination extends StatelessWidget {
@@ -34,9 +29,6 @@ class DecDoctorExamination extends StatelessWidget {
           Expanded(
             flex: 3,
             child: Container(
-              // height: checkAnimation.value
-              //     ? constraints.maxHeight * 3 / 5 - 10
-              //     : 120,
               padding: const EdgeInsets.all(15.0),
               margin: const EdgeInsets.all(10.0),
               decoration: BoxDecoration(

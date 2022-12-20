@@ -7,7 +7,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 import '../../constants/api_link.dart';
-import '../../models/patient.dart';
 import 'package:http/http.dart' as http;
 
 class HealthRecordService {
@@ -41,31 +40,28 @@ class HealthRecordService {
     }
   }
 
-  static Future<String?> addHealthRecord(
-      Map<String, dynamic> healthRecord, BuildContext context) async {
-    String? result;
+  static Future<Map<String, dynamic>?> getHealthRecordById(String id) async {
+    Map<String, dynamic>? healthRecordMap;
+
     try {
-      final response = await http.post(
-        Uri.parse('${ApiLink.uri}/api/addHealthRecord/'),
+      final response = await http.get(
+        Uri.parse("${ApiLink.uri}/api/getHealthRecordById"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'id': id,
         },
-        body: jsonEncode(healthRecord),
-      );
-      print(response.body);
-      httpErrorHandle(
-        response: response,
-        context: context,
-        onSuccess: () {
-          final decodeResponse = jsonDecode(response.body);
-          print(decodeResponse);
-          result = decodeResponse['id'];
-        },
-      );
+      ).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        final extractData = jsonDecode(response.body);
+        print(extractData);
+        healthRecordMap = extractData['healthRecord'];
+      }
     } catch (e) {
-      result = null;
+      print("getHealthRecordById:  $e");
     }
-    return result;
+
+    return healthRecordMap;
   }
 
   static Future<String?> insertHealthRecord(

@@ -33,18 +33,6 @@ class PatientService {
           listPatients.addAll({map['_id']: Patient.fromJson(map)});
         }
 
-        SocketService.socket.on('newPatient', (jsonData) async {
-          String newPatientId = jsonData['patient'];
-          print(newPatientId);
-          Map<String, dynamic>? patientMap = await getPatientById(newPatientId);
-          print(patientMap);
-          if (patientMap != null) {
-            Patient newPatient = Patient.fromJson(patientMap);
-            listPatients.addAll({newPatient.id: newPatient});
-          } else {
-            print("patient not exists");
-          }
-        });
         DataService.instance.checkFetchData.add(1);
       }
     } catch (e) {
