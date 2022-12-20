@@ -6,6 +6,7 @@ import 'package:admin_clinical/models/health_record.dart';
 import 'package:admin_clinical/models/patient.dart';
 import 'package:admin_clinical/services/data_service/data_service.dart';
 import 'package:admin_clinical/services/data_service/health_record_service.dart';
+import 'package:admin_clinical/services/data_service/notification_service.dart';
 import 'package:admin_clinical/services/data_service/patient_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -19,8 +20,14 @@ class DpPatinetController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    fetchAllBasicData();
     listPatinet = PatientService.listPatients;
     listDoctor = DataService.instance.listDoctor;
+  }
+
+  Future<bool> fetchAllBasicData() async {
+    print("Fetch all data is called");
+    return await DataService.instance.fetchAllData();
   }
 
   //Booking appointment field
@@ -74,32 +81,49 @@ class DpPatinetController extends GetxController {
       Get.dialog(
           const ErrorDialog(question: "Booking Appointment", title1: "Failed"));
     } else {
-      HealthRecord newRecord = HealthRecord(
-        dateCreate: DateTime.now(),
-        departmentId: "01",
-        patientId: selectPatient.value.id,
-        status: "Waiting Examination",
-        doctorId: "",
-        totalMoney: 0,
-        services: [],
-        medicines: [],
-      );
-      Map<String, dynamic> newRecordMap = newRecord.toMap();
-      final response =
-          await HealthRecordService.addHealthRecord(newRecordMap, Get.context!);
-      if (response != null) {
-        try {
-          final updatePatientResponse = await _updatePatientRecord(
-            selectPatient.value.id,
-            response,
-          );
-          if (updatePatientResponse) {
-            Get.dialog(const SuccessDialog(
-                question: "Booking Appointment", title1: "Success"));
-          }
-        } catch (err) {
-          print("Some error: $err");
+      bool check = false;
+      // HealthRecordService.listHealthRecord.forEach((key, value) {});
+
+      for (var item in HealthRecordService.listHealthRecord.values) {
+        if (item.patientId == selectPatient.value.id &&
+            item.status == "Waiting Examination") {
+          check = true;
+          break;
         }
+      }
+      if (!check) {
+        HealthRecord newRecord = HealthRecord(
+          dateCreate: DateTime.now(),
+          departmentId: "01",
+          patientId: selectPatient.value.id,
+          status: "Waiting Examination",
+          doctorId: "",
+          totalMoney: 0,
+          services: [],
+          medicines: [],
+        );
+        Map<String, dynamic> newRecordMap = newRecord.toMap();
+        final response = await HealthRecordService.addHealthRecord(
+            newRecordMap, Get.context!);
+        if (response != null) {
+          try {
+            final updatePatientResponse = await _updatePatientRecord(
+              selectPatient.value.id,
+              response,
+            );
+            if (updatePatientResponse) {
+              NotificationService.instance
+                  .insertNotification("You have appointment from Patient");
+              Get.dialog(const SuccessDialog(
+                  question: "Booking Appointment", title1: "Success"));
+            }
+          } catch (err) {
+            print("Some error: $err");
+          }
+        }
+      } else {
+        Get.dialog(const ErrorDialog(
+            question: "Create Health Record", title1: "Wating  Examination"));
       }
     }
   }

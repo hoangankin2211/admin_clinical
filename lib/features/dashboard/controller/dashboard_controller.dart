@@ -18,6 +18,7 @@ import 'package:get/get.dart';
 
 import '../../../models/user.dart';
 import '../../../services/auth_service/auth_service.dart';
+import '../../../services/data_service/notification_service.dart';
 import '../../../services/socket_service.dart';
 import '../../clinical_room/controller/clinical_room_controller.dart';
 import '../../dec_doctor_examination/controller/dec_doctor_examination_controller.dart';
@@ -47,6 +48,9 @@ class DashboardController extends GetxController {
       DataService.instance.getDoctorRole(AuthService.instance.user.id);
     }
     response = await fetchAllBasicData();
+    if (AuthService.instance.user.type == "Admin") {
+      await NotificationService.instance.fetchAllNotificationModelData();
+    }
     if (response) {
       response = await _initializeAllController();
       if (response) {
