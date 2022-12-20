@@ -7,8 +7,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 import '../../../constants/app_colors.dart';
+import '../../../constants/global_widgets/custom_dialog_error/error_dialog.dart';
+import '../../../constants/global_widgets/custom_dialog_error/success_dialog.dart';
 import '../../../constants/utils.dart';
+import '../../../models/patient.dart';
 import '../../../services/data_service/data_service.dart';
+import '../../../services/data_service/notification_service.dart';
 import '../../auth/widgets/custom_button.dart';
 import '../../patient/widgets/custom_text_form_field.dart';
 import '../controller/dp_patinet_contnrolller.dart';
@@ -53,6 +57,51 @@ class _DpCreateIdTabState extends State<DpCreateIdTab> {
   TextEditingController symptomController = TextEditingController();
   TextEditingController dobController = TextEditingController();
   DateTime currentDateTime = DateTime.now();
+
+  final RxBool _isLoading = false.obs;
+
+  void _handleProcessInsertData(BuildContext context) async {
+    _isLoading.value = true;
+
+    String? result =
+        await Utils.convertAssetsToUrl(_image, emailController.text);
+
+    final response = await controller.addPatientToDataBase(
+      Patient(
+        id: '',
+        name: fullNameController.text,
+        gender: genderCode.value,
+        email: emailController.text,
+        address: locationController.text,
+        dob: dobController.text,
+        phoneNumber: "${phoneCode.value} ${phoneNumberController.text}",
+        status: statusCode.value,
+        avt: result,
+        symptom: symptomController.text,
+        healthRecord: [],
+      ),
+      Get.context ?? context,
+    );
+    if (response) {
+      NotificationService.instance
+          .insertNotification("You have a Patient create ID");
+      await Get.dialog(
+        const SuccessDialog(
+            question: 'Add Patient Success',
+            title1: 'Added new patient to database'),
+      );
+      Get.back();
+    } else {
+      Get.dialog(
+        const ErrorDialog(
+          question: 'ERROR',
+          title1: 'Can\'t create new patient !!! Some error have occurred',
+        ),
+      );
+      Get.back();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -392,7 +441,9 @@ class _DpCreateIdTabState extends State<DpCreateIdTab> {
             const SizedBox(width: 10.0),
             SizedBox(
                 height: 40.0,
-                child: CustomButton(title: 'Create', onPressed: () {})),
+                child: CustomButton(
+                    title: 'Create',
+                    onPressed: () => _handleProcessInsertData(context))),
           ],
         ),
       ],
