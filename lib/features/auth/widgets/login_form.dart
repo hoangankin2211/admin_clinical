@@ -38,18 +38,18 @@ class LoginForm extends StatelessWidget {
                 alignment: Alignment.center,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      'images/google.png',
+                  children: const [
+                    Image(
+                      image: AssetImage('assets/images/google.png'),
                       fit: BoxFit.cover,
                       filterQuality: FilterQuality.high,
                       height: 30,
                       width: 30,
                     ),
-                    const SizedBox(
+                    SizedBox(
                       width: 10,
                     ),
-                    const Text(
+                    Text(
                       'Login with Google',
                       style: TextStyle(
                         color: Colors.black,

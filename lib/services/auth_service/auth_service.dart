@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:admin_clinical/constants/global_widgets/custom_dialog_error/error_dialog.dart';
 import 'package:admin_clinical/routes/name_route.dart';
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -107,9 +106,7 @@ class AuthService extends ChangeNotifier {
       print("sign in function is called");
       var client = http.Client();
       http.Response res = await client.post(
-        Uri.parse(
-          '${ApiLink.uri}/api/signin',
-        ),
+        Uri.parse('${ApiLink.uri}/api/signin'),
         body: jsonEncode(
           {
             'email': email,
@@ -120,11 +117,12 @@ class AuthService extends ChangeNotifier {
           'Content-Type': 'application/json; charset=UTF-8',
         },
       );
-
+      print('here');
       httpErrorHandle(
         response: res,
         context: context,
         onSuccess: () async {
+          print('Login successful');
           result = true;
           SharedPreferences prefs = await SharedPreferences.getInstance();
           AuthService.instance.setUser(res.body);
