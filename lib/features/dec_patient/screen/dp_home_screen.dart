@@ -10,6 +10,40 @@ import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
+List<IconData> listIcon = [
+  FontAwesomeIcons.facebook,
+  FontAwesomeIcons.twitter,
+  FontAwesomeIcons.instagram,
+  FontAwesomeIcons.youtube,
+  FontAwesomeIcons.message,
+];
+
+List<Map<String, dynamic>> listIconTitleRow = [
+  {
+    'icon': Icons.location_pin,
+    'title': ' 35/37 Rohtak Road, West Punjabi Bagh New Delhi – 110026'
+  },
+  {'icon': Icons.mail, 'title': ' info@mgshospital.com'},
+  {'icon': Icons.phone, 'title': ' +91 11 4511 1444'},
+];
+
+List<String> listServices = [
+  'Patient Care',
+  'Ambulance Services',
+  'Intensive Care Services',
+  'Laboratory Services',
+  'Imaging Services',
+  '24 Hrs Services',
+];
+List<String> listAboutMgs = [
+  'About Organization',
+  'Chairman\'s Message',
+  'Doctors',
+  'Career',
+  'Blogs',
+  'Contact us',
+];
+
 class DpHomeScreen extends StatelessWidget {
   DpHomeScreen({super.key});
   final controller = Get.put(DpPatinetController());
@@ -89,28 +123,206 @@ class HomePage extends StatelessWidget {
                 icon: FontAwesome.medkit,
               ),
               SizedBox(
-                width: 50.0,
+                width: 100.0,
               ),
               RowFunc(
                 title: 'Consult Online',
                 subitle: 'Talk to a doctor online',
-                icon: FontAwesome.medkit,
+                icon: Icons.phone,
               ),
               SizedBox(
-                width: 50.0,
+                width: 100.0,
               ),
               RowFunc(
                 title: 'Book Health Check ',
                 subitle: 'Book a test online',
-                icon: FontAwesome.medkit,
+                icon: Icons.file_copy,
               ),
             ],
           ),
         ),
-        Container(
-            width: Get.width,
-            height: Get.height / 2.5,
-            color: Color.fromARGB(255, 3, 49, 87)),
+        SizedBox(
+          width: Get.width,
+          height: Get.height / 2.5,
+          child: Stack(
+            children: [
+              Container(
+                width: Get.width,
+                height: Get.height / 2.2,
+                decoration: const BoxDecoration(
+                  color: Color.fromARGB(255, 3, 49, 87),
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: AssetImage(
+                      "images/background_login.jpg",
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                width: Get.width,
+                height: Get.height / 2.5,
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.black54,
+                      Colors.black87,
+                    ],
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: SizedBox(
+                        width: Get.width / 1.8,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10.0),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'About MGS',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 22.0,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 5.0),
+                                    ...listAboutMgs.map((e) => InkWell(
+                                          onTap: () {},
+                                          child: Text(
+                                            e,
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ))
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10.0),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'Services',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 22.0,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 5.0),
+                                    ...listServices.map((e) => InkWell(
+                                          onTap: () {},
+                                          child: Text(
+                                            e,
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ))
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10.0),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset(
+                                      'assets/icons/app_icon.png',
+                                      height: 100.0,
+                                      width: 100.0,
+                                    ),
+                                    const SizedBox(height: 20.0),
+                                    Row(
+                                      children: listIcon
+                                          .map((e) => Expanded(
+                                                child: InkWell(
+                                                  onTap: () {},
+                                                  child: Icon(
+                                                    e,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              ))
+                                          .toList(),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 2,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'MGS SUPER SPECIALITY HOSPITAL',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 22.0,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 5.0),
+                                    ...listIconTitleRow.map(
+                                      (e) => Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 5.0),
+                                        child: Row(
+                                          children: [
+                                            Icon(e['icon'],
+                                                color: Colors.white),
+                                            Text(
+                                              e['title'],
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const Text(
+                      '2021 © All right reserved. MGS Super Speciality Hospital Made by passion  iBrandox Online Pvt. Ltd.',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    const SizedBox(height: 50.0),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ]),
     );
   }
@@ -195,7 +407,7 @@ class DoctorViewField extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 40.0),
-              Text(
+              const Text(
                 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. ',
                 textAlign: TextAlign.center,
                 style: TextStyle(
@@ -206,92 +418,101 @@ class DoctorViewField extends StatelessWidget {
               ),
               const SizedBox(height: 40.0),
               Obx(
-                () => Row(
-                  children: [
-                    for (int i = 0; i < 3; i++)
-                      Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.all(20.0),
-                          margin: const EdgeInsets.symmetric(horizontal: 60.0),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20.0),
-                            color: Colors.white,
-                            boxShadow: const [
-                              BoxShadow(
-                                  color: Colors.black26, blurRadius: 10.0),
-                            ],
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                width: double.infinity,
-                                height: 400,
+                () => (DataService.instance.listDoctor.isEmpty)
+                    ? const Center(
+                        child: CircularProgressIndicator(
+                            color: AppColors.primaryColor))
+                    : Row(
+                        children: [
+                          for (int i = 0; i < 3; i++)
+                            Expanded(
+                              child: Container(
+                                padding: const EdgeInsets.all(20.0),
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 60.0),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(20.0),
-                                  image: DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: NetworkImage(DataService
-                                        .instance.listDoctor[i].avt!),
-                                  ),
+                                  color: Colors.white,
+                                  boxShadow: const [
+                                    BoxShadow(
+                                        color: Colors.black26,
+                                        blurRadius: 10.0),
+                                  ],
                                 ),
-                              ),
-                              const SizedBox(height: 20.0),
-                              Text(
-                                DataService.instance.listDoctor[i].name!,
-                                style: const TextStyle(
-                                    color: AppColors.headline1TextColor,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 26.0),
-                              ),
-                              Text(
-                                'Khoa Than Kinh',
-                                style: const TextStyle(
-                                    color: AppColors.primaryColor,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 26.0),
-                              ),
-                              const Divider(thickness: 1),
-                              const SizedBox(height: 10.0),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Ratings:",
-                                    style: const TextStyle(
-                                      color: AppColors.primaryColor,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 22.0,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 20.0),
-                                  Row(
-                                    children: [
-                                      const Icon(Icons.star,
-                                          color: Colors.yellowAccent),
-                                      Text(
-                                        '4.5  rating',
-                                        style: const TextStyle(
-                                          color: AppColors.headline1TextColor,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20.0,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      width: double.infinity,
+                                      height: 400,
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(20.0),
+                                        image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: NetworkImage(DataService
+                                              .instance.listDoctor[i].avt!),
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                ],
+                                    ),
+                                    const SizedBox(height: 20.0),
+                                    Text(
+                                      DataService.instance.listDoctor[i].name!,
+                                      style: const TextStyle(
+                                          color: AppColors.headline1TextColor,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 26.0),
+                                    ),
+                                    const Text(
+                                      'Khoa Than Kinh',
+                                      style: TextStyle(
+                                          color: AppColors.primaryColor,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 26.0),
+                                    ),
+                                    const Divider(thickness: 1),
+                                    const SizedBox(height: 10.0),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          "Ratings:",
+                                          style: TextStyle(
+                                            color: AppColors.primaryColor,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 22.0,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 20.0),
+                                        Row(
+                                          children: const [
+                                            Icon(Icons.star,
+                                                color: Colors.yellowAccent),
+                                            Text(
+                                              '4.5  rating',
+                                              style: TextStyle(
+                                                color: AppColors
+                                                    .headline1TextColor,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 20.0,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ],
-                          ),
-                        ),
+                            ),
+                        ],
                       ),
-                  ],
-                ),
               ),
               const SizedBox(height: 40),
               InkWell(
                 onTap: () {},
-                child: Text(
+                child: const Text(
                   'View all Doctor',
                   style: TextStyle(
                     fontSize: 24,
@@ -340,6 +561,7 @@ class AboutField extends StatelessWidget {
                           padding: const EdgeInsets.only(top: 500),
                           child: Container(
                             width: constraints.maxWidth / 2.2,
+                            height: constraints.maxHeight / 10.0,
                             padding: const EdgeInsets.all(15.0),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(15.0),
@@ -360,6 +582,35 @@ class AboutField extends StatelessWidget {
                                   color: Colors.blue,
                                 ),
                                 const SizedBox(width: 10.0),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: const [
+                                    Text(
+                                      'Dr Nguyen Minh Hung',
+                                      style: TextStyle(
+                                        color: AppColors.primaryColor,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 22.0,
+                                      ),
+                                    ), //
+                                    Text(
+                                      'Head of hospital department',
+                                      style: TextStyle(
+                                        color: AppColors.headline1TextColor,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20.0,
+                                      ),
+                                    ),
+                                    Text(
+                                      'Khoa than kinh',
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16.0,
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ],
                             ),
                           ),
