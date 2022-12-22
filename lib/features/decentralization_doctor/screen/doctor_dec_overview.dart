@@ -14,7 +14,6 @@ DateTime now = DateTime.now();
 class DoctorDecOverview extends StatelessWidget {
   DoctorDecOverview({super.key});
 
-  final doctorOverviewController = Get.find<DoctorOverviewController>();
   CalendarFormat format = CalendarFormat.month;
   final controller = Get.find<DoctorOverviewController>();
 

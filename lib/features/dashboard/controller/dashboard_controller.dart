@@ -8,10 +8,7 @@ import 'package:admin_clinical/features/medicine/screens/medicine_screen.dart';
 import 'package:admin_clinical/features/overview/screens/overview_screen.dart';
 import 'package:admin_clinical/features/patient/controller/patient_page_controller.dart';
 import 'package:admin_clinical/features/patient/screens/list_patients_screen.dart';
-import 'package:admin_clinical/features/report/controller/report_controller.dart';
-import 'package:admin_clinical/features/report/screens/report_screen.dart';
 import 'package:admin_clinical/features/settings/screen/setting_main_screen.dart';
-import 'package:admin_clinical/models/service.dart';
 import 'package:admin_clinical/services/data_service/data_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
@@ -25,7 +22,6 @@ import '../../../services/socket_service.dart';
 import '../../clinical_room/controller/clinical_room_controller.dart';
 import '../../dec_doctor_examination/controller/dec_doctor_examination_controller.dart';
 import '../../dec_doctor_examination/controller/doctor_examination_controller.dart';
-import '../../dec_doctor_examination/screens/dec_doctor_examination.dart';
 import '../../dec_doctor_examination/screens/doctor_examination_screen.dart';
 import '../../decentralization_doctor/controller/doctor_overview_controller.dart';
 import '../../doctor/controller/doctor_main_controller.dart';
@@ -43,32 +39,39 @@ class DashboardController extends GetxController {
   @override
   void onReady() async {
     bool response = await setUserIfNeed();
-
     SocketService.instance.connectSocket();
-
     if (AuthService.instance.user.type == "Doctor") {
       DataService.instance.getDoctorRole(AuthService.instance.user.id);
     }
-    response = await fetchAllBasicData();
-    if (AuthService.instance.user.type == "Admin") {
-      await NotificationService.instance.fetchAllNotificationModelData();
-    }
-    if (response) {
-      response = await _initializeAllController();
-      if (response) {
-        Future(
-          () => pages.value = Obx(
-            () => IndexedStack(
-              index: pageIndex.value,
-              alignment: Alignment.topCenter,
-              children: listPageRole[AuthService.instance.user.type]!
-                  .map((e) => e)
-                  .toList(),
-            ),
-          ),
-        ).then((_) => update(['DashboardScreen']));
-      }
-    }
+    DataService.instance.fetchAllDataStream().listen(
+      (event) => print(DataService.instance.checkFetchData.last),
+      onDone: () async {
+        if (AuthService.instance.user.type == "Admin") {
+          await NotificationService.instance.fetchAllNotificationModelData();
+        }
+        if (response) {
+          response = await _initializeAllController();
+          if (response) {
+            Stream.fromFuture(
+              Future(
+                () => pages.value = Obx(
+                  () => IndexedStack(
+                    index: pageIndex.value,
+                    alignment: Alignment.topCenter,
+                    children: listPageRole[AuthService.instance.user.type]!
+                        .map((e) => e)
+                        .toList(),
+                  ),
+                ),
+              ),
+            ).listen((event) {}).onDone(() {
+              update(['DashboardScreen']);
+            });
+          }
+        }
+      },
+    );
+
     super.onReady();
   }
 
@@ -92,7 +95,6 @@ class DashboardController extends GetxController {
     await Get.putAsync(() => Future.value(ClinicalRoomController()));
     await Get.putAsync(() => Future.value(MedicineController()));
     await Get.putAsync(() => Future.value(SettingController()));
-    await Get.putAsync(() => Future.value(ReportController()));
     return true;
   }
 
@@ -151,10 +153,6 @@ class DashboardController extends GetxController {
         'icon': FontAwesome.medkit,
       },
       {
-        'label': 'Report',
-        'icon': Icons.bar_chart_outlined,
-      },
-      {
         'label': 'Setting',
         'icon': Icons.settings_outlined,
       },
@@ -198,7 +196,6 @@ class DashboardController extends GetxController {
       InvoiceView(),
       ClinicalRoom(),
       const MedicineScreen(),
-      ReportScreen(),
       const SettingMainScreen(),
     ],
   };

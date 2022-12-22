@@ -99,13 +99,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.5"
-  date_util:
-    dependency: "direct main"
-    description:
-      name: date_util
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.4"
   dio:
     dependency: transitive
     description:

@@ -98,6 +98,36 @@ class DataService extends GetxController {
     return true;
   }
 
+  Stream fetchAllDataStream() async* {
+    yield* Stream.fromFutures([
+      fetchAllDoctor((value) {
+        checkFetchData.add(1);
+        listDoctor.value = value;
+      }),
+      fetchAllDeparMent((value) {
+        checkFetchData.add(2);
+        listDepartMent.value = value;
+      }),
+      PatientService.fetchAllPatientData()
+          .then((value) => checkFetchData.add(3)),
+      MedicineService.instance
+          .fetchAllMedicineData()
+          .then((value) => checkFetchData.add(4)),
+      HealthRecordService.fetchAllHealthRecordData()
+          .then((value) => checkFetchData.add(5)),
+      InvoiceService.instance
+          .fetchAllDataInvoice()
+          .then((value) => checkFetchData.add(6)),
+      ServiceDataService.instance
+          .fetchAllDataService()
+          .then((value) => checkFetchData.add(7)),
+      ClinicalRoomService.instance
+          .fetchAllClinicalRoomData()
+          .then((value) => checkFetchData.add(8)),
+      fetchRegulationData().then((value) => checkFetchData.add(9)),
+    ]);
+  }
+
   Future<void> fetchRegulationData() async {
     try {
       http.Response res = await http.get(
