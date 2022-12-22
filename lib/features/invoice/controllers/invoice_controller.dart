@@ -1,6 +1,4 @@
 import 'package:admin_clinical/features/invoice/screens/make_invoice_screen.dart';
-import 'package:admin_clinical/features/invoice/screens/verify_invoice_information_screen.dart';
-import 'package:admin_clinical/features/overview/controller/overview_controller.dart';
 import 'package:admin_clinical/features/turnover/screen/turnover_main_screen.dart';
 import 'package:admin_clinical/services/data_service/invoice_service.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +13,6 @@ class InvoiceController extends GetxController {
   Rx<HealthRecord?> selectedHealthRecord = Rx(null);
   Rx<Invoice?> selectedInvoice = Rx(null);
   RxList<String> lInvoiceSelect = <String>[].obs;
-  final controller = Get.find<OverviewController>();
   var selectedPage = 0.obs;
   RxList<Invoice> listInvoice = <Invoice>[].obs;
   List<String> listStatus = ["Cancelled", "Overdue", "Paid"];

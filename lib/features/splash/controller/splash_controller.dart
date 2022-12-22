@@ -1,6 +1,4 @@
 import 'package:admin_clinical/routes/name_route.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/container.dart';
 import 'package:get/get.dart';
 
 import '../../../services/auth_service/auth_service.dart';
