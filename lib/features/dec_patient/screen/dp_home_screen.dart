@@ -4,6 +4,7 @@ import 'package:admin_clinical/features/dec_patient/controller/dp_patinet_contnr
 import 'package:admin_clinical/features/dec_patient/screen/booking_medical_screen.dart';
 import 'package:admin_clinical/features/dec_patient/widgets/dp_app_bar.dart';
 import 'package:admin_clinical/routes/name_route.dart';
+import 'package:admin_clinical/services/data_service/data_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -74,11 +75,236 @@ class HomePage extends StatelessWidget {
           ),
         ),
         AboutField(),
-        SizedBox(
-          width: Get.width,
-          height: Get.height,
+        DoctorViewField(),
+        Container(
+          height: 100,
+          width: double.infinity,
+          color: AppColors.primaryColor,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              RowFunc(
+                title: 'Book Appintment',
+                subitle: 'Choose by name, specialty...',
+                icon: FontAwesome.medkit,
+              ),
+              SizedBox(
+                width: 50.0,
+              ),
+              RowFunc(
+                title: 'Consult Online',
+                subitle: 'Talk to a doctor online',
+                icon: FontAwesome.medkit,
+              ),
+              SizedBox(
+                width: 50.0,
+              ),
+              RowFunc(
+                title: 'Book Health Check ',
+                subitle: 'Book a test online',
+                icon: FontAwesome.medkit,
+              ),
+            ],
+          ),
         ),
+        Container(
+            width: Get.width,
+            height: Get.height / 2.5,
+            color: Color.fromARGB(255, 3, 49, 87)),
       ]),
+    );
+  }
+}
+
+class RowFunc extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String subitle;
+  const RowFunc({
+    Key? key,
+    required this.icon,
+    required this.title,
+    required this.subitle,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Icon(icon, color: Colors.white, size: 30.0),
+        const SizedBox(width: 10.0),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(title,
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 23.0)),
+            Text(subitle,
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 20.0))
+          ],
+        )
+      ],
+    );
+  }
+}
+
+class DoctorViewField extends StatelessWidget {
+  const DoctorViewField({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: Get.width,
+      height: Get.height,
+      child: LayoutBuilder(builder: (context, constraints) {
+        return Padding(
+          padding: EdgeInsets.only(
+            left: constraints.maxWidth / 8,
+            right: constraints.maxWidth / 8,
+            bottom: constraints.maxHeight / 10,
+            top: constraints.maxHeight / 10,
+          ),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Text('Meet Our ',
+                      style: TextStyle(
+                          color: AppColors.headline1TextColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 50.0)),
+                  Text(
+                    'Specialists',
+                    style: TextStyle(
+                      color: AppColors.primaryColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 50.0,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 40.0),
+              Text(
+                'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. ',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20.0,
+                ),
+              ),
+              const SizedBox(height: 40.0),
+              Obx(
+                () => Row(
+                  children: [
+                    for (int i = 0; i < 3; i++)
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.all(20.0),
+                          margin: const EdgeInsets.symmetric(horizontal: 60.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20.0),
+                            color: Colors.white,
+                            boxShadow: const [
+                              BoxShadow(
+                                  color: Colors.black26, blurRadius: 10.0),
+                            ],
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: double.infinity,
+                                height: 400,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(DataService
+                                        .instance.listDoctor[i].avt!),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 20.0),
+                              Text(
+                                DataService.instance.listDoctor[i].name!,
+                                style: const TextStyle(
+                                    color: AppColors.headline1TextColor,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 26.0),
+                              ),
+                              Text(
+                                'Khoa Than Kinh',
+                                style: const TextStyle(
+                                    color: AppColors.primaryColor,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 26.0),
+                              ),
+                              const Divider(thickness: 1),
+                              const SizedBox(height: 10.0),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Ratings:",
+                                    style: const TextStyle(
+                                      color: AppColors.primaryColor,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 22.0,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 20.0),
+                                  Row(
+                                    children: [
+                                      const Icon(Icons.star,
+                                          color: Colors.yellowAccent),
+                                      Text(
+                                        '4.5  rating',
+                                        style: const TextStyle(
+                                          color: AppColors.headline1TextColor,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20.0,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 40),
+              InkWell(
+                onTap: () {},
+                child: Text(
+                  'View all Doctor',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primaryColor,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+              )
+            ],
+          ),
+        );
+      }),
     );
   }
 }

@@ -76,14 +76,29 @@ class DpPatinetController extends GetxController {
     return false;
   }
 
+  void addEntries(Map<String, Patient> newPatient) {
+    PatientService.listPatients.addAll(newPatient);
+  }
+
+  Future<bool> addPatientToDataBase(
+      Patient patient, BuildContext context) async {
+    final response = await PatientService.insertPatient(patient, context);
+    if (response != null) {
+      if (response['isSuccess']) {
+        patient.id = response['id'];
+        addEntries({patient.id: patient});
+        return true;
+      }
+    }
+    return false;
+  }
+
   void bookingAppointment() async {
     if (selectPatient.value.id == '') {
       Get.dialog(
           const ErrorDialog(question: "Booking Appointment", title1: "Failed"));
     } else {
       bool check = false;
-      // HealthRecordService.listHealthRecord.forEach((key, value) {});
-
       for (var item in HealthRecordService.listHealthRecord.values) {
         if (item.patientId == selectPatient.value.id &&
             item.status == "Waiting Examination") {
@@ -106,12 +121,15 @@ class DpPatinetController extends GetxController {
         final response = await HealthRecordService.addHealthRecord(
             newRecordMap, Get.context!);
         if (response != null) {
+          HealthRecordService.listHealthRecord.addAll({response: newRecord});
           try {
             final updatePatientResponse = await _updatePatientRecord(
               selectPatient.value.id,
               response,
             );
             if (updatePatientResponse) {
+              PatientService.listPatients[selectPatient.value.id]!.healthRecord!
+                  .add(response);
               NotificationService.instance
                   .insertNotification("You have appointment from Patient");
               Get.dialog(const SuccessDialog(
