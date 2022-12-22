@@ -125,6 +125,7 @@ class AuthService extends ChangeNotifier {
         response: res,
         context: context,
         onSuccess: () async {
+          print('Login successful');
           result = true;
           SharedPreferences prefs = await SharedPreferences.getInstance();
           AuthService.instance.setUser(res.body);
