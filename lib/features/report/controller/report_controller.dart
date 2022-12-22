@@ -3,7 +3,7 @@ import 'package:admin_clinical/models/patient.dart';
 import 'package:admin_clinical/services/data_service/health_record_service.dart';
 import 'package:admin_clinical/services/data_service/invoice_service.dart';
 import 'package:admin_clinical/services/data_service/patient_service.dart';
-import 'package:date_util/date_util.dart';
+// import 'package:date_util/date_util.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -25,11 +25,11 @@ class ReportController extends GetxController {
   RxInt selectMonth = 1.obs;
   fetchAllChartData(int type) {
     chartData.clear();
-    int lengthDate =
-        DateUtil().daysInMonth(selectDate['month'], selectDate['year']);
+    // int lengthDate =
+    //     DateUtil().daysInMonth(selectDate['month'], selectDate['year']);
     chartData.value = (type == 0)
         ? [
-            for (int i = 1; i <= lengthDate; i++)
+            for (int i = 1; i <= /*lengthDate*/ 5; i++)
               {
                 'id': i,
                 'data': 0,
