@@ -21,14 +21,13 @@ class LoginScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           ClipPath(
-            child: Image.asset(
-              "images/background_login.jpg",
-              fit: BoxFit.cover,
-              filterQuality: FilterQuality.high,
-              width: Get.width * 0.5,
-              height: Get.height,
-            ),
-          ),
+              child: Image(
+            image: const AssetImage("assets/images/background_login.jpg"),
+            fit: BoxFit.cover,
+            filterQuality: FilterQuality.high,
+            width: Get.width * 0.5,
+            height: Get.height,
+          )),
           Expanded(
             child: PageView(
               controller: controller,
