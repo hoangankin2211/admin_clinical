@@ -15,6 +15,7 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final heightDevice = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Colors.white,
       body: Row(
@@ -24,9 +25,8 @@ class LoginScreen extends StatelessWidget {
               child: Image(
             image: const AssetImage("assets/images/background_login.jpg"),
             fit: BoxFit.cover,
-            filterQuality: FilterQuality.high,
             width: Get.width * 0.5,
-            height: Get.height,
+            height: heightDevice,
           )),
           Expanded(
             child: PageView(

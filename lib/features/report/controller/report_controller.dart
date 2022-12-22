@@ -25,8 +25,8 @@ class ReportController extends GetxController {
   RxInt selectMonth = 1.obs;
   fetchAllChartData(int type) {
     chartData.clear();
-    int lengthDate =
-        DateUtil().daysInMonth(selectDate['month'], selectDate['year']);
+    DateTime x1 = DateTime(2019, 1, 0).toUtc();
+    int lengthDate = DateTime(2019, 2, 0).toUtc().difference(x1).inDays;
     chartData.value = (type == 0)
         ? [
             for (int i = 1; i <= lengthDate; i++)
