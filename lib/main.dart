@@ -7,7 +7,7 @@ import 'package:url_strategy/url_strategy.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  setPathUrlStrategy();
+  // setPathUrlStrategy();
 
   runApp(const MyApp());
 }

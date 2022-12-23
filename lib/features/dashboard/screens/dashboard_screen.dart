@@ -36,7 +36,7 @@ class DashboardScreen extends StatelessWidget {
                           children: [
                             Image.asset(
                               filterQuality: FilterQuality.high,
-                              'icons/app_icon.png',
+                              'assets/icons/app_icon.png',
                               fit: BoxFit.cover,
                               color: AppColors.primaryColor,
                               height: 60,

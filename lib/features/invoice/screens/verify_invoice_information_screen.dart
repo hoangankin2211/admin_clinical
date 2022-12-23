@@ -142,7 +142,7 @@ class ClinicInvoiceInformation extends StatelessWidget {
             children: [
               Image.asset(
                 filterQuality: FilterQuality.high,
-                'icons/app_icon.png',
+                'assets/icons/app_icon.png',
                 fit: BoxFit.cover,
                 color: AppColors.primaryColor,
                 height: 60,
@@ -440,7 +440,7 @@ class InvoiceAmountFormWidget extends StatelessWidget {
           Align(
             alignment: Alignment.centerRight,
             child: Image.asset(
-              'images/signature.png',
+              'assets/images/signature.png',
               height: 50,
               width: 100,
               fit: BoxFit.cover,

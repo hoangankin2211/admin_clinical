@@ -157,7 +157,7 @@ class PatientListRow extends StatelessWidget {
                           ? NetworkImage(
                               avt!,
                             ) as ImageProvider
-                          : const AssetImage('images/user.png'),
+                          : const AssetImage('assets/images/user.png'),
                       radius: 20,
                     )
                   : const SizedBox(
