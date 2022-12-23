@@ -1,5 +1,6 @@
 import 'package:admin_clinical/models/health_record.dart';
 import 'package:admin_clinical/models/patient.dart';
+import 'package:admin_clinical/services/data_service/data_service.dart';
 import 'package:admin_clinical/services/data_service/health_record_service.dart';
 import 'package:admin_clinical/services/data_service/invoice_service.dart';
 import 'package:admin_clinical/services/data_service/patient_service.dart';
@@ -7,6 +8,8 @@ import 'package:admin_clinical/services/data_service/patient_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../models/department.dart';
+import '../../../models/doctor.dart';
 import '../../../models/invoice.dart';
 
 class ReportController extends GetxController {
@@ -23,13 +26,14 @@ class ReportController extends GetxController {
 
   RxInt selectTypeOfChart = 0.obs;
   RxInt selectMonth = 1.obs;
+
   fetchAllChartData(int type) {
     chartData.clear();
     DateTime x1 = DateTime(2019, 1, 0).toUtc();
     int lengthDate = DateTime(2019, 2, 0).toUtc().difference(x1).inDays;
     chartData.value = (type == 0)
         ? [
-            for (int i = 1; i <= /*lengthDate*/ 5; i++)
+            for (int i = 1; i <= lengthDate; i++)
               {
                 'id': i,
                 'data': 0,
@@ -67,4 +71,7 @@ class ReportController extends GetxController {
     fetchAllChartData(0);
     update();
   }
+
+  //view all doctor page
+
 }

@@ -7,8 +7,13 @@ import '../../auth/widgets/custom_button.dart';
 
 class DpApBar extends StatelessWidget {
   final Function(int) switchPage;
-
-  const DpApBar({super.key, required this.switchPage});
+  final Function() nexxPageCallback;
+  final Function() openHealthRecordViewCallback;
+  const DpApBar(
+      {super.key,
+      required this.switchPage,
+      required this.nexxPageCallback,
+      required this.openHealthRecordViewCallback});
 
   @override
   Widget build(BuildContext context) {
@@ -52,9 +57,9 @@ class DpApBar extends StatelessWidget {
               ),
               const SizedBox(width: 90),
               InkWell(
-                onTap: () {},
+                onTap: openHealthRecordViewCallback,
                 child: const Text(
-                  'Book an appointment',
+                  'View Health Record',
                   style: TextStyle(
                     color: Color.fromARGB(255, 53, 72, 78),
                     fontWeight: FontWeight.bold,
@@ -80,7 +85,7 @@ class DpApBar extends StatelessWidget {
                 height: 50,
                 child: CustomButton1(
                   title: "Book now",
-                  onPressed: () => switchPage(1),
+                  onPressed: nexxPageCallback,
                 ),
               ),
             ],

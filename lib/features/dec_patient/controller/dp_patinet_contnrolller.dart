@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:admin_clinical/constants/global_widgets/custom_dialog_error/error_dialog.dart';
 import 'package:admin_clinical/constants/global_widgets/custom_dialog_error/success_dialog.dart';
+import 'package:admin_clinical/models/department.dart';
 import 'package:admin_clinical/models/health_record.dart';
 import 'package:admin_clinical/models/patient.dart';
 import 'package:admin_clinical/services/data_service/data_service.dart';
@@ -17,12 +18,14 @@ import '../../../models/doctor.dart';
 class DpPatinetController extends GetxController {
   RxMap<String, Patient> listPatinet = RxMap({});
   RxList<Doctor1> listDoctor = RxList([]);
+  RxList<Department> listDepartMent = RxList([]);
   @override
   void onInit() {
     super.onInit();
     fetchAllBasicData();
     listPatinet = PatientService.listPatients;
     listDoctor = DataService.instance.listDoctor;
+    listDepartMent = DataService.instance.listDepartMent;
   }
 
   Future<bool> fetchAllBasicData() async {
@@ -146,6 +149,19 @@ class DpPatinetController extends GetxController {
     }
   }
 
+  Rx<Doctor1> selectDotor = DataService.instance.listDoctor.isNotEmpty
+      ? DataService.instance.listDoctor[0].obs
+      : Doctor1(
+              iDBS: '',
+              name: '',
+              address: '',
+              dateBorn: DateTime.now(),
+              phoneNumber: '',
+              avt: '',
+              departMent: '',
+              experience: 0,
+              description: '')
+          .obs;
   void canceleForm() {
     selectPatient.value = Patient(
         avt: '',
@@ -156,5 +172,99 @@ class DpPatinetController extends GetxController {
         dob: '',
         phoneNumber: '',
         status: '');
+  }
+
+  // Book appointment
+  final idTextController = TextEditingController();
+  final symptomControllerViewDoc = TextEditingController();
+
+  TextEditingController dobController = TextEditingController();
+  DateTime currentDateTime = DateTime.now();
+
+  Rx<Patient> selectPatientViewDoc = Patient(
+          avt: '',
+          id: '',
+          name: '',
+          gender: '',
+          address: '',
+          dob: '',
+          phoneNumber: '',
+          status: '')
+      .obs;
+
+  void selectPatinetFuncViewDoc() async {
+    Patient? temp = await PatientService.searchPatientById(Get.context!,
+        id: idTextController.value.text);
+    if (temp != null) {
+      selectPatientViewDoc.value = temp;
+    }
+  }
+
+  void bookingAppointmentViewDoc() async {
+    if (selectPatientViewDoc.value.id == '') {
+      Get.dialog(
+          const ErrorDialog(question: "Booking Appointment", title1: "Failed"));
+    } else {
+      bool check = false;
+      for (var item in HealthRecordService.listHealthRecord.values) {
+        if (item.patientId == selectPatientViewDoc.value.id &&
+            item.status == "Waiting Examination") {
+          check = true;
+          break;
+        }
+      }
+      if (!check) {
+        HealthRecord newRecord = HealthRecord(
+          dateCreate: currentDateTime,
+          departmentId: selectDotor.value.departMent!,
+          patientId: selectPatientViewDoc.value.id,
+          status: "Waiting Examination",
+          doctorId: "",
+          totalMoney: 0,
+          services: [],
+          medicines: [],
+        );
+        Map<String, dynamic> newRecordMap = newRecord.toMap();
+        final response = await HealthRecordService.addHealthRecord(
+            newRecordMap, Get.context!);
+        if (response != null) {
+          HealthRecordService.listHealthRecord.addAll({response: newRecord});
+          try {
+            final updatePatientResponse = await _updatePatientRecord(
+              selectPatientViewDoc.value.id,
+              response,
+            );
+            if (updatePatientResponse) {
+              PatientService
+                  .listPatients[selectPatientViewDoc.value.id]!.healthRecord!
+                  .add(response);
+              NotificationService.instance
+                  .insertNotification("You have appointment from Patient");
+              Get.dialog(const SuccessDialog(
+                  question: "Booking Appointment", title1: "Success"));
+            }
+          } catch (err) {
+            print("Some error: $err");
+          }
+        }
+      } else {
+        Get.dialog(const ErrorDialog(
+            question: "Create Health Record", title1: "Wating  Examination"));
+      }
+    }
+  }
+
+  // search health record field
+  final idPatinetSearchController = TextEditingController();
+
+  RxList<HealthRecord> listHealthRecordSearch = RxList<HealthRecord>([]);
+
+  searchHealthRecord() {
+    listHealthRecordSearch.clear();
+    for (var item in HealthRecordService.listHealthRecord.values) {
+      if (item.patientId == idPatinetSearchController.text) {
+        listHealthRecordSearch.add(item);
+      }
+    }
   }
 }

@@ -785,7 +785,7 @@ class DoctorProfileScreen extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10.0),
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
               child: ReadMoreText(
                 controller.doctor.description!,
                 trimLines: 5,
