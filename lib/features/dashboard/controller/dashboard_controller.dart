@@ -8,6 +8,8 @@ import 'package:admin_clinical/features/medicine/screens/medicine_screen.dart';
 import 'package:admin_clinical/features/overview/screens/overview_screen.dart';
 import 'package:admin_clinical/features/patient/controller/patient_page_controller.dart';
 import 'package:admin_clinical/features/patient/screens/list_patients_screen.dart';
+import 'package:admin_clinical/features/report/controller/report_controller.dart';
+import 'package:admin_clinical/features/report/screens/report_screen.dart';
 import 'package:admin_clinical/features/settings/screen/setting_main_screen.dart';
 import 'package:admin_clinical/services/data_service/data_service.dart';
 import 'package:flutter/material.dart';
@@ -95,6 +97,8 @@ class DashboardController extends GetxController {
     await Get.putAsync(() => Future.value(ClinicalRoomController()));
     await Get.putAsync(() => Future.value(MedicineController()));
     await Get.putAsync(() => Future.value(SettingController()));
+    await Get.putAsync(() => Future.value(ReportController()));
+
     return true;
   }
 
@@ -153,6 +157,10 @@ class DashboardController extends GetxController {
         'icon': FontAwesome.medkit,
       },
       {
+        'label': 'Report',
+        'icon': Icons.bar_chart_rounded,
+      },
+      {
         'label': 'Setting',
         'icon': Icons.settings_outlined,
       },
@@ -196,6 +204,7 @@ class DashboardController extends GetxController {
       InvoiceView(),
       ClinicalRoom(),
       const MedicineScreen(),
+      ReportScreen(),
       const SettingMainScreen(),
     ],
   };
