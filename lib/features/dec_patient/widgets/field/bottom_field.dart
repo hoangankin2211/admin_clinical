@@ -57,7 +57,7 @@ class BottomField extends StatelessWidget {
                   image: DecorationImage(
                     fit: BoxFit.cover,
                     image: AssetImage(
-                      "images/background_login.jpg",
+                      "assets/images/background_login.jpg",
                     ),
                   ),
                 ),
