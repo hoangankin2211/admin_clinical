@@ -11,6 +11,7 @@ import 'package:admin_clinical/features/patient/screens/list_patients_screen.dar
 import 'package:admin_clinical/features/report/controller/report_controller.dart';
 import 'package:admin_clinical/features/report/screens/report_screen.dart';
 import 'package:admin_clinical/features/settings/screen/setting_main_screen.dart';
+import 'package:admin_clinical/routes/name_route.dart';
 import 'package:admin_clinical/services/data_service/data_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
@@ -48,7 +49,12 @@ class DashboardController extends GetxController {
   @override
   void onReady() async {
     bool response = await setUserIfNeed();
-
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('x-auth-token');
+    if (token == null || token == '') {
+      prefs.setString('x-auth-token', '');
+      Get.offAllNamed(PageName.loginScreen);
+    }
     SocketService.instance.connectSocket();
     if (AuthService.instance.user.type == "Doctor") {
       DataService.instance.getDoctorRole(AuthService.instance.user.id);

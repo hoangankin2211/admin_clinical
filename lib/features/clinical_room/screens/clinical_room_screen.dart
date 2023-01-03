@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:admin_clinical/constants/global_widgets/header_list_item.dart';
 import 'package:admin_clinical/constants/global_widgets/list_item.dart';
 import 'package:admin_clinical/features/clinical_room/controller/clinical_room_controller.dart';
@@ -23,16 +25,23 @@ class ClinicalRoom extends StatelessWidget {
           _searchField(MediaQuery.of(context).size.width, context),
           const SizedBox(height: 20.0),
           Expanded(
-            child: Row(children: [
+            child: Column(children: [
               Expanded(
                 flex: 5,
-                child: _listField(),
+                child: Container(color: Colors.red),
               ),
               const SizedBox(width: 20.0),
               Expanded(
-                flex: 2,
-                child: _listRoomViewField(),
-              ),
+                  flex: 6,
+                  child: Container(
+                    margin: const EdgeInsets.all(10.0),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15.0),
+                        color: AppColors.backgroundColor,
+                        boxShadow: const [
+                          BoxShadow(color: Colors.black26, blurRadius: 5.0)
+                        ]),
+                  )),
             ]),
           ),
         ],
@@ -133,7 +142,7 @@ class ClinicalRoom extends StatelessWidget {
                 const SizedBox(height: 20.0),
                 Expanded(
                   child: ListView(
-                    children: [
+                    children: const [
                       ClinicalPatientItem(),
                       ClinicalPatientItem(),
                       ClinicalPatientItem(),
@@ -363,11 +372,11 @@ class ClinicalPatientItem extends StatelessWidget {
         const SizedBox(height: 10.0),
         Row(
           children: [
-            Expanded(
+            const Expanded(
               flex: 1,
               child: Text(
                 '01',
-                style: const TextStyle(
+                style: TextStyle(
                   overflow: TextOverflow.ellipsis,
                   color: Colors.grey,
                   fontWeight: FontWeight.bold,
