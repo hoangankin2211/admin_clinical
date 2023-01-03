@@ -64,6 +64,7 @@ class AuthService extends ChangeNotifier {
         String? token = prefs.getString('x-auth-token');
         if (token == null || token == '') {
           prefs.setString('x-auth-token', '');
+          return false;
         }
         var tokenRes = await http.post(
           Uri.parse('${ApiLink.uri}/api/validToken'),
