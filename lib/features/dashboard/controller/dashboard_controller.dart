@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../models/user.dart';
 import '../../../services/auth_service/auth_service.dart';
@@ -38,9 +39,16 @@ class DashboardController extends GetxController {
 
   User? get user => _user.value;
 
+  // Future<bool> checkPreferences() async{
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   String? token = prefs.getString('x-auth-token');
+  //   if(token != )
+  // }
+
   @override
   void onReady() async {
     bool response = await setUserIfNeed();
+
     SocketService.instance.connectSocket();
     if (AuthService.instance.user.type == "Doctor") {
       DataService.instance.getDoctorRole(AuthService.instance.user.id);

@@ -78,7 +78,7 @@ class DpHomeScreen extends StatelessWidget {
         toolbarHeight: 100,
         backgroundColor: Colors.transparent,
         title: Padding(
-          padding: EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(20.0),
           child: DpApBar(
             switchPage: switchPage,
             nexxPageCallback: () {
