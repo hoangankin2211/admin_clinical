@@ -114,7 +114,7 @@ class DoctorMainController extends GetxController {
             question: "Edit new Doctor", title1: "Field is null"),
       );
     } else {
-      isLoadingEdit = true.obs;
+      isLoadingEdit.value = true;
       String? imageUrl = listDoctor.value[selectDoctor.value].avt!;
       if (image != null) {
         imageUrl = await convertUti8ListToUrl(
@@ -141,6 +141,7 @@ class DoctorMainController extends GetxController {
         Get.dialog(
             const SuccessDialog(question: "Edit Doctor", title1: "Success"));
       }
+      isLoadingEdit.value = false;
     }
   }
 

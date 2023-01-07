@@ -114,155 +114,171 @@ class ListPatientField extends StatelessWidget {
                           color: AppColors.primaryColor,
                         ),
                       ),
-                      child: ListView(
-                        // crossAxisAlignments: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                width: 100.0,
-                                height: 100.0,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  boxShadow: const [
-                                    BoxShadow(
-                                        color: Colors.black12, blurRadius: 7.0)
-                                  ],
-                                  color: Colors.white,
-                                  image: DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: NetworkImage((controller
-                                                .selectPatinet.value ==
-                                            -1)
-                                        ? 'https://thumbs.dreamstime.com/b/medical-form-list-results-data-approved-check-mark-vector-flat-cartoon-clinical-checklist-document-checkbox-133036988.jpg'
-                                        : controller
+                      child: (controller.selectPatinet.value == -1 ||
+                              controller.listPatient.isEmpty)
+                          ? const SizedBox(
+                              width: double.infinity,
+                              height: double.infinity,
+                            )
+                          : ListView(
+                              // crossAxisAlignments: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                      width: 100.0,
+                                      height: 100.0,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        boxShadow: const [
+                                          BoxShadow(
+                                              color: Colors.black12,
+                                              blurRadius: 7.0)
+                                        ],
+                                        color: Colors.white,
+                                        image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: NetworkImage(controller
+                                                      .listPatient[controller
+                                                          .selectPatinet.value]
+                                                      .avt ==
+                                                  ''
+                                              ? 'https://thumbs.dreamstime.com/b/medical-form-list-results-data-approved-check-mark-vector-flat-cartoon-clinical-checklist-document-checkbox-133036988.jpg'
+                                              : controller
+                                                  .listPatient[controller
+                                                      .selectPatinet.value]
+                                                  .avt!),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 10.0),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            (controller.selectPatinet.value ==
+                                                    -1)
+                                                ? ''
+                                                : controller
                                                     .listPatient[controller
                                                         .selectPatinet.value]
-                                                    .avt ==
-                                                ''
-                                            ? 'https://thumbs.dreamstime.com/b/medical-form-list-results-data-approved-check-mark-vector-flat-cartoon-clinical-checklist-document-checkbox-133036988.jpg'
-                                            : controller
-                                                .listPatient[controller
-                                                    .selectPatinet.value]
-                                                .avt!),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 10.0),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      (controller.selectPatinet.value == -1)
-                                          ? ''
-                                          : controller
-                                              .listPatient[controller
-                                                  .selectPatinet.value]
-                                              .name,
-                                      style: const TextStyle(
-                                        color: AppColors.headline1TextColor,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 24.0,
+                                                    .name,
+                                            style: const TextStyle(
+                                              color:
+                                                  AppColors.headline1TextColor,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 24.0,
+                                            ),
+                                          ),
+                                          Text(
+                                            (controller.selectPatinet.value ==
+                                                    -1)
+                                                ? ''
+                                                : '${controller.listPatient[controller.selectPatinet.value].gender} - ${controller.listPatient[controller.selectPatinet.value].dob}',
+                                            style: const TextStyle(
+                                              color: Colors.grey,
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 20.0,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                    Text(
-                                      (controller.selectPatinet.value == -1)
-                                          ? ''
-                                          : '${controller.listPatient[controller.selectPatinet.value].gender} - ${controller.listPatient[controller.selectPatinet.value].dob}',
-                                      style: const TextStyle(
-                                        color: Colors.grey,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 20.0,
+                                    InkWell(
+                                      onTap: () {},
+                                      child: const Icon(
+                                        Icons.more_horiz,
+                                        color: Colors.black,
                                       ),
                                     ),
                                   ],
                                 ),
-                              ),
-                              InkWell(
-                                onTap: () {},
-                                child: const Icon(
-                                  Icons.more_horiz,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 10.0),
-                          const Text(
-                            'Medical Form',
-                            style: TextStyle(
-                              color: AppColors.headline1TextColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20.0,
-                            ),
-                          ),
-                          const SizedBox(height: 10.0),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 15.0, vertical: 5.0),
-                                decoration: BoxDecoration(
-                                  color:
-                                      const Color.fromARGB(255, 170, 217, 255),
-                                  borderRadius: BorderRadius.circular(15.0),
-                                ),
-                                child: const Text(
-                                  'Today 10:00 AM',
+                                const SizedBox(height: 10.0),
+                                const Text(
+                                  'Medical Form',
                                   style: TextStyle(
-                                    color: AppColors.primaryColor,
+                                    color: AppColors.headline1TextColor,
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 15.0,
+                                    fontSize: 20.0,
                                   ),
                                 ),
-                              ),
-                              InkWell(
-                                onTap: () {},
-                                child: Row(
-                                  children: const [
-                                    Text(
-                                      'Check',
-                                      style: TextStyle(
-                                        color: Colors.grey,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20.0,
+                                const SizedBox(height: 10.0),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 15.0, vertical: 5.0),
+                                      decoration: BoxDecoration(
+                                        color: const Color.fromARGB(
+                                            255, 170, 217, 255),
+                                        borderRadius:
+                                            BorderRadius.circular(15.0),
+                                      ),
+                                      child: const Text(
+                                        'Today 10:00 AM',
+                                        style: TextStyle(
+                                          color: AppColors.primaryColor,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15.0,
+                                        ),
                                       ),
                                     ),
-                                    Icon(Icons.arrow_right, color: Colors.grey),
+                                    InkWell(
+                                      onTap: () {},
+                                      child: Row(
+                                        children: const [
+                                          Text(
+                                            'Check',
+                                            style: TextStyle(
+                                              color: Colors.grey,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20.0,
+                                            ),
+                                          ),
+                                          Icon(Icons.arrow_right,
+                                              color: Colors.grey),
+                                        ],
+                                      ),
+                                    ),
                                   ],
                                 ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 10.0),
-                          const Divider(thickness: 1),
-                          const SizedBox(height: 10.0),
-                          RowConsultationItem(
-                            header: 'Last Checked: ',
-                            title: controller.lastHealthRecord.value == null
-                                ? ''
-                                : DateFormat().add_yMMMMEEEEd().format(
-                                    controller
-                                        .lastHealthRecord.value!.dateCreate),
-                          ),
-                          RowConsultationItem(
-                            header: 'Conclusion And Treatment: ',
-                            title: controller.lastHealthRecord.value == null
-                                ? ''
-                                : controller.lastHealthRecord.value!
-                                    .conclusionAndTreatment!,
-                          ),
-                          RowConsultationItem(
-                            header: 'Diagnostic: ',
-                            title: controller.lastHealthRecord.value == null
-                                ? ''
-                                : controller
-                                    .lastHealthRecord.value!.diagnostic!,
-                          ),
-                        ],
-                      ),
+                                const SizedBox(height: 10.0),
+                                const Divider(thickness: 1),
+                                const SizedBox(height: 10.0),
+                                RowConsultationItem(
+                                  header: 'Last Checked: ',
+                                  title:
+                                      controller.lastHealthRecord.value == null
+                                          ? ''
+                                          : DateFormat()
+                                              .add_yMMMMEEEEd()
+                                              .format(controller
+                                                  .lastHealthRecord
+                                                  .value!
+                                                  .dateCreate),
+                                ),
+                                RowConsultationItem(
+                                  header: 'Conclusion And Treatment: ',
+                                  title:
+                                      controller.lastHealthRecord.value == null
+                                          ? ''
+                                          : controller.lastHealthRecord.value!
+                                              .conclusionAndTreatment!,
+                                ),
+                                RowConsultationItem(
+                                  header: 'Diagnostic: ',
+                                  title:
+                                      controller.lastHealthRecord.value == null
+                                          ? ''
+                                          : controller.lastHealthRecord.value!
+                                              .diagnostic!,
+                                ),
+                              ],
+                            ),
                     ),
                   ),
                 ],

@@ -45,7 +45,6 @@ class FieldOverviewDoctor extends StatelessWidget {
                   controller.fetchAllData();
                 },
                 label: Text(
-
                   'Refresh',
                   style: Theme.of(context)
                       .textTheme
@@ -67,7 +66,6 @@ class FieldOverviewDoctor extends StatelessWidget {
                 ),
               ),
             ],
-            
           ),
           Expanded(
             child: Stack(
