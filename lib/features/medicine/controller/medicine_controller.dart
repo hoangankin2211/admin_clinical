@@ -292,10 +292,11 @@ class MedicineController extends GetxController {
       Get.dialog(const ErrorDialog(
           question: 'Edit Medicine', title1: "Field is Null"));
     } else {
-      String imageUrl = listMedicine[selectMedcine.value].thumbnails;
+      String? imageUrl = listMedicine[selectMedcine.value].thumbnails;
       isLoadingEdit.value = true;
       if (image != null) {
-        imageUrl = (await convertUti8ListToUrl(image, nameController.text)) ??
+        imageUrl = (await convertUti8ListToUrl(
+                image, listMedicine[selectMedcine.value].name)) ??
             listMedicine[selectMedcine.value].thumbnails;
       }
       // ignore: use_build_context_synchronously
