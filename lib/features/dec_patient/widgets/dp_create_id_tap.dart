@@ -120,19 +120,44 @@ class _DpCreateIdTabState extends State<DpCreateIdTab> {
                       fontSize: 20.0,
                     ),
                   ),
-                  RichText(
-                      text: TextSpan(
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 20.0),
-                          children: [
-                        const TextSpan(
-                            text: 'Your ID:',
-                            style: TextStyle(color: AppColors.primaryColor)),
-                        TextSpan(
-                            text: response['id'],
+                  SizedBox(
+                    width: double.infinity,
+                    child: Row(
+                      children: [
+                        const Text(
+                          'Your ID: ',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20.0,
+                              color: AppColors.primaryColor),
+                        ),
+                        Expanded(
+                          child: TextField(
+                            controller: TextEditingController(
+                              text: response['id'],
+                            ),
                             style: const TextStyle(
-                                color: AppColors.headline1TextColor))
-                      ])),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20.0,
+                                color: AppColors.headline1TextColor),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  // RichText(
+                  //     text: TextSpan(
+                  //         style: const TextStyle(
+                  //             fontWeight: FontWeight.bold, fontSize: 20.0),
+                  //         children: [
+                  //       const TextSpan(
+                  //           text: 'Your ID:',
+                  //           style: TextStyle(color: AppColors.primaryColor)),
+                  //       TextSpan(
+                  //           text: response['id'],
+                  //           style: const TextStyle(
+                  //               color: AppColors.headline1TextColor))
+                  //     ])),
                 ],
               ),
             ),

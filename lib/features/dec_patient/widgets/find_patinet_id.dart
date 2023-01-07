@@ -102,20 +102,31 @@ class FindPatinetID extends StatelessWidget {
               const SizedBox(height: 40.0),
               Obx(
                 () => controller.yourId.value != ""
-                    ? RichText(
-                        text: TextSpan(
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 20.0),
-                            children: [
-                            const TextSpan(
-                                text: 'Your ID:',
-                                style:
-                                    TextStyle(color: AppColors.primaryColor)),
-                            TextSpan(
-                                text: controller.yourId.value,
+                    ? SizedBox(
+                        width: widthDevice / 4 - 80,
+                        child: Row(
+                          children: [
+                            const Text(
+                              'Your ID: ',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20.0,
+                                  color: AppColors.primaryColor),
+                            ),
+                            Expanded(
+                              child: TextField(
+                                controller: TextEditingController(
+                                  text: controller.yourId.value,
+                                ),
                                 style: const TextStyle(
-                                    color: AppColors.headline1TextColor))
-                          ]))
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20.0,
+                                    color: AppColors.headline1TextColor),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
                     : const SizedBox(),
               )
             ],

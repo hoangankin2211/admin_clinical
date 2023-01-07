@@ -116,11 +116,13 @@ class DpPatinetController extends GetxController {
     };
   }
 
+  RxBool isLoadingBooking = false.obs;
   void bookingAppointment() async {
     if (selectPatient.value.id == '') {
       Get.dialog(
           const ErrorDialog(question: "Booking Appointment", title1: "Failed"));
     } else {
+      isLoadingBooking.value = true;
       bool check = false;
       for (var item in HealthRecordService.listHealthRecord.values) {
         if (item.patientId == selectPatient.value.id &&
@@ -166,6 +168,7 @@ class DpPatinetController extends GetxController {
         Get.dialog(const ErrorDialog(
             question: "Create Health Record", title1: "Wating  Examination"));
       }
+      isLoadingBooking.value = false;
     }
   }
 

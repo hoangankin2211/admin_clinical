@@ -209,13 +209,16 @@ class DpBookingAppointmentTab extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 10.0),
-            SizedBox(
-              height: 40.0,
-              child: CustomButton(
-                title: 'Booking',
-                onPressed: controller.bookingAppointment,
+            Obx(
+              () => SizedBox(
+                height: 40.0,
+                child: CustomButton(
+                  check: controller.isLoadingBooking.value,
+                  title: 'Booking',
+                  onPressed: controller.bookingAppointment,
+                ),
               ),
-            ),
+            )
           ],
         ),
       ],
