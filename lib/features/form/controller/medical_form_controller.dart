@@ -199,7 +199,7 @@ class MedicalFormController extends GetxController {
     textController.forEach((key, value) => value.clear());
   }
 
-  void onPressedFinishButton(
+  Future onPressedFinishButton(
       BuildContext context, Function() backButton) async {
     final result = await Get.dialog(
       const CustomNotificationDialog(
@@ -223,6 +223,7 @@ class MedicalFormController extends GetxController {
         );
         if (temp != null) {
           InvoiceService.instance.listInvoice.add(temp);
+          InvoiceService.instance.listInvoice.refresh();
         }
 
         await editStatusHealthRecord(

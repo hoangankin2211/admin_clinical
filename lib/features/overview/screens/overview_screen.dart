@@ -486,25 +486,25 @@ class OverviewScreen extends StatelessWidget {
                         fontSize: 18.0,
                       ),
                     ),
-                    InkWell(
-                      onTap: () {},
-                      child: Row(
-                        children: const [
-                          Text(
-                            "Week ",
-                            style: TextStyle(
-                              color: AppColors.primarySecondColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16.0,
-                            ),
-                          ),
-                          Icon(
-                            Icons.arrow_drop_down,
-                            color: AppColors.primarySecondColor,
-                          ),
-                        ],
-                      ),
-                    ),
+                    // InkWell(
+                    //   onTap: () {},
+                    //   child: Row(
+                    //     children: const [
+                    //       Text(
+                    //         "Week ",
+                    //         style: TextStyle(
+                    //           color: AppColors.primarySecondColor,
+                    //           fontWeight: FontWeight.bold,
+                    //           fontSize: 16.0,
+                    //         ),
+                    //       ),
+                    //       Icon(
+                    //         Icons.arrow_drop_down,
+                    //         color: AppColors.primarySecondColor,
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
                   ],
                 ),
                 const SizedBox(height: 10.0),
@@ -736,22 +736,22 @@ class OverviewScreen extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                             fontSize: 18.0),
                       ),
-                      InkWell(
-                        onTap: () {},
-                        child: Row(
-                          children: const [
-                            Text("LastWeek ",
-                                style: TextStyle(
-                                    color: AppColors.primarySecondColor,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16.0)),
-                            Icon(
-                              Icons.arrow_drop_down,
-                              color: AppColors.primarySecondColor,
-                            ),
-                          ],
-                        ),
-                      ),
+                      // InkWell(
+                      //   onTap: () {},
+                      //   child: Row(
+                      //     children: const [
+                      //       Text("LastWeek ",
+                      //           style: TextStyle(
+                      //               color: AppColors.primarySecondColor,
+                      //               fontWeight: FontWeight.bold,
+                      //               fontSize: 16.0)),
+                      //       Icon(
+                      //         Icons.arrow_drop_down,
+                      //         color: AppColors.primarySecondColor,
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
                     ],
                   ),
                   const SizedBox(height: 10.0),

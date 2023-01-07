@@ -168,7 +168,7 @@ class MedicalFormScreen extends StatelessWidget {
                                                       horizontal: 5),
                                               backgroundColor: Colors.green),
                                           onPressed: () async {
-                                            medicalFormController
+                                            await medicalFormController
                                                 .onPressedFinishButton(
                                                     context, backButton);
                                           },
