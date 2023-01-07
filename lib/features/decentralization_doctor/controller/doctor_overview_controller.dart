@@ -117,5 +117,6 @@ class DoctorOverviewController extends GetxController {
       }
       // print(lastHealthRecord.value!.conclusionAndTreatment);
     }
+    lastHealthRecord.refresh();
   }
 }

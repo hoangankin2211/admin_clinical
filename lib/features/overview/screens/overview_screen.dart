@@ -103,7 +103,7 @@ class OverviewScreen extends StatelessWidget {
                   child: Padding(
                     padding: EdgeInsets.only(left: 20.0),
                     child: Text(
-                      "Hospital Survey",
+                      "Clinic Survey",
                       style: TextStyle(
                         color: AppColors.headline1TextColor,
                         fontWeight: FontWeight.bold,
@@ -486,25 +486,25 @@ class OverviewScreen extends StatelessWidget {
                         fontSize: 18.0,
                       ),
                     ),
-                    InkWell(
-                      onTap: () {},
-                      child: Row(
-                        children: const [
-                          Text(
-                            "Week ",
-                            style: TextStyle(
-                              color: AppColors.primarySecondColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16.0,
-                            ),
-                          ),
-                          Icon(
-                            Icons.arrow_drop_down,
-                            color: AppColors.primarySecondColor,
-                          ),
-                        ],
-                      ),
-                    ),
+                    // InkWell(
+                    //   onTap: () {},
+                    //   child: Row(
+                    //     children: const [
+                    //       Text(
+                    //         "Week ",
+                    //         style: TextStyle(
+                    //           color: AppColors.primarySecondColor,
+                    //           fontWeight: FontWeight.bold,
+                    //           fontSize: 16.0,
+                    //         ),
+                    //       ),
+                    //       Icon(
+                    //         Icons.arrow_drop_down,
+                    //         color: AppColors.primarySecondColor,
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
                   ],
                 ),
                 const SizedBox(height: 10.0),
@@ -736,22 +736,22 @@ class OverviewScreen extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                             fontSize: 18.0),
                       ),
-                      InkWell(
-                        onTap: () {},
-                        child: Row(
-                          children: const [
-                            Text("LastWeek ",
-                                style: TextStyle(
-                                    color: AppColors.primarySecondColor,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16.0)),
-                            Icon(
-                              Icons.arrow_drop_down,
-                              color: AppColors.primarySecondColor,
-                            ),
-                          ],
-                        ),
-                      ),
+                      // InkWell(
+                      //   onTap: () {},
+                      //   child: Row(
+                      //     children: const [
+                      //       Text("LastWeek ",
+                      //           style: TextStyle(
+                      //               color: AppColors.primarySecondColor,
+                      //               fontWeight: FontWeight.bold,
+                      //               fontSize: 16.0)),
+                      //       Icon(
+                      //         Icons.arrow_drop_down,
+                      //         color: AppColors.primarySecondColor,
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
                     ],
                   ),
                   const SizedBox(height: 10.0),
@@ -804,14 +804,16 @@ class OverviewScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
-                      'Patientes Medical Status',
+                      'Patients Medical Status',
                       style: TextStyle(
                           color: AppColors.headline1TextColor,
                           fontWeight: FontWeight.bold,
                           fontSize: 18.0),
                     ),
                     InkWell(
-                      onTap: () => DataService.instance.deleteAllHealthRecord(),
+                      onTap: () async {
+                        await _showDatePicker(context: Get.context!);
+                      },
                       child: Row(
                         children: const [
                           Text("Week ",
