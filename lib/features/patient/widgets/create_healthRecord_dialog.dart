@@ -99,7 +99,9 @@ class CreateHealthRecordDialog extends StatelessWidget {
       if (response != null) {
         print(response);
         newRecord.id = response;
-        HealthRecordService.listHealthRecord.addAll({response: newRecord});
+        HealthRecordService.listHealthRecord
+            .putIfAbsent(response, () => newRecord);
+        HealthRecordService.listHealthRecord.refresh();
         return {"isSuccess": true, 'id': response};
       }
     } catch (e) {

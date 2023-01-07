@@ -80,7 +80,9 @@ class DpPatinetController extends GetxController {
   }
 
   void addEntries(Map<String, Patient> newPatient) {
-    PatientService.listPatients.addAll(newPatient);
+    // PatientService.listPatients.addAll(newPatient);
+    PatientService.listPatients
+        .putIfAbsent(newPatient.keys.first, () => newPatient.values.first);
   }
 
   Future<bool> addPatientToDataBase(
