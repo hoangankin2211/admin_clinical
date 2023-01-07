@@ -162,10 +162,10 @@ class DashboardController extends GetxController {
         'label': 'Payment',
         'icon': Icons.payment_outlined,
       },
-      {
-        'label': 'Clinical Room',
-        'icon': Icons.medical_services_outlined,
-      },
+      // {
+      //   'label': 'Clinical Room',
+      //   'icon': Icons.medical_services_outlined,
+      // },
       {
         'label': 'Medicine',
         'icon': FontAwesome.medkit,
@@ -216,7 +216,7 @@ class DashboardController extends GetxController {
       // DoctorExaminationScreen(),
       DoctorMainScreen(),
       InvoiceView(),
-      ClinicalRoom(),
+      // ClinicalRoom(),
       const MedicineScreen(),
       ReportScreen(),
       const SettingMainScreen(),

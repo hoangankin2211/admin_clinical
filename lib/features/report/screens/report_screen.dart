@@ -115,8 +115,7 @@ class ReportScreen extends StatelessWidget {
                 child: ListView(
                   children: [
                     for (var item in controller.listHealthRecoord.values)
-                      if (controller.selectDate['month'] ==
-                          item.dateCreate.month)
+                      if (controller.selectDate['year'] == item.dateCreate.year)
                         PatientInMonthRow(
                           name:
                               controller.listPatient.containsKey(item.patientId)
@@ -167,8 +166,8 @@ class ReportScreen extends StatelessWidget {
                 () => ListView(
                     children: controller.listInvoice
                         .map(
-                          (element) => (element.createTime.month ==
-                                  controller.selectDate['month'])
+                          (element) => (element.createTime.year ==
+                                  controller.selectDate['year'])
                               ? InvoiceReportItem(element: element)
                               : const SizedBox(),
                         )

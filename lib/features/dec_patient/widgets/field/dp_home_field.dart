@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
 import '../../controller/dp_patinet_contnrolller.dart';
+import '../find_patinet_id.dart';
 import '../view_all_health_record.dart';
 import 'bottom_field.dart';
 import 'doctor_view_field.dart';
@@ -15,6 +16,7 @@ class HomePage extends StatelessWidget {
   final Function() callNextPage;
   final bool checkShadow;
   final bool checkShadow1;
+  final bool checkShadow2;
   final Function() removeShadowCallback;
   HomePage({
     Key? key,
@@ -23,6 +25,7 @@ class HomePage extends StatelessWidget {
     required this.checkShadow,
     required this.checkShadow1,
     required this.removeShadowCallback,
+    required this.checkShadow2,
   }) : super(key: key);
   final controller = Get.find<DpPatinetController>();
   @override
@@ -89,6 +92,24 @@ class HomePage extends StatelessWidget {
                   widthDevice: widthDevice, controller: controller),
             ),
           ),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 400),
+              padding: const EdgeInsets.all(40.0),
+              curve: Curves.fastOutSlowIn,
+              width: checkShadow2 ? 0 : widthDevice / 4,
+              height: heightDevice - 100,
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20.0),
+                ),
+              ),
+              child: FindPatinetID(
+                  widthDevice: widthDevice, controller: controller),
+            ),
+          )
         ],
       ),
     );
