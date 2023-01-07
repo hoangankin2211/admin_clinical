@@ -172,7 +172,9 @@ class InvoiceController extends GetxController {
         const SuccessDialog(
             question: "Change Status Invoice", title1: "Success"),
       );
+      return true;
     }
+    return false;
   }
 
   List<Map<String, dynamic>> listInvoices = [

@@ -24,6 +24,7 @@ class VerifyInvoiceInformationScreen extends StatelessWidget {
   final List<Medicine> medicines;
   final List<Service> services;
   final invoiceController = Get.find<InvoiceController>();
+  final _isLoading = false.obs;
 
   @override
   Widget build(BuildContext context) {
@@ -33,94 +34,110 @@ class VerifyInvoiceInformationScreen extends StatelessWidget {
           padding: AppDecoration.primaryPadding,
           width: constraints.maxWidth * 0.7,
           decoration: AppDecoration.primaryDecorationContainer,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  IconButton(
-                    onPressed: () => invoiceController
-                        .changePage(invoiceController.selectedPage.value - 1),
-                    icon: const Icon(
-                      Icons.arrow_back_ios_new_outlined,
-                      color: AppColors.primarySecondColor,
-                      size: 28,
-                    ),
-                  ),
-                  const Spacer(),
-                  TextButton.icon(
-                    style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 22),
-                        backgroundColor: AppColors.primaryColor),
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.save,
-                      color: Colors.white,
-                    ),
-                    label: Text(
-                      'Save Invoice',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline5!
-                          .copyWith(color: Colors.white),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  TextButton.icon(
-                    style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 22),
-                        backgroundColor: Colors.blueGrey),
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.save,
-                      color: Colors.white,
-                    ),
-                    label: Text(
-                      'Delete Invoice',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline5!
-                          .copyWith(color: Colors.white),
-                    ),
-                  )
-                ],
-              ),
-              const SizedBox(height: 10),
-              FormCard(
-                child: Column(
+          child: _isLoading.value
+              ? const Center(child: CircularProgressIndicator())
+              : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 10),
-                    ClinicInvoiceInformation(invoiceId: invoice.id),
-                    AppWidget.primaryDivider,
-                    PatientInvoiceInformation(
-                      address: patient.address,
-                      patientName: patient.name,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        IconButton(
+                          onPressed: () => invoiceController.changePage(
+                              invoiceController.selectedPage.value - 1),
+                          icon: const Icon(
+                            Icons.arrow_back_ios_new_outlined,
+                            color: AppColors.primarySecondColor,
+                            size: 28,
+                          ),
+                        ),
+                        const Spacer(),
+                        TextButton.icon(
+                          style: TextButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 22),
+                              backgroundColor: AppColors.primaryColor),
+                          onPressed: () async {
+                            invoiceController.selectStatus.value = 2;
+                            _isLoading.value = true;
+                            bool response =
+                                await invoiceController.changeStatusInvoice(
+                              context,
+                              invoice.id,
+                            );
+                            _isLoading.value = false;
+                            if (response) {
+                              invoiceController.changePage(0);
+                            }
+                          },
+                          icon: const Icon(
+                            Icons.save,
+                            color: Colors.white,
+                          ),
+                          label: Text(
+                            'Save Invoice',
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline5!
+                                .copyWith(color: Colors.white),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        TextButton.icon(
+                          style: TextButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 22),
+                              backgroundColor: Colors.blueGrey),
+                          onPressed: () {},
+                          icon: const Icon(
+                            Icons.save,
+                            color: Colors.white,
+                          ),
+                          label: Text(
+                            'Delete Invoice',
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline5!
+                                .copyWith(color: Colors.white),
+                          ),
+                        )
+                      ],
                     ),
-                    AppWidget.primaryDivider,
-                    const SizedBox(height: 5),
-                    const DateTimeInfoField(),
-                    SizedBox(
-                        height: constraints.maxHeight * 0.3,
-                        child: ResultServiceIndicationView(services: services)),
-                    AppWidget.primaryDivider,
-                    SizedBox(
-                        height: constraints.maxHeight * 0.3,
-                        child: FormCard(
-                            child: ResultMedicineIndicationView(
-                                medicine: medicines))),
+                    const SizedBox(height: 10),
                     FormCard(
-                        child: InvoiceAmountFormWidget(amount: invoice.amount)),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 10),
+                          ClinicInvoiceInformation(invoiceId: invoice.id),
+                          AppWidget.primaryDivider,
+                          PatientInvoiceInformation(
+                            address: patient.address,
+                            patientName: patient.name,
+                          ),
+                          AppWidget.primaryDivider,
+                          const SizedBox(height: 5),
+                          const DateTimeInfoField(),
+                          SizedBox(
+                              height: constraints.maxHeight * 0.3,
+                              child: ResultServiceIndicationView(
+                                  services: services)),
+                          AppWidget.primaryDivider,
+                          SizedBox(
+                              height: constraints.maxHeight * 0.3,
+                              child: FormCard(
+                                  child: ResultMedicineIndicationView(
+                                      medicine: medicines))),
+                          FormCard(
+                              child: InvoiceAmountFormWidget(
+                                  amount: invoice.amount)),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
-              ),
-            ],
-          ),
         ),
       ),
     );

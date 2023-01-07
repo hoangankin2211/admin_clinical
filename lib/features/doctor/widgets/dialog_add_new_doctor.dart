@@ -128,7 +128,7 @@ class _DialogAddNewDoctorState extends State<DialogAddNewDoctor> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "Gender",
+                                  "Department",
                                   style: Theme.of(context).textTheme.headline4,
                                 ),
                                 const SizedBox(width: 10.0),
