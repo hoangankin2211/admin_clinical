@@ -8,12 +8,16 @@ import '../../auth/widgets/custom_button.dart';
 class DpApBar extends StatelessWidget {
   final Function(int) switchPage;
   final Function() nexxPageCallback;
+  final Function() backPageCallback;
   final Function() openHealthRecordViewCallback;
+  final Function() openFindIDViewCallback;
   const DpApBar(
       {super.key,
       required this.switchPage,
       required this.nexxPageCallback,
-      required this.openHealthRecordViewCallback});
+      required this.openHealthRecordViewCallback,
+      required this.backPageCallback,
+      required this.openFindIDViewCallback});
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +49,7 @@ class DpApBar extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               InkWell(
-                onTap: () {},
+                onTap: backPageCallback,
                 child: const Text(
                   'Home',
                   style: TextStyle(
@@ -72,6 +76,18 @@ class DpApBar extends StatelessWidget {
                 onTap: () {},
                 child: const Text(
                   'Find a Doctor',
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 53, 72, 78),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18.0,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 90),
+              InkWell(
+                onTap: openFindIDViewCallback,
+                child: const Text(
+                  'Find Your ID',
                   style: TextStyle(
                     color: Color.fromARGB(255, 53, 72, 78),
                     fontWeight: FontWeight.bold,

@@ -4,6 +4,7 @@ import 'package:admin_clinical/constants/global_widgets/chart/line_chart_design.
 import 'package:admin_clinical/constants/global_widgets/header_list_item.dart';
 import 'package:admin_clinical/constants/global_widgets/list_item.dart';
 import 'package:admin_clinical/features/clinical_room/controller/clinical_room_controller.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -32,53 +33,43 @@ class ClinicalRoom extends StatelessWidget {
                   child: Row(children: [
                     Expanded(
                       flex: 2,
-                      child: Column(children: [
-                        const Text(
-                          'Chart View',
-                          style: TextStyle(
-                            color: AppColors.headline1TextColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 22.0,
-                          ),
-                        ),
-                        const SizedBox(height: 10.0),
-                        // Expanded(
-                        //   child : SizedBox(
-                        //     child:  Obx(
-                        //       () => SizedBox(
-                        //         width: double.infinity,
-                        //         height: 210,
-                        //         child: LineChartDesign(
-                        //             maxTitle: overviewController
-                        //                 .maxOfListInvoice.value
-                        //                 .toString(),
-                        //             middleTitle: (overviewController
-                        //                         .maxOfListInvoice.value /
-                        //                     2)
-                        //                 .round()
-                        //                 .toString(),
-                        //             listData: [
-                        //               ...overviewController.data_invoice_chart
-                        //                   .map(
-                        //                 (element) => FlSpot(
-                        //                   element['id'],
-                        //                   // ignore: unrelated_type_equality_checks
-                        //                   overviewController.maxOfListInvoice !=
-                        //                           0
-                        //                       ? (element['data'] /
-                        //                               overviewController
-                        //                                   .maxOfListInvoice
-                        //                                   .value) *
-                        //                           5
-                        //                       : 0,
-                        //                 ),
-                        //               ),
-                        //             ]),
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ),
-                      ]),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Chart View',
+                              style: TextStyle(
+                                color: AppColors.headline1TextColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 22.0,
+                              ),
+                            ),
+                            const SizedBox(height: 10.0),
+                            Expanded(
+                              child: SizedBox(
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  height: 210,
+                                  child: LineChartDesign(
+                                      // maxTitle: controller.maxOfListInvoice.value
+                                      //     .toString(),
+                                      // middleTitle:
+                                      //     (controller.maxOfListInvoice.value / 2)
+                                      //         .round()
+                                      //         .toString(),
+                                      listData: [
+                                        FlSpot(0, 3),
+                                        FlSpot(1, 3.3),
+                                        FlSpot(2, 2),
+                                        FlSpot(3, 4),
+                                        FlSpot(4, 5),
+                                        FlSpot(5, 1),
+                                        FlSpot(6, 4),
+                                      ]),
+                                ),
+                              ),
+                            ),
+                          ]),
                     ),
                     Expanded(
                       flex: 3,

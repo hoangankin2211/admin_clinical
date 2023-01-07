@@ -61,45 +61,94 @@ class _DpCreateIdTabState extends State<DpCreateIdTab> {
   final RxBool _isLoading = false.obs;
 
   void _handleProcessInsertData(BuildContext context) async {
-    _isLoading.value = true;
-
-    String? result =
-        await Utils.convertAssetsToUrl(_image, emailController.text);
-
-    final response = await controller.addPatientToDataBase(
-      Patient(
-        id: '',
-        name: fullNameController.text,
-        gender: genderCode.value,
-        email: emailController.text,
-        address: locationController.text,
-        dob: dobController.text,
-        phoneNumber: "${phoneCode.value} ${phoneNumberController.text}",
-        status: statusCode.value,
-        avt: result,
-        symptom: symptomController.text,
-        healthRecord: [],
-      ),
-      Get.context ?? context,
-    );
-    if (response) {
-      NotificationService.instance
-          .insertNotification("You have a Patient create ID");
+    if (fullNameController.text == "" ||
+        emailController.text == "" ||
+        locationController.text == "" ||
+        phoneNumberController.text == "") {
       await Get.dialog(
-        const SuccessDialog(
-            question: 'Add Patient Success',
-            title1: 'Added new patient to database'),
-      );
-      Get.back();
+          const ErrorDialog(question: "Create ID", title1: "Field is null"));
     } else {
-      Get.dialog(
-        const ErrorDialog(
-          question: 'ERROR',
-          title1: 'Can\'t create new patient !!! Some error have occurred',
+      _isLoading.value = true;
+
+      String? result =
+          await Utils.convertAssetsToUrl(_image, emailController.text);
+
+      final response = await controller.addPatientToDataBaseReturnId(
+        Patient(
+          id: '',
+          name: fullNameController.text,
+          gender: genderCode.value,
+          email: emailController.text,
+          address: locationController.text,
+          dob: dobController.text,
+          phoneNumber: "${phoneCode.value} ${phoneNumberController.text}",
+          status: statusCode.value,
+          avt: result,
+          symptom: symptomController.text,
+          healthRecord: [],
         ),
+        Get.context ?? context,
       );
-      Get.back();
+      if (response['check']) {
+        _isLoading.value = false;
+        await Get.dialog(
+          Dialog(
+            backgroundColor: Colors.transparent,
+            child: Container(
+              width: Get.width / 4,
+              height: Get.height / 3,
+              padding: const EdgeInsets.all(15.0),
+              decoration: BoxDecoration(
+                color: AppColors.backgroundColor,
+                borderRadius: BorderRadius.circular(20.0),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/images/checked.png',
+                    height: 80.0,
+                    width: 80.0,
+                  ),
+                  const SizedBox(height: 20.0),
+                  const Text(
+                    'Create ID is success',
+                    style: TextStyle(
+                      color: AppColors.headline1TextColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20.0,
+                    ),
+                  ),
+                  RichText(
+                      text: TextSpan(
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 20.0),
+                          children: [
+                        const TextSpan(
+                            text: 'Your ID:',
+                            style: TextStyle(color: AppColors.primaryColor)),
+                        TextSpan(
+                            text: response['id'],
+                            style: const TextStyle(
+                                color: AppColors.headline1TextColor))
+                      ])),
+                ],
+              ),
+            ),
+          ),
+        );
+      } else {
+        Get.dialog(
+          const ErrorDialog(
+            question: 'ERROR',
+            title1: 'Can\'t create new patient !!! Some error have occurred',
+          ),
+        );
+        Get.back();
+      }
     }
+    _isLoading.value = false;
   }
 
   @override
@@ -439,11 +488,14 @@ class _DpCreateIdTabState extends State<DpCreateIdTab> {
               ),
             ),
             const SizedBox(width: 10.0),
-            SizedBox(
-                height: 40.0,
-                child: CustomButton(
-                    title: 'Create',
-                    onPressed: () => _handleProcessInsertData(context))),
+            Obx(
+              () => SizedBox(
+                  height: 40.0,
+                  child: CustomButton(
+                      check: _isLoading.value,
+                      title: 'Create',
+                      onPressed: () => _handleProcessInsertData(context))),
+            ),
           ],
         ),
       ],

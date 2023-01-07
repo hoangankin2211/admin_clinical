@@ -19,6 +19,7 @@ class DpPatinetController extends GetxController {
   RxMap<String, Patient> listPatinet = RxMap({});
   RxList<Doctor1> listDoctor = RxList([]);
   RxList<Department> listDepartMent = RxList([]);
+  RxBool isLoadingCreateID = false.obs;
   @override
   void onInit() {
     super.onInit();
@@ -96,6 +97,25 @@ class DpPatinetController extends GetxController {
       }
     }
     return false;
+  }
+
+  Future<Map<String, dynamic>> addPatientToDataBaseReturnId(
+      Patient patient, BuildContext context) async {
+    final response = await PatientService.insertPatient(patient, context);
+    if (response != null) {
+      if (response['isSuccess']) {
+        patient.id = response['id'];
+        addEntries({patient.id: patient});
+        return {
+          'id': response['id'],
+          'check': true,
+        };
+      }
+    }
+    return {
+      'id': '',
+      'check': false,
+    };
   }
 
   void bookingAppointment() async {
@@ -267,6 +287,31 @@ class DpPatinetController extends GetxController {
       if (item.patientId == idPatinetSearchController.text) {
         listHealthRecordSearch.add(item);
       }
+    }
+  }
+
+  // Find ID
+  final emailPatientFindController = TextEditingController();
+  final phoneNoPatientFindController = TextEditingController();
+  final yourId = "".obs;
+  List<String> dropDownItem = ['+84', '+86', '+42', '+88', '+14', '+52', '+50'];
+  late final phoneCode = dropDownItem.first.obs;
+
+  findIdFunc() async {
+    yourId.value = "";
+    String result = "";
+    for (var item in PatientService.listPatients.values) {
+      if (item.email == emailPatientFindController.text &&
+          item.phoneNumber ==
+              "${phoneCode.value} ${phoneNoPatientFindController.text}") {
+        result = item.id;
+      }
+    }
+    if (result == "") {
+      await Get.dialog(
+          const ErrorDialog(question: "Find ID", title1: "Cann't Find "));
+    } else {
+      yourId.value = result;
     }
   }
 }
