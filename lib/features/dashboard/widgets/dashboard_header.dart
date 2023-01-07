@@ -86,12 +86,13 @@ class DashboardHeader extends StatelessWidget {
               horizontalTitleGap: 10,
               contentPadding: const EdgeInsets.symmetric(horizontal: 20.0),
               isThreeLine: true,
-              leading: const CircleAvatar(
-                backgroundColor: Color.fromARGB(255, 217, 236, 246),
-                child: Icon(
-                  Icons.person,
-                  color: Colors.black,
-                ),
+              leading: CircleAvatar(
+                backgroundColor: const Color.fromARGB(255, 217, 236, 246),
+                backgroundImage: (AuthService.instance.user.avt.isNotEmpty)
+                    ? NetworkImage(
+                        AuthService.instance.user.avt,
+                      ) as ImageProvider
+                    : const AssetImage('assets/images/user.png'),
               ),
               title: Text(
                 AuthService.instance.user.name,

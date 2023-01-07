@@ -34,17 +34,44 @@ class TurnoverMainScreen extends StatelessWidget {
   TurnoverMainScreen({super.key});
   final patientPageController = Get.find<PatientPageController>();
   final invoiceController = Get.find<InvoiceController>();
-  List<Widget> listHeader = [
-    ...headerTitle.map(
-      (e) => Text(
+  final _isSelectAll = false.obs;
+  late List<Widget> listHeader = [
+    ...headerTitle.map((e) {
+      Widget result = Text(
         e,
         style: const TextStyle(
           color: AppColors.backgroundColor,
           fontWeight: FontWeight.bold,
           fontSize: 16.0,
         ),
-      ),
-    )
+      );
+      if (e == 'Invoice ID') {
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Obx(
+              () => Checkbox(
+                value: _isSelectAll.value,
+                onChanged: (value) {
+                  if (value != null && value) {
+                    invoiceController.lInvoiceSelect.addAll(invoiceController
+                        .listInvoice
+                        .map((element) => element.id));
+                  } else if (value == false) {
+                    invoiceController.lInvoiceSelect.clear();
+                    invoiceController.lInvoiceSelect.refresh();
+                  }
+                  _isSelectAll.value = value ?? false;
+                },
+              ),
+            ),
+            const SizedBox(width: 5),
+            result,
+          ],
+        );
+      }
+      return result;
+    })
   ];
 
   List<Map<String, dynamic>> listFilter = [
@@ -462,8 +489,8 @@ class TurnoverMainScreen extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
       child: Row(
-        children: [
-          const Text(
+        children: const [
+          Text(
             "All Invoice",
             style: TextStyle(
                 color: AppColors.primaryColor,
@@ -471,15 +498,7 @@ class TurnoverMainScreen extends StatelessWidget {
                 decoration: TextDecoration.underline,
                 fontSize: 20.0),
           ),
-          const Spacer(),
-          InkWell(
-            onTap: () {},
-            child: const Icon(
-              Icons.settings_outlined,
-              color: AppColors.primaryColor,
-            ),
-          ),
-          const SizedBox(width: 10.0),
+          Spacer(),
         ],
       ),
     );
