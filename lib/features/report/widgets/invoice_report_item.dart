@@ -44,9 +44,10 @@ class InvoiceReportItem extends StatelessWidget {
                                 AppColors.headline1TextColor.withOpacity(0.3),
                             blurRadius: 3.0)
                       ],
-                      image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: NetworkImage(element.thumb)),
+                    ),
+                    child: const Icon(
+                      Icons.payment,
+                      color: AppColors.primaryColor,
                     ),
                   ),
                   Text(

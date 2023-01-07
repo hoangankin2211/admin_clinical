@@ -29,13 +29,7 @@ class LoginScreen extends StatelessWidget {
             height: heightDevice,
           )),
           Expanded(
-            child: PageView(
-              controller: controller,
-              children: [
-                LoginForm(switchPage: switchPage),
-                SignUpForm(switchPage: switchPage),
-              ],
-            ),
+            child: LoginForm(switchPage: switchPage),
           ),
         ],
       ),

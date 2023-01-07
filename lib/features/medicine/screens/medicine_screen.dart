@@ -133,7 +133,7 @@ class _MedicineScreenState extends State<MedicineScreen> {
                                   ),
                                 ),
                                 child: Row(children: const [
-                                  Text("Selecct Week ",
+                                  Text("Select Week ",
                                       style: TextStyle(
                                           color: AppColors.primarySecondColor,
                                           fontWeight: FontWeight.bold,

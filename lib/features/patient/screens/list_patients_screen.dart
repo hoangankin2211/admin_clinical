@@ -149,18 +149,61 @@ class ListPatientScreen extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Obx(
-                                () => ShowEntriesWidget(
-                                  maxEntries:
-                                      patientPageController.data.value.length,
-                                  applyEntries:
-                                      patientPageController.applyEntries,
-                                  numberOfEntries: patientPageController
-                                      .numberOfEntries.value,
-                                  width: constraints.maxWidth * 0.03,
-                                  height: constraints.maxHeight * 0.05,
-                                ),
+                              Row(
+                                children: [
+                                  Text(
+                                    'Number or patient: ',
+                                    style:
+                                        Theme.of(context).textTheme.headline4,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Obx(
+                                    () => Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 5),
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            AppDecoration.primaryRadiusBorder,
+                                        border: Border.all(
+                                          color: Colors.grey[400]!,
+                                          width: 1,
+                                        ),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          ConstrainedBox(
+                                            constraints: BoxConstraints(
+                                              maxWidth:
+                                                  constraints.maxWidth * 0.03,
+                                              maxHeight:
+                                                  constraints.maxHeight * 0.05,
+                                            ),
+                                            child: TextFormField(
+                                              controller: TextEditingController(
+                                                  text: patientPageController
+                                                      .data.value.length
+                                                      .toString()),
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              decoration: const InputDecoration(
+                                                isDense: true,
+                                                border: InputBorder.none,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    'entries',
+                                    style:
+                                        Theme.of(context).textTheme.headline4,
+                                  ),
+                                ],
                               ),
+                              const SizedBox(height: 20),
                               CustomIconButton(
                                 onPressed: () async {
                                   patientPageController.isLoading.value = true;
@@ -196,7 +239,6 @@ class ListPatientScreen extends StatelessWidget {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 20),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
@@ -244,11 +286,12 @@ class ListPatientScreen extends StatelessWidget {
                                           initialDate: DateTime.now(),
                                           builder: (context, child) {
                                             return Center(
-                                                child: SizedBox(
-                                              width: 1000.0,
-                                              height: 1100.0,
-                                              child: child,
-                                            ));
+                                              child: SizedBox(
+                                                width: Get.width * 0.5,
+                                                height: Get.height * 0.5,
+                                                child: child,
+                                              ),
+                                            );
                                           },
                                         );
                                         if (choice != null) {
@@ -388,7 +431,7 @@ class PatientProfileCard extends StatelessWidget {
                     ? NetworkImage(
                         patient!.avt!,
                       ) as ImageProvider
-                    : const AssetImage('images/user.png'),
+                    : const AssetImage('assets/images/user.png'),
                 radius: 80,
               ),
               if (patient != null)

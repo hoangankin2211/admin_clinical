@@ -73,7 +73,7 @@ class SettingController extends GetxController {
   Rx<String> selectedCountry = Rx<String>('Vietnam');
 
   ///////////////////Field edit profile
-  void editProfile(BuildContext context, Uint8List? image) async {
+  Future editProfile(BuildContext context, Uint8List? image) async {
     var timeStamp = dateController.value.millisecondsSinceEpoch;
     isLoading1.value = true;
     String imageUrl = "";
@@ -84,7 +84,7 @@ class SettingController extends GetxController {
       );
       imageUrl = imageRes.secureUrl;
     }
-    _auth.editProfile(
+    final response = await _auth.editProfile(
         name: firstNameController.text,
         email: getUser().email,
         gender: dropDownRoleChoice[selectedRole.value!],
@@ -104,6 +104,17 @@ class SettingController extends GetxController {
           );
         },
         context: context);
+    if (response) {
+      isLoading1.value = true;
+      update();
+      showDialog(
+        context: context,
+        builder: (context) => const SuccessDialog(
+          question: "Edit Profile",
+          title1: "Edit Profile Success",
+        ),
+      );
+    }
   }
 
   showDialogChagepassword(String title, BuildContext context) {

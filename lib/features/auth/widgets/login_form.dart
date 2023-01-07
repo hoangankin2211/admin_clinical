@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:admin_clinical/constants/app_colors.dart';
 import 'package:admin_clinical/constants/app_decoration.dart';
+import 'package:admin_clinical/constants/global_widgets/custom_dialog_error/error_dialog.dart';
 import 'package:admin_clinical/features/auth/controller/auth_controller.dart';
 import 'package:admin_clinical/features/auth/widgets/forget_password_form.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +30,9 @@ class LoginForm extends StatelessWidget {
             AppDecoration.spaceBetweenElementForm,
             InkWell(
               borderRadius: AppDecoration.primaryRadiusBorder,
-              onTap: () {},
+              onTap: () => Get.dialog(const ErrorDialog(
+                  question: "WARNING",
+                  title1: 'THE SERVICE HAVE NOT FINISHED YET !!!')),
               child: Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
@@ -50,7 +53,7 @@ class LoginForm extends StatelessWidget {
                       width: 10,
                     ),
                     Text(
-                      'Login with Google',
+                      'Login with Google    ',
                       style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
@@ -198,23 +201,20 @@ class LoginForm extends StatelessWidget {
             ),
             AppDecoration.spaceBetweenElementForm,
             Row(
-              children: [
-                const Text(
+              children: const [
+                Text(
                   'Don\'t have an account ? ',
                   style: TextStyle(
-                      fontSize: 15,
+                      fontSize: 17,
                       fontWeight: FontWeight.w500,
                       color: Colors.black),
                 ),
-                TextButton(
-                  onPressed: () => switchPage(1),
-                  child: const Text(
-                    'Sign up',
-                    style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.primaryColor),
-                  ),
+                Text(
+                  'Please ! Contact Administrator to be provided Account!',
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black),
                 ),
               ],
             ),

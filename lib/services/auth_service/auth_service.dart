@@ -70,7 +70,7 @@ class AuthService extends ChangeNotifier {
           Uri.parse('${ApiLink.uri}/api/validToken'),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
-            'x-auth-token': token!,
+            'x-auth-token': token,
           },
         );
         var response = jsonDecode(tokenRes.body);
@@ -232,7 +232,7 @@ class AuthService extends ChangeNotifier {
     }
   }
 
-  void editProfile({
+  Future<bool> editProfile({
     required String name,
     required String email,
     required String gender,
@@ -243,6 +243,7 @@ class AuthService extends ChangeNotifier {
     required VoidCallback callBack,
     required BuildContext context,
   }) async {
+    bool result = false;
     try {
       http.Response res = await http.post(
         Uri.parse(
@@ -266,13 +267,14 @@ class AuthService extends ChangeNotifier {
         response: res,
         context: context,
         onSuccess: () async {
+          result = true;
           AuthService.instance.setUser(res.body);
-          callBack();
         },
       );
     } catch (e) {
-      callBack();
+      print(e.toString());
     }
+    return result;
   }
 
   Future<bool> changePassword({

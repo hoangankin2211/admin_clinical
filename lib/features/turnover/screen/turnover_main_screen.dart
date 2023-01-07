@@ -1,3 +1,4 @@
+import 'package:admin_clinical/constants/global_widgets/custom_dialog_error/error_dialog.dart';
 import 'package:admin_clinical/features/invoice/controllers/invoice_controller.dart';
 import 'package:admin_clinical/features/patient/widgets/custom_text_form_field.dart';
 import 'package:admin_clinical/features/patient/widgets/show_entries_widget.dart';
@@ -8,6 +9,7 @@ import 'package:get/get.dart';
 
 import '../../../commons/widgets/custom_icon_button.dart';
 import '../../../constants/app_colors.dart';
+import '../../../constants/app_decoration.dart';
 import '../../../constants/global_widgets/button_mouse_region.dart';
 import '../../auth/widgets/custom_button.dart';
 import '../../invoice/widgets/dialog_change_status.dart';
@@ -22,7 +24,6 @@ List<String> headerTitle = [
   "Invoice ID",
   "Category",
   "Created on",
-  "Invoice from",
   "Amount",
   "Status",
   "Action",
@@ -33,28 +34,44 @@ class TurnoverMainScreen extends StatelessWidget {
   TurnoverMainScreen({super.key});
   final patientPageController = Get.find<PatientPageController>();
   final invoiceController = Get.find<InvoiceController>();
-  List<Widget> listHeader = [
-    ...headerTitle.map(
-      (e) => Row(
-        children: [
-          Text(
-            e,
-            style: const TextStyle(
-              color: AppColors.backgroundColor,
-              fontWeight: FontWeight.bold,
-              fontSize: 16.0,
+  final _isSelectAll = false.obs;
+  late List<Widget> listHeader = [
+    ...headerTitle.map((e) {
+      Widget result = Text(
+        e,
+        style: const TextStyle(
+          color: AppColors.backgroundColor,
+          fontWeight: FontWeight.bold,
+          fontSize: 16.0,
+        ),
+      );
+      if (e == 'Invoice ID') {
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Obx(
+              () => Checkbox(
+                value: _isSelectAll.value,
+                onChanged: (value) {
+                  if (value != null && value) {
+                    invoiceController.lInvoiceSelect.addAll(invoiceController
+                        .listInvoice
+                        .map((element) => element.id));
+                  } else if (value == false) {
+                    invoiceController.lInvoiceSelect.clear();
+                    invoiceController.lInvoiceSelect.refresh();
+                  }
+                  _isSelectAll.value = value ?? false;
+                },
+              ),
             ),
-          ),
-          InkWell(
-            onTap: () {},
-            child: const Icon(
-              Icons.swap_vert_rounded,
-              color: AppColors.primarySecondColor,
-            ),
-          ),
-        ],
-      ),
-    )
+            const SizedBox(width: 5),
+            result,
+          ],
+        );
+      }
+      return result;
+    })
   ];
 
   List<Map<String, dynamic>> listFilter = [
@@ -113,6 +130,9 @@ class TurnoverMainScreen extends StatelessWidget {
                     color: Colors.white,
                   ),
                 ),
+                const SizedBox(
+                  width: 10,
+                ),
                 const Text(
                   "Invoice",
                   style: TextStyle(
@@ -161,13 +181,13 @@ class TurnoverMainScreen extends StatelessWidget {
           const SizedBox(height: 20.0),
           _invoiceListField(),
           const SizedBox(height: 10.0),
-          _listInvoiceFIeld(constraints),
+          _listInvoiceFIeld(constraints, context),
         ],
       ),
     );
   }
 
-  Expanded _listInvoiceFIeld(BoxConstraints constraints) {
+  Expanded _listInvoiceFIeld(BoxConstraints constraints, BuildContext context) {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.all(15.0),
@@ -191,13 +211,57 @@ class TurnoverMainScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                ShowEntriesWidget(
-                  applyEntries: patientPageController.applyEntries,
-                  numberOfEntries:
-                      patientPageController.numberOfEntries.value - 1,
-                  width: constraints.maxWidth * 0.03,
-                  height: constraints.maxHeight * 0.05,
-                  maxEntries: patientPageController.data.value.length - 1,
+                // ShowEntriesWidget(
+                //   applyEntries: patientPageController.applyEntries,
+                //   numberOfEntries:
+                //       patientPageController.numberOfEntries.value - 1,
+                //   width: constraints.maxWidth * 0.03,
+                //   height: constraints.maxHeight * 0.05,
+                //   maxEntries: patientPageController.data.value.length - 1,
+                // ),
+                Row(
+                  children: [
+                    Text(
+                      'Number of Invoices: ',
+                      style: Theme.of(context).textTheme.headline4,
+                    ),
+                    const SizedBox(width: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      decoration: BoxDecoration(
+                        borderRadius: AppDecoration.primaryRadiusBorder,
+                        border: Border.all(
+                          color: Colors.grey[400]!,
+                          width: 1,
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          ConstrainedBox(
+                            constraints: BoxConstraints(
+                              maxWidth: constraints.maxWidth * 0.03,
+                              maxHeight: constraints.maxHeight * 0.05,
+                            ),
+                            child: TextFormField(
+                              controller: TextEditingController(
+                                  text: invoiceController.listInvoice.length
+                                      .toString()),
+                              keyboardType: TextInputType.number,
+                              decoration: const InputDecoration(
+                                isDense: true,
+                                border: InputBorder.none,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'entries',
+                      style: Theme.of(context).textTheme.headline4,
+                    )
+                  ],
                 ),
                 CustomIconButton(
                   onPressed: () => Get.dialog(
@@ -271,7 +335,7 @@ class TurnoverMainScreen extends StatelessWidget {
                               ),
                               child: RowExpanded(
                                 listWidget: listHeader,
-                                listFlex: const [2, 1, 1, 2, 1, 1, 1],
+                                listFlex: const [2, 1, 1, 1, 1, 1],
                               ),
                             ),
                             Obx(
@@ -297,7 +361,6 @@ class TurnoverMainScreen extends StatelessWidget {
                                         category: element.category,
                                         date: element.createTime,
                                         image: element.thumb,
-                                        name: element.title,
                                         amount: element.amount,
                                         status: element.status,
                                         deleteCallback: () => invoiceController
@@ -318,11 +381,21 @@ class TurnoverMainScreen extends StatelessWidget {
                                                     element.hrId];
                                             invoiceController.selectedInvoice
                                                 .value = element;
-                                            print(invoiceController
-                                                .selectedHealthRecord
-                                                .value!
-                                                .patientId);
-                                            invoiceController.changePage(1);
+                                            if (element.status == 2) {
+                                              Get.dialog(
+                                                const ErrorDialog(
+                                                  question: "Fail",
+                                                  title1:
+                                                      "This invoice have been paid!!! It can not be paid again",
+                                                ),
+                                              );
+                                            } else {
+                                              print(invoiceController
+                                                  .selectedHealthRecord
+                                                  .value!
+                                                  .patientId);
+                                              invoiceController.changePage(1);
+                                            }
                                           } else {
                                             Get.dialog(
                                               DialogChangeStatus(
@@ -416,8 +489,8 @@ class TurnoverMainScreen extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
       child: Row(
-        children: [
-          const Text(
+        children: const [
+          Text(
             "All Invoice",
             style: TextStyle(
                 color: AppColors.primaryColor,
@@ -425,36 +498,7 @@ class TurnoverMainScreen extends StatelessWidget {
                 decoration: TextDecoration.underline,
                 fontSize: 20.0),
           ),
-          const Spacer(),
-          InkWell(
-            onTap: () {},
-            child: const Icon(
-              Icons.settings_outlined,
-              color: AppColors.primaryColor,
-            ),
-          ),
-          const SizedBox(width: 10.0),
-          ButtonMouseRegion(
-            color: AppColors.primaryColor,
-            colorChange: Colors.yellow,
-            child: Row(
-              children: const [
-                Icon(
-                  Icons.add_circle_outline_sharp,
-                  color: Colors.white,
-                ),
-                Text(
-                  ' New Invoice',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18.0,
-                  ),
-                ),
-              ],
-            ),
-            func: () => invoiceController.changePage(1),
-          ),
+          Spacer(),
         ],
       ),
     );

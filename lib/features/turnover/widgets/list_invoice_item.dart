@@ -8,7 +8,6 @@ class ListInvoiceItem extends StatelessWidget {
   final String category;
   final DateTime date;
   final String image;
-  final String name;
   final double amount;
   final int status;
   final bool check;
@@ -22,7 +21,6 @@ class ListInvoiceItem extends StatelessWidget {
       required this.category,
       required this.date,
       required this.image,
-      required this.name,
       required this.amount,
       required this.status,
       this.onSelectedAction,
@@ -85,38 +83,6 @@ class ListInvoiceItem extends StatelessWidget {
           ),
         ),
         Expanded(
-          flex: 2,
-          child: Row(
-            children: [
-              Container(
-                height: 30.0,
-                width: 30.0,
-                decoration: BoxDecoration(
-                  color: AppColors.backgroundColor,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                        color: AppColors.headline1TextColor.withOpacity(0.3),
-                        blurRadius: 3.0)
-                  ],
-                  image: DecorationImage(
-                      fit: BoxFit.cover, image: NetworkImage(image)),
-                ),
-              ),
-              Expanded(
-                child: Text(
-                  ' $name',
-                  style: const TextStyle(
-                    color: AppColors.primaryColor,
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        Expanded(
           flex: 1,
           child: Text(
             '\$ $amount',
@@ -150,7 +116,7 @@ class ListInvoiceItem extends StatelessWidget {
         Expanded(
           flex: 1,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               PopupMenuButton<String>(
                 onSelected: (value) {
@@ -163,7 +129,7 @@ class ListInvoiceItem extends StatelessWidget {
                   ),
                   const PopupMenuItem<String>(
                     value: 'Change Status',
-                    child: Text('change Status'),
+                    child: Text('Change Status'),
                   ),
                   const PopupMenuItem<String>(
                     value: 'Make Invoice',
